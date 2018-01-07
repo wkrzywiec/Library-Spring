@@ -25,6 +25,9 @@ dependencies {
     implementation 'com.google.guava:guava:21.0'
     
     def tomcatVersion = '8.0.46'
+    def springWebMvcVersion = '5.0.2.RELEASE'
+    def springSecurityVersion = '5.0.0.RELEASE'
+    
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
@@ -33,7 +36,9 @@ dependencies {
     providedCompile 'javax.servlet:javax.servlet-api:4.0.0'
 	compile 'javax.servlet:jstl:1.2'
 	compile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.1'
-	compile 'org.springframework:spring-webmvc:5.0.0.RELEASE'
+	compile "org.springframework:spring-webmvc:${springWebMvcVersion}"
+	compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
+	compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
     
 
     testImplementation 'junit:junit:4.12'
