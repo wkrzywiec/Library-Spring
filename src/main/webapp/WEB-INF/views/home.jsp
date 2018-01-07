@@ -4,9 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Library portal - home page</title>
 </head>
 <body>
-Home page
+
+<h2>Home page</h2>
+
 </body>
 </html>
