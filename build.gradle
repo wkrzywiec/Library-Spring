@@ -15,6 +15,7 @@ buildscript {
 
     dependencies {
         classpath 'com.bmuschko:gradle-tomcat-plugin:2.4.1'
+        classpath 'mysql:mysql-connector-java:6.0.6'
     }
 }
 
@@ -37,9 +38,16 @@ dependencies {
 	compile 'javax.servlet:jstl:1.2'
 	compile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.1'
 	compile "org.springframework:spring-webmvc:${springWebMvcVersion}"
+	compile "org.springframework:spring-jdbc:${springWebMvcVersion}"
+	compile "org.springframework:spring-orm:${springWebMvcVersion}"
+	compile "org.springframework:spring-test:${springWebMvcVersion}"
 	compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
 	compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
+	
     
+    compile 'mysql:mysql-connector-java:6.0.6'
+    compile 'org.hibernate:hibernate-core:5.2.12.Final'
+	compile 'com.mchange:c3p0:0.9.5.2'
 
     testImplementation 'junit:junit:4.12'
 }
