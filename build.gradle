@@ -52,6 +52,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
+
 tomcat {
 
 	httpPort = 8080
@@ -59,4 +60,4 @@ tomcat {
 	contextPath = '/library-spring'
 }
 
-
+build.finalizedBy(tomcatRun)
