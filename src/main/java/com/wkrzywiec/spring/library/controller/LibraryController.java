@@ -14,8 +14,12 @@ public class LibraryController {
 
 	@GetMapping("/")
 	public String showHomePage(){
-		System.out.println(userDAO.getCustomer(1).toString());
 		return "home";
+	}
+	
+	@GetMapping("/loginPage")
+	public String showLoginPage(){
+		return "loginPage";
 	}
 	
 }
