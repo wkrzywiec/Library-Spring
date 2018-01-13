@@ -17,9 +17,4 @@ public class LibraryController {
 		return "home";
 	}
 	
-	@GetMapping("/loginPage")
-	public String showLoginPage(){
-		return "loginPage";
-	}
-	
 }

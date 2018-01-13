@@ -18,8 +18,9 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 		UserBuilder users = User.withDefaultPasswordEncoder();
 		
 		auth.inMemoryAuthentication()
-			.withUser(users.username("admin").password("admin").roles("LIBRARIAN"))
-			.withUser(users.username("test").password("test").roles("READER"));
+			.withUser(users.username("book").password("book").roles("USER","LIBRARIAN"))
+			.withUser(users.username("test").password("test").roles("USER"))
+			.withUser(users.username("admin").password("admin").roles("USER", "ADMIN"));
 	}
 
 	@Override
@@ -32,8 +33,10 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 					.loginPage("/loginPage")
 					.loginProcessingUrl("/login")
 					.permitAll()
-					.and()
-					.logout().permitAll();
+			.and()
+				.logout().permitAll()
+			.and()
+				.exceptionHandling().accessDeniedPage("/access-denied");
 		
 	}
 
