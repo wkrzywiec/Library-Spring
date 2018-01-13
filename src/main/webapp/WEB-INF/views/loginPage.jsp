@@ -8,24 +8,31 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet"
-		 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-	
+		 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>	
 <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+	body {
+		background: #556270;  /* fallback for old browsers */
+		background: -webkit-linear-gradient(to left, #FF6B6B, #556270);  /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to left, #FF6B6B, #556270); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	
+	}
+
+</style>
 <title>Library login page</title>
 </head>
 <body>
 
     <div>
-		
-		<div id="loginbox" style="margin-top: 50px;"
-			class="mainbox col-md-3 col-md-offset-2 col-sm-6 col-sm-offset-2">
 			
+		<div id="loginbox" style="margin-top: 150px;"
+			class="mainbox col-md-3 col-md-offset-5 col-sm-8 col-sm-offset-1">
+					
 			<div class="panel panel-info">
 
 				<div class="panel-heading">
 					<div class="panel-title">Sign In</div>
+					<div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="www.google.com">Forgot password?</a></div>
 				</div>
 
 				<div style="padding-top: 30px" class="panel-body">
@@ -66,20 +73,39 @@
 						</div>
 
 						
-						<div style="margin-bottom: 25px" class="input-group">
+						<div style="margin-bottom: 15px" class="input-group">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span> 
 							
 							<input type="password" name="password" placeholder="password" class="form-control" >
 						</div>
+						
+						<div class="input-group">
+                        	<div class="checkbox">
+                            	<label>
+                                	<input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                               	</label>
+                        	</div>
+                        </div>
 
 						
 						<div style="margin-top: 10px" class="form-group">						
 							<div class="col-sm-6 controls">
-								<button type="submit" class="btn btn-success">Login</button>
+								<button type="submit" class="btn btn-success btn-block">Login</button>
 							</div>
 						</div>
-
+						
 					</form:form>
+	
+					<div class="form-group">
+                    	<div class="col-md-12 control">
+                        	<div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                            	Don't have an account?
+                            <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                            	Sign Up Here
+                             </a>
+                             </div>
+                    	</div>
+                	</div>   
 
 				</div>
 
