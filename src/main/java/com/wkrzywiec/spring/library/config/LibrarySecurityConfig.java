@@ -31,7 +31,10 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 				.formLogin()
 					.loginPage("/loginPage")
 					.loginProcessingUrl("/login")
-					.permitAll();
+					.permitAll()
+					.and()
+					.logout().permitAll();
+		
 	}
 
 
