@@ -1,8 +1,9 @@
 package com.wkrzywiec.spring.library.dao;
 
-import com.wkrzywiec.spring.library.entity.Customer;
+import com.wkrzywiec.spring.library.entity.User;
 
 public interface UserDAO {
 
-	public Customer getCustomer(int id);
+	public User getActiveUser(String username);
+	
 }
