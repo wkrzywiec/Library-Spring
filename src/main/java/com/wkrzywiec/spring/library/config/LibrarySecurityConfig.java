@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -21,19 +22,13 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 	@Qualifier("userDetailService")
 	private UserDetailsService libraryUserDetailsService;
 	
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		
 		auth.userDetailsService(libraryUserDetailsService);
 		auth.authenticationProvider(authenticationProvider());
-		/*
-		UserBuilder users = User.withDefaultPasswordEncoder();
 		
-		auth.inMemoryAuthentication()
-			.withUser(users.username("book").password("book").roles("USER","LIBRARIAN"))
-			.withUser(users.username("test").password("test").roles("USER"))
-			.withUser(users.username("admin").password("admin").roles("USER", "ADMIN"));
-		*/
 	}
 
 	@Override
@@ -49,7 +44,12 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.logout().permitAll()
 			.and()
-				.exceptionHandling().accessDeniedPage("/access-denied");	
+				.exceptionHandling().accessDeniedPage("/access-denied")
+			.and()
+				.rememberMe()
+					.key("library-spring-key")
+					.rememberMeCookieName("library-spring-remember-me-cookie")
+					.tokenValiditySeconds(30 * 60 * 24);
 	}
 	
 	@Bean

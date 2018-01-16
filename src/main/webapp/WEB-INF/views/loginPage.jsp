@@ -82,7 +82,7 @@
 						<div class="input-group">
                         	<div class="checkbox">
                             	<label>
-                                	<input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                                	<input id="remember-me" type="checkbox" name="remember-me" value="1"> Remember me
                                	</label>
                         	</div>
                         </div>
