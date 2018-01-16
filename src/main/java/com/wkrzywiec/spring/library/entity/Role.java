@@ -16,8 +16,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="authority")
-public class Authority {
+@Table(name="role")
+public class Role {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -30,16 +30,16 @@ public class Authority {
 			cascade= {CascadeType.PERSIST, CascadeType.MERGE,
 			CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
-			name="user_authority",
-			joinColumns=@JoinColumn(name="authority_id"),
+			name="user_role",
+			joinColumns=@JoinColumn(name="role_id"),
 			inverseJoinColumns=@JoinColumn(name="user_id"))
 	private List<User> users;
 
-	public Authority(){
+	public Role(){
 		
 	}
 	
-	public Authority(String name) {
+	public Role(String name) {
 		super();
 		this.name = name;
 	}
@@ -99,7 +99,7 @@ public class Authority {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Authority other = (Authority) obj;
+		Role other = (Role) obj;
 		if (id != other.id)
 			return false;
 		if (name == null) {

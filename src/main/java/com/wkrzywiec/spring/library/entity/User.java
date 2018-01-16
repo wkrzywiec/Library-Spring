@@ -42,10 +42,10 @@ public class User {
 				cascade= {CascadeType.PERSIST, CascadeType.MERGE,
 				CascadeType.DETACH, CascadeType.REFRESH})
 	@JoinTable(
-				name="user_authority",
+				name="user_role",
 				joinColumns=@JoinColumn(name="user_id"),
-				inverseJoinColumns=@JoinColumn(name="authority_id"))
-	private List<Authority> authorities;
+				inverseJoinColumns=@JoinColumn(name="role_id"))
+	private List<Role> authorities;
 	public User(){
 		
 	}
@@ -58,10 +58,10 @@ public class User {
 		this.userDetail = userDetail;
 	}
 	
-	public void addAuthority(Authority authority){
+	public void addAuthority(Role authority){
 		
 		if (authorities == null){
-			authorities = new ArrayList<Authority>();
+			authorities = new ArrayList<Role>();
 		}
 		
 		authorities.add(authority);
@@ -108,11 +108,11 @@ public class User {
 	}
 	
 
-	public List<Authority> getAuthorities() {
+	public List<Role> getAuthorities() {
 		return authorities;
 	}
 
-	public void setAuthorities(List<Authority> authorities) {
+	public void setAuthorities(List<Role> authorities) {
 		this.authorities = authorities;
 	}
 

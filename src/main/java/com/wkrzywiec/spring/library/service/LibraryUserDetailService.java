@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.wkrzywiec.spring.library.dao.UserDAO;
-import com.wkrzywiec.spring.library.entity.Authority;
+import com.wkrzywiec.spring.library.entity.Role;
 
 
 @Service("userDetailService")
@@ -45,17 +45,17 @@ public class LibraryUserDetailService implements UserDetailsService {
 				;
 	}
 	
-	private Collection<? extends GrantedAuthority> getUserAuthorities(List<Authority> modelAuthList) {
+	private Collection<? extends GrantedAuthority> getUserAuthorities(List<Role> modelAuthList) {
 		
         List<GrantedAuthority> authList = getGrantedUserAuthority(modelAuthList);
         return authList;
     }
 
-	private List<GrantedAuthority> getGrantedUserAuthority (List<Authority> modelAuthList){
+	private List<GrantedAuthority> getGrantedUserAuthority (List<Role> modelAuthList){
 		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		
-		for (Authority auth : modelAuthList){
+		for (Role auth : modelAuthList){
 			authorities.add(new SimpleGrantedAuthority(auth.getName()));
 		}
 		
