@@ -1,5 +1,7 @@
 package com.wkrzywiec.spring.library.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
@@ -22,6 +25,8 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 	@Qualifier("userDetailService")
 	private UserDetailsService libraryUserDetailsService;
 	
+	@Autowired
+	private DataSource dataSource;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,8 +52,8 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().accessDeniedPage("/access-denied")
 			.and()
 				.rememberMe()
-					.key("library-spring-key")
 					.rememberMeCookieName("library-spring-remember-me-cookie")
+					.tokenRepository(persistentTokenRepository())
 					.tokenValiditySeconds(30 * 60 * 24);
 	}
 	
@@ -59,6 +64,13 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
+	
+	@Bean
+	  public PersistentTokenRepository persistentTokenRepository() {
+	      JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+	      repo.setDataSource(dataSource);
+	      return repo;
+	  }
 
 	@Bean
     public PasswordEncoder passwordEncoder() {
