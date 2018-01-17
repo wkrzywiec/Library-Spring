@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -57,6 +58,16 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 					.tokenValiditySeconds(30 * 60 * 24);
 	}
 	
+	
+	
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web
+			.ignoring()
+				.antMatchers("/register-user")
+				.antMatchers("/forgot-password");
+	}
+
 	@Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
