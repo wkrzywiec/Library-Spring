@@ -41,7 +41,7 @@ public class UserDTO {
 	private Date birthday;
 	
 	@NotEmpty
-	//@PhoneNumber
+	@PhoneNumber
 	private String phone;
 	
 	@NotEmpty

@@ -294,8 +294,29 @@ public class CustomAnnotationsTest {
 		assertFalse(violations.isEmpty());
 	}
 	
-	//TODO - String Phone validation
-	
+	@Test
+	public void givenUserDTO_WhenIncorrectPhone_ThenDoNotPassValid(){
+		
+		String[] phoneList = {"111", "aaaF", "0-223534123", "05-223534123", "00a-223534123",
+				"007-223b34123", "007-12323445", "123 123 123", "+48-152152152"
+		};
+		Set<ConstraintViolation<UserDTO>> violations = null;
+		
+		for (String phone : phoneList){
+			//when
+			user.setPhone(phone);
+			//then
+			violations = validator.validate(user);
+			assertFalse(violations.isEmpty());
+			violations.clear();
+		}
+		
+		
+		
+		
+		
+		
+	}
 	@Test
 	public void givenUserDTO_WhenNoPhone_ThenDoNotPassValid(){
 		
