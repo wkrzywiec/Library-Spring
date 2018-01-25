@@ -298,8 +298,7 @@ public class CustomAnnotationsTest {
 	public void givenUserDTO_WhenIncorrectPhone_ThenDoNotPassValid(){
 		
 		String[] phoneList = {"111", "aaaF", "0-223534123", "05-223534123", "00a-223534123",
-				"007-223b34123", "007-12323445", "123 123 123", "+48-152152152"
-		};
+				"007-223b34123", "0071-12323445", "123 123 123", "+48-152152152"};
 		Set<ConstraintViolation<UserDTO>> violations = null;
 		
 		for (String phone : phoneList){
@@ -310,13 +309,8 @@ public class CustomAnnotationsTest {
 			assertFalse(violations.isEmpty());
 			violations.clear();
 		}
-		
-		
-		
-		
-		
-		
 	}
+	
 	@Test
 	public void givenUserDTO_WhenNoPhone_ThenDoNotPassValid(){
 		
@@ -376,7 +370,25 @@ public class CustomAnnotationsTest {
 		assertFalse(violations.isEmpty());
 	}
 	
-	//TODO postal code verification
+	
+	@Test
+	public void givenUserDTO_WhenIncorrectPostalCode_ThenDoNotPassValid(){
+		
+		String[] postalCodesList = {"0-152", "00513", "aa-15h", "123", "00--546",
+				"00 152"};
+		Set<ConstraintViolation<UserDTO>> violations = null;
+		
+		for (String postalCode : postalCodesList){
+			//when
+			user.setPostalCode(postalCode);
+			//then
+			violations = validator.validate(user);
+			assertFalse(violations.isEmpty());
+			violations.clear();
+		}
+		
+	}
+	
 	@Test
 	public void givenUserDTO_WhenNoPostalCode_ThenDoNotPassValid(){
 		

@@ -49,7 +49,7 @@ public class UserDTO {
 	private String address;
 	
 	@NotEmpty
-	//@PostalCode
+	@PostalCode
 	private String postalCode;
 
 	@NotEmpty
