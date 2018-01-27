@@ -25,7 +25,7 @@ public class User {
 	@Column(name="id")
 	private int id;
 	
-	@Column(name="login")
+	@Column(name="login", unique=true)
 	private String login;
 	
 	@Column(name="password")
@@ -45,7 +45,7 @@ public class User {
 				name="user_role",
 				joinColumns=@JoinColumn(name="user_id"),
 				inverseJoinColumns=@JoinColumn(name="role_id"))
-	private List<Role> authorities;
+	private List<Role> roles;
 	public User(){
 		
 	}
@@ -58,13 +58,13 @@ public class User {
 		this.userDetail = userDetail;
 	}
 	
-	public void addAuthority(Role authority){
+	public void addRole(Role role){
 		
-		if (authorities == null){
-			authorities = new ArrayList<Role>();
+		if (roles == null){
+			roles = new ArrayList<Role>();
 		}
 		
-		authorities.add(authority);
+		roles.add(role);
 	}
 
 	public int getId() {
@@ -108,12 +108,12 @@ public class User {
 	}
 	
 
-	public List<Role> getAuthorities() {
-		return authorities;
+	public List<Role> getRoles() {
+		return roles;
 	}
 
-	public void setAuthorities(List<Role> authorities) {
-		this.authorities = authorities;
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	

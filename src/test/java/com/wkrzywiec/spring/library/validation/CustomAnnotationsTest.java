@@ -23,6 +23,7 @@ public class CustomAnnotationsTest {
 	private Validator validator;
 	private UserDTO user;
 	private Set<ConstraintViolation<UserDTO>> violations;
+	
 	@Before
 	public void setUp() throws ParseException {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -58,7 +59,17 @@ public class CustomAnnotationsTest {
 		
 	}
 	
-	//TODO unique username
+	@Test
+	public void givenUserDTO_whenUsernameAlreadyInUser_ThenDoNotPassValidation(){
+		
+		//when
+		user.setUsername("admin");
+		//then 
+		violations = validator.validate(user);
+		assertFalse(violations.isEmpty());
+		
+	}
+
 	@Test
 	public void givenUserDTO_whenIncorrectUsername_ThenDoNotPassValidation(){
 		
@@ -243,7 +254,6 @@ public class CustomAnnotationsTest {
 		assertFalse(violations.isEmpty());
 	}
 
-	//TODO unique email
 	@Test
 	public void givenUserDTO_WhenIncorrectEmail_ThenDoNotPassValid(){
 		

@@ -4,9 +4,9 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Component;
 
-
-
+@Component
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
 
 	 private String firstFieldName;

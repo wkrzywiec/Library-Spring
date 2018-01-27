@@ -1,9 +1,11 @@
 package com.wkrzywiec.spring.library.validation;
 
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PasswordValidator implements ConstraintValidator<PasswordValid, String> {
 
 	

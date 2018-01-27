@@ -32,7 +32,7 @@ public class LibraryUserDetailService implements UserDetailsService {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 		
-        Collection<? extends GrantedAuthority> authList = getUserAuthorities(user.getAuthorities());
+        Collection<? extends GrantedAuthority> authList = getUserAuthorities(user.getRoles());
         
 		return new User(
 					user.getLogin(),
@@ -43,6 +43,15 @@ public class LibraryUserDetailService implements UserDetailsService {
 					accountNonLocked,
 					authList)
 				;
+	}
+	
+	public boolean isUsernameAlreadyInUse(String username, String column){
+		
+		boolean userInDb = true;
+		
+		if (userDAO.getActiveUser(username, column) == null) userInDb = false;
+			
+		return userInDb;
 	}
 	
 	private Collection<? extends GrantedAuthority> getUserAuthorities(List<Role> modelAuthList) {

@@ -3,6 +3,9 @@ package com.wkrzywiec.spring.library.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PostalCodeValidator implements ConstraintValidator<PostalCode, String>{
 
 	@Override

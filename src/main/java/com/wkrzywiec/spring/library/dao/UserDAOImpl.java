@@ -37,6 +37,25 @@ public class UserDAOImpl implements UserDAO {
 			return null;
 	}
 	
+	@Override
+	@Transactional
+	public User getActiveUser(String username, String column) {
+		
+		List<User> userList = new ArrayList<User>();
+		String strQuery = "from User u where u." + column + " = :" + column;
+		
+		Query<User> query = getCurrentSession().createQuery(strQuery);
+		query.setParameter(column, username);
+		
+		userList = query.list();
+		
+		if (userList.size() > 0 ){
+			return userList.get(0);
+		} else 
+			return null;
+	}
+	
+	
 	protected Session getCurrentSession(){
 		return sessionFactory.getCurrentSession();
 	}

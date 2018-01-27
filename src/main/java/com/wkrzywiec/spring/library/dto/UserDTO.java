@@ -19,7 +19,7 @@ public class UserDTO {
 
 	@NotEmpty
 	@Size(min=5,max=45)
-	//@UniqueLogin
+	@UniqueField(column="login")
 	private String username;
 	
 	@NotEmpty
@@ -40,9 +40,10 @@ public class UserDTO {
 	
 	@EmailValid
 	@NotEmpty
+	@UniqueField(column="email")
 	private String email;
 	
-	@DateTimeFormat(pattern="dd/mm/yyyy")
+	@DateTimeFormat(pattern="dd/MM/yyyy")
 	@Past
 	private Date birthday;
 	
