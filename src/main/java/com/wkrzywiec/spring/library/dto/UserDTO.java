@@ -2,7 +2,7 @@ package com.wkrzywiec.spring.library.dto;
 
 import java.util.Date;
 
-import javax.validation.constraints.Email;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -11,6 +11,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.wkrzywiec.spring.library.validation.*;
 
+
+@FieldMatch.List({
+    @FieldMatch(first = "password", second = "confirmPassword", message = "The password fields must match!")
+})
 public class UserDTO {
 
 	@NotEmpty

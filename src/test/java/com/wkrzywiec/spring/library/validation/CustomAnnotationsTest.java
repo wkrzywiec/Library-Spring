@@ -22,7 +22,7 @@ public class CustomAnnotationsTest {
 
 	private Validator validator;
 	private UserDTO user;
-	
+	private Set<ConstraintViolation<UserDTO>> violations;
 	@Before
 	public void setUp() throws ParseException {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -53,18 +53,19 @@ public class CustomAnnotationsTest {
 		
 		//when	
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
         assertTrue(violations.isEmpty());
 		
 	}
 	
+	//TODO unique username
 	@Test
 	public void givenUserDTO_whenIncorrectUsername_ThenDoNotPassValidation(){
 		
 		//when
 		user.setUsername("aa");
 		//then 
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 		
 		violations.clear();
@@ -81,7 +82,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setUsername("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -91,7 +92,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setUsername(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -101,7 +102,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setFirstName("s");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	
 		violations.clear();
@@ -119,7 +120,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setFirstName("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -129,7 +130,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setFirstName(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -139,7 +140,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setLastName("a");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 		
 		violations.clear();
@@ -157,7 +158,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setLastName("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -167,12 +168,23 @@ public class CustomAnnotationsTest {
 		//when
 		user.setLastName(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
-	//TODO password and confirmation password the same
 	//TODO password constrains
+	
+	@Test
+	public void givenUserDTO_WhenPassAndConfirmPassAreNotSame_ThenDoNotPassValid(){
+		
+		user.setPassword("Footbal2017");
+		user.setConfirmPassword("Footbal2018");
+		
+		violations = validator.validate(user);
+		assertFalse(violations.isEmpty());
+		
+	}
+	
 	
 	@Test
 	public void givenUserDTO_WhenNoPassword_ThenDoNotPassValid(){
@@ -180,7 +192,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setPassword("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -190,7 +202,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setPassword(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -200,7 +212,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setConfirmPassword("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -210,17 +222,18 @@ public class CustomAnnotationsTest {
 		//when
 		user.setConfirmPassword(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 
+	//TODO unique email
 	@Test
 	public void givenUserDTO_WhenIncorrectEmail_ThenDoNotPassValid(){
 		
 		//when
 		user.setEmail("luki95");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 		
 		violations.clear();
@@ -257,7 +270,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setEmail("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -267,7 +280,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setEmail(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -281,7 +294,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setBirthday(date);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -290,7 +303,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setBirthday(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -299,7 +312,6 @@ public class CustomAnnotationsTest {
 		
 		String[] phoneList = {"111", "aaaF", "0-223534123", "05-223534123", "00a-223534123",
 				"007-223b34123", "0071-12323445", "123 123 123", "+48-152152152"};
-		Set<ConstraintViolation<UserDTO>> violations = null;
 		
 		for (String phone : phoneList){
 			//when
@@ -317,7 +329,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setPhone("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -327,7 +339,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setPhone(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -337,7 +349,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setAddress("s");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	
 		//when
@@ -356,7 +368,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setAddress("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -366,7 +378,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setAddress(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -376,7 +388,6 @@ public class CustomAnnotationsTest {
 		
 		String[] postalCodesList = {"0-152", "00513", "aa-15h", "123", "00--546",
 				"00 152"};
-		Set<ConstraintViolation<UserDTO>> violations = null;
 		
 		for (String postalCode : postalCodesList){
 			//when
@@ -395,7 +406,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setPostalCode("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -405,7 +416,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setPostalCode(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -415,7 +426,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setCity("");
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	
@@ -425,7 +436,7 @@ public class CustomAnnotationsTest {
 		//when
 		user.setCity(null);
 		//then
-		Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
+		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
 	}
 	

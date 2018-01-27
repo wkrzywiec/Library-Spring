@@ -51,6 +51,7 @@ dependencies {
     compile 'org.hibernate:hibernate-validator:6.0.7.Final'
     compile 'org.glassfish:javax.el:3.0.1-b09'
 	compile 'com.mchange:c3p0:0.9.5.2'
+	compile 'commons-beanutils:commons-beanutils:1.9.3'
 
     testImplementation 'junit:junit:4.12'
 }
