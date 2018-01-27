@@ -30,14 +30,16 @@ public class UserDTO {
 	@Size(min=2,max=60)
 	private String lastName;
 	
+	@PasswordValid
 	@NotEmpty
 	private String password;
 	
+	@PasswordValid
 	@NotEmpty
 	private String confirmPassword;
 	
+	@EmailValid
 	@NotEmpty
-	@CustomEmail
 	private String email;
 	
 	@DateTimeFormat(pattern="dd/mm/yyyy")

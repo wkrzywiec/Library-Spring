@@ -1,13 +1,17 @@
 package com.wkrzywiec.spring.library.validation;
 
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class CustomEmailValidator implements ConstraintValidator<CustomEmail, String> {
+public class PasswordValidator implements ConstraintValidator<PasswordValid, String> {
 
+	
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		return value != null && value.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+		
+	    return value != null && value.matches("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}");
+		
 	}
 
 }

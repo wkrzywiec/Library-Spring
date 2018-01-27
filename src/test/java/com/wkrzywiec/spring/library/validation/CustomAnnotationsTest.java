@@ -172,7 +172,25 @@ public class CustomAnnotationsTest {
 		assertFalse(violations.isEmpty());
 	}
 	
-	//TODO password constrains
+	@Test
+	public void givenUserDTO_WhenIncorrectPassword_ThenDoNotPassValid(){
+		
+		String[] passwordsList = {"111", "aF", "football2017", "football", "A223534123",
+				"a223534123"};
+		
+		for (String password : passwordsList){
+			//when
+			user.setPassword(password);
+			user.setConfirmPassword(password);
+			//then
+			//System.out.println(violations.iterator().next().getMessage());
+			violations = validator.validate(user);
+			assertFalse(violations.isEmpty());
+			violations.clear();
+		}
+		
+	}
+	
 	
 	@Test
 	public void givenUserDTO_WhenPassAndConfirmPassAreNotSame_ThenDoNotPassValid(){
@@ -182,7 +200,6 @@ public class CustomAnnotationsTest {
 		
 		violations = validator.validate(user);
 		assertFalse(violations.isEmpty());
-		
 	}
 	
 	
