@@ -21,19 +21,15 @@ public class UserDetail {
 	
 	@Column(name="last_name")
 	private String lastName;
-	
-	@Column(name="email", unique=true)
-	private String email;
 
 	public UserDetail(){
 		
 	}
 	
-	public UserDetail(String firstName, String lastName, String email) {
+	public UserDetail(String firstName, String lastName) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.email = email;
 	}
 
 	public int getId() {
@@ -60,17 +56,9 @@ public class UserDetail {
 		this.lastName = lastName;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	@Override
 	public String toString() {
-		return "UserDetail [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+		return "UserDetail [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName 
 				+ "]";
 	}
 
@@ -78,7 +66,6 @@ public class UserDetail {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
@@ -94,11 +81,6 @@ public class UserDetail {
 		if (getClass() != obj.getClass())
 			return false;
 		UserDetail other = (UserDetail) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;
@@ -113,6 +95,6 @@ public class UserDetail {
 			return false;
 		return true;
 	}
-	
+
 	
 }

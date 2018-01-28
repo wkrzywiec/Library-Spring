@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.wkrzywiec.spring.library.config.LibraryMvcServletDispatcherInitializer;
 import com.wkrzywiec.spring.library.validation.*;
 
 
@@ -17,9 +18,9 @@ import com.wkrzywiec.spring.library.validation.*;
 })
 public class UserDTO {
 
+	//@UniqueUsername
 	@NotEmpty
 	@Size(min=5,max=45)
-	@UniqueField(column="login")
 	private String username;
 	
 	@NotEmpty
@@ -38,9 +39,9 @@ public class UserDTO {
 	@NotEmpty
 	private String confirmPassword;
 	
+	//@UniqueEmail
 	@EmailValid
 	@NotEmpty
-	@UniqueField(column="email")
 	private String email;
 	
 	@DateTimeFormat(pattern="dd/MM/yyyy")
@@ -61,7 +62,6 @@ public class UserDTO {
 
 	@NotEmpty
 	@Size(min=2,max=60)
-	//@Letters
 	private String city;
 	
 	public UserDTO(){

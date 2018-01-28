@@ -25,11 +25,14 @@ public class User {
 	@Column(name="id")
 	private int id;
 	
-	@Column(name="login", unique=true)
-	private String login;
+	@Column(name="username", unique=true)
+	private String username;
 	
 	@Column(name="password")
 	private String password;
+	
+	@Column(name="email", unique=true)
+	private String email;
 	
 	@Column(name="enable")
 	private boolean enable;
@@ -50,10 +53,11 @@ public class User {
 		
 	}
 	
-	public User(String login, String password, boolean enable, UserDetail userDetail) {
+	public User(String username, String password, String email, boolean enable, UserDetail userDetail) {
 		super();
-		this.login = login;
+		this.username = username;
 		this.password = password;
+		this.email = email;
 		this.enable = enable;
 		this.userDetail = userDetail;
 	}
@@ -75,12 +79,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getLogin() {
-		return login;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setLogin(String login) {
-		this.login = login;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {
@@ -114,6 +118,61 @@ public class User {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", enable=" + enable + ", userDetail="
+				+ userDetail + ", roles=" + roles + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + (enable ? 1231 : 1237);
+		result = prime * result + id;
+		result = prime * result + ((roles == null) ? 0 : roles.hashCode());
+		result = prime * result + ((userDetail == null) ? 0 : userDetail.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (enable != other.enable)
+			return false;
+		if (id != other.id)
+			return false;
+		if (roles == null) {
+			if (other.roles != null)
+				return false;
+		} else if (!roles.equals(other.roles))
+			return false;
+		if (userDetail == null) {
+			if (other.userDetail != null)
+				return false;
+		} else if (!userDetail.equals(other.userDetail))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
 	}
 
 	

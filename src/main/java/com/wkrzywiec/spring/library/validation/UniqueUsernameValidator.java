@@ -9,22 +9,14 @@ import org.springframework.stereotype.Component;
 import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
 
 @Component
-public class UniqueFieldValidator implements ConstraintValidator<UniqueField, String>{
+public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String>{
 
 	@Autowired
 	private LibraryUserDetailService userService;
-	
-	private String column;
-	
-	
-	@Override
-	public void initialize(UniqueField constraintAnnotation) {
-		column = constraintAnnotation.column();
-	}
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		return !userService.isUsernameAlreadyInUse(value, column);
+		return value != null && !userService.isUsernameAlreadyInUse(value);
 	}
 
 }

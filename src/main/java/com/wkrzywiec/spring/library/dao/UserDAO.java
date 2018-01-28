@@ -6,6 +6,6 @@ public interface UserDAO {
 
 	public User getActiveUser(String username);
 	
-	public User getActiveUser(String username, String column);
+	public User getActiveUserByEmail(String email);
 	
 }

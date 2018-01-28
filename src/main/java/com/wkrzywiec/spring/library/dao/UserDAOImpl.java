@@ -26,8 +26,8 @@ public class UserDAOImpl implements UserDAO {
 		
 		List<User> userList = new ArrayList<User>();
 		
-		Query<User> query = getCurrentSession().createQuery("from User u where u.login = :login");
-		query.setParameter("login", username);
+		Query<User> query = getCurrentSession().createQuery("from User u where u.username = :username");
+		query.setParameter("username", username);
 		
 		userList = query.list();
 		
@@ -36,16 +36,15 @@ public class UserDAOImpl implements UserDAO {
 		} else 
 			return null;
 	}
+	
 	
 	@Override
-	@Transactional
-	public User getActiveUser(String username, String column) {
+	public User getActiveUserByEmail(String email) {
 		
 		List<User> userList = new ArrayList<User>();
-		String strQuery = "from User u where u." + column + " = :" + column;
 		
-		Query<User> query = getCurrentSession().createQuery(strQuery);
-		query.setParameter(column, username);
+		Query<User> query = getCurrentSession().createQuery("from User u where u.email = :email");
+		query.setParameter("email", email);
 		
 		userList = query.list();
 		
@@ -54,8 +53,9 @@ public class UserDAOImpl implements UserDAO {
 		} else 
 			return null;
 	}
-	
-	
+
+
+
 	protected Session getCurrentSession(){
 		return sessionFactory.getCurrentSession();
 	}

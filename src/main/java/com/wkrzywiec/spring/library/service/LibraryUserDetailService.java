@@ -35,7 +35,7 @@ public class LibraryUserDetailService implements UserDetailsService {
         Collection<? extends GrantedAuthority> authList = getUserAuthorities(user.getRoles());
         
 		return new User(
-					user.getLogin(),
+					user.getUsername(),
 					user.getPassword(),
 					user.isEnable(),
 					accountNonExpired,
@@ -45,12 +45,17 @@ public class LibraryUserDetailService implements UserDetailsService {
 				;
 	}
 	
-	public boolean isUsernameAlreadyInUse(String username, String column){
+	public boolean isUsernameAlreadyInUse(String username){
 		
 		boolean userInDb = true;
+		if (userDAO.getActiveUser(username) == null) userInDb = false;
+		return userInDb;
+	}
+	
+	public boolean isEmailAlreadyInUse(String email){
 		
-		if (userDAO.getActiveUser(username, column) == null) userInDb = false;
-			
+		boolean userInDb = true;
+		if (userDAO.getActiveUserByEmail(email) == null) userInDb = false;
 		return userInDb;
 	}
 	
