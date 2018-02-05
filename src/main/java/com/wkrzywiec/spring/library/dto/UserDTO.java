@@ -2,15 +2,18 @@ package com.wkrzywiec.spring.library.dto;
 
 import java.util.Date;
 
-
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.wkrzywiec.spring.library.config.LibraryMvcServletDispatcherInitializer;
-import com.wkrzywiec.spring.library.validation.*;
+import com.wkrzywiec.spring.library.validation.EmailValid;
+import com.wkrzywiec.spring.library.validation.FieldMatch;
+import com.wkrzywiec.spring.library.validation.PasswordValid;
+import com.wkrzywiec.spring.library.validation.PhoneNumber;
+import com.wkrzywiec.spring.library.validation.PostalCode;
 
 
 @FieldMatch.List({
@@ -40,12 +43,13 @@ public class UserDTO {
 	private String confirmPassword;
 	
 	//@UniqueEmail
-	@EmailValid
 	@NotEmpty
+	@EmailValid
 	private String email;
 	
 	@DateTimeFormat(pattern="dd/MM/yyyy")
 	@Past
+	@NotNull
 	private Date birthday;
 	
 	@NotEmpty

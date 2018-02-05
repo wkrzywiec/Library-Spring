@@ -65,7 +65,8 @@ public class LibrarySecurityConfig extends WebSecurityConfigurerAdapter {
 		web
 			.ignoring()
 				.antMatchers("/register-user")
-				.antMatchers("/forgot-password");
+				.antMatchers("/forgot-password")
+				.antMatchers("/successful-registration");
 	}
 
 	@Bean
