@@ -7,6 +7,8 @@
 <title>Library portal - successful registration of new user</title>
 </head>
 <body>
-
+	<p>You have been successfully registered!
+	Go back to login <a href="${pageContext.request.contextPath}">page</a>
+	
 </body>
 </html>

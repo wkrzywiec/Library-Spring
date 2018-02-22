@@ -49,11 +49,10 @@ public class LoginController {
 				@Valid @ModelAttribute("user") UserDTO userDTO,
 				BindingResult bindingResult) {
 		
-		System.out.println(userDTO.toString());
-		
 		if (bindingResult.hasErrors()){
 			return "register-user";
 		} else {
+			userService.saveReaderUser(userDTO);
 			return "successful-registration";
 		}
 		

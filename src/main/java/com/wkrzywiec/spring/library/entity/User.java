@@ -1,7 +1,7 @@
 package com.wkrzywiec.spring.library.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -42,13 +42,13 @@ public class User {
 	private UserDetail userDetail;
 
 	@ManyToMany(fetch=FetchType.EAGER,
-				cascade= {CascadeType.PERSIST, CascadeType.MERGE,
-				CascadeType.DETACH, CascadeType.REFRESH})
+				cascade= {CascadeType.DETACH, CascadeType.MERGE,
+						CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinTable(
 				name="user_role",
 				joinColumns=@JoinColumn(name="user_id"),
 				inverseJoinColumns=@JoinColumn(name="role_id"))
-	private List<Role> roles;
+	private Set<Role> roles;
 	public User(){
 		
 	}
@@ -65,7 +65,7 @@ public class User {
 	public void addRole(Role role){
 		
 		if (roles == null){
-			roles = new ArrayList<Role>();
+			roles = new HashSet<Role>();
 		}
 		
 		roles.add(role);
@@ -94,6 +94,14 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	public boolean isEnable() {
 		return enable;
@@ -110,16 +118,15 @@ public class User {
 	public void setUserDetail(UserDetail userDetail) {
 		this.userDetail = userDetail;
 	}
-	
 
-	public List<Role> getRoles() {
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + ", enable=" + enable + ", userDetail="
@@ -175,7 +182,4 @@ public class User {
 		return true;
 	}
 
-	
-	
-	
 }

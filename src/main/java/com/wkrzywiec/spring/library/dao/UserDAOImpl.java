@@ -11,6 +11,8 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.wkrzywiec.spring.library.entity.Role;
+import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.User;
 
 
@@ -29,16 +31,13 @@ public class UserDAOImpl implements UserDAO {
 		Query<User> query = getCurrentSession().createQuery("from User u where u.username = :username");
 		query.setParameter("username", username);
 		
-		userList = query.list();
+		return query.getSingleResult();
 		
-		if (userList.size() > 0 ){
-			return userList.get(0);
-		} else 
-			return null;
 	}
 	
 	
 	@Override
+	@Transactional
 	public User getActiveUserByEmail(String email) {
 		
 		List<User> userList = new ArrayList<User>();
@@ -46,14 +45,31 @@ public class UserDAOImpl implements UserDAO {
 		Query<User> query = getCurrentSession().createQuery("from User u where u.email = :email");
 		query.setParameter("email", email);
 		
-		userList = query.list();
-		
-		if (userList.size() > 0 ){
-			return userList.get(0);
-		} else 
-			return null;
+		return query.getSingleResult();
 	}
 
+	@Override
+	@Transactional
+	public void saveUser(User user) {
+		
+		Role userRole = getRoleByName(Roles.USER.toString());
+		user.addRole(userRole);
+		
+		getCurrentSession().persist(user);
+	}
+
+	@Override
+	@Transactional
+	public Role getRoleByName(String roleName) {
+		
+		List<Role> userList = new ArrayList<Role>();
+		
+		Query<Role> query = getCurrentSession().createQuery("from Role r where r.name = :name");
+		query.setParameter("name", roleName);
+
+		return query.getSingleResult();
+		
+	}
 
 
 	protected Session getCurrentSession(){

@@ -2,7 +2,9 @@ package com.wkrzywiec.spring.library.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,17 +13,24 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.wkrzywiec.spring.library.dao.UserDAO;
+import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.Role;
+import com.wkrzywiec.spring.library.entity.Roles;
+import com.wkrzywiec.spring.library.entity.UserDetail;
 
 
 @Service("userDetailService")
-public class LibraryUserDetailService implements UserDetailsService {
+public class LibraryUserDetailService implements UserDetailsService, UserService {
 
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -44,7 +53,7 @@ public class LibraryUserDetailService implements UserDetailsService {
 					authList)
 				;
 	}
-	
+	@Override
 	public boolean isUsernameAlreadyInUse(String username){
 		
 		boolean userInDb = true;
@@ -52,19 +61,36 @@ public class LibraryUserDetailService implements UserDetailsService {
 		return userInDb;
 	}
 	
+	@Override
 	public boolean isEmailAlreadyInUse(String email){
 		
 		boolean userInDb = true;
 		if (userDAO.getActiveUserByEmail(email) == null) userInDb = false;
 		return userInDb;
 	}
+
+	@Override
+	public void saveReaderUser(UserDTO user) {
+		com.wkrzywiec.spring.library.entity.User userEntity = convertUserDTOtoUserEntity(user);
+		userDAO.saveUser(userEntity);
+	}
 	
-	private Collection<? extends GrantedAuthority> getUserAuthorities(List<Role> modelAuthList) {
+	@Override
+	public Role getRoleByName(String roleName) {
+		return userDAO.getRoleByName(roleName);
+	}
+	private Collection<? extends GrantedAuthority> getUserAuthorities(Set<Role> modelAuthSet) {
+		
+		List<Role> modelAuthList = convertRolesSetToList(modelAuthSet);
 		
         List<GrantedAuthority> authList = getGrantedUserAuthority(modelAuthList);
         return authList;
     }
 
+	private List<Role> convertRolesSetToList(Set<Role> modelAuthSet) {
+		return new ArrayList<Role>(modelAuthSet);
+	}
+	
 	private List<GrantedAuthority> getGrantedUserAuthority (List<Role> modelAuthList){
 		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -74,5 +100,28 @@ public class LibraryUserDetailService implements UserDetailsService {
 		}
 		
 		return authorities;
+	}
+	
+	private com.wkrzywiec.spring.library.entity.User convertUserDTOtoUserEntity(UserDTO user) {
+		
+		com.wkrzywiec.spring.library.entity.User userEntity = new com.wkrzywiec.spring.library.entity.User();
+		
+		userEntity.setUsername(user.getUsername());
+		userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+		userEntity.setEmail(user.getEmail());
+		userEntity.setEnable(true);
+
+		UserDetail userDetail = new UserDetail();
+		userDetail.setFirstName(user.getFirstName());
+		userDetail.setLastName(user.getLastName());
+		userDetail.setPhone(user.getPhone());
+		userDetail.setBirthday(user.getBirthday());
+		userDetail.setAddress(user.getAddress());
+		userDetail.setPostalCode(user.getPostalCode());
+		userDetail.setCity(user.getCity());
+		
+		userEntity.setUserDetail(userDetail);
+		
+		return userEntity;
 	}
 }
