@@ -110,7 +110,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
 		userEntity.setEmail(user.getEmail());
 		userEntity.setEnable(true);
-
+		
 		UserDetail userDetail = new UserDetail();
 		userDetail.setFirstName(user.getFirstName());
 		userDetail.setLastName(user.getLastName());

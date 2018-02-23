@@ -14,6 +14,8 @@ import com.wkrzywiec.spring.library.validation.FieldMatch;
 import com.wkrzywiec.spring.library.validation.PasswordValid;
 import com.wkrzywiec.spring.library.validation.PhoneNumber;
 import com.wkrzywiec.spring.library.validation.PostalCode;
+import com.wkrzywiec.spring.library.validation.UniqueEmail;
+import com.wkrzywiec.spring.library.validation.UniqueUsername;
 
 
 @FieldMatch.List({
@@ -21,7 +23,7 @@ import com.wkrzywiec.spring.library.validation.PostalCode;
 })
 public class UserDTO {
 
-	//@UniqueUsername
+	@UniqueUsername
 	@NotEmpty
 	@Size(min=5,max=45)
 	private String username;
@@ -42,7 +44,7 @@ public class UserDTO {
 	@NotEmpty
 	private String confirmPassword;
 	
-	//@UniqueEmail
+	@UniqueEmail
 	@NotEmpty
 	@EmailValid
 	private String email;

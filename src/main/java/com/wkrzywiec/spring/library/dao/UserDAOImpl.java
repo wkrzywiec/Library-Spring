@@ -3,6 +3,7 @@ package com.wkrzywiec.spring.library.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
 import org.hibernate.Session;
@@ -31,10 +32,14 @@ public class UserDAOImpl implements UserDAO {
 		Query<User> query = getCurrentSession().createQuery("from User u where u.username = :username");
 		query.setParameter("username", username);
 		
-		return query.getSingleResult();
+		try {
+			User user = query.getSingleResult();
+			return user;
+		} catch(NoResultException e) {
+			return null;
+		}
 		
 	}
-	
 	
 	@Override
 	@Transactional
@@ -45,7 +50,12 @@ public class UserDAOImpl implements UserDAO {
 		Query<User> query = getCurrentSession().createQuery("from User u where u.email = :email");
 		query.setParameter("email", email);
 		
-		return query.getSingleResult();
+		try {
+			User user = query.getSingleResult();
+			return user;
+		} catch(NoResultException e) {
+			return null;
+		}
 	}
 
 	@Override
