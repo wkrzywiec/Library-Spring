@@ -130,7 +130,7 @@
                             				Don't have an account?
 	                            			<a href="${pageContext.request.contextPath}/register-user">
 	                            			Sign Up Here
-                             			</a>
+                             				</a>
                              		</div>
                     			</div>
                 			</div>   

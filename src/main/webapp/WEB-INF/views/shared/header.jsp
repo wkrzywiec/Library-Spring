@@ -1,5 +1,6 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">	
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -57,7 +58,11 @@
       <div class="dropdown-menu dropdown-menu-right">
         <a class="dropdown-item" href="#">Profile</a>
         <a class="dropdown-item" href="#">Change password</a>
-        <a class="dropdown-item" href="#" style="background: #f3f1f4">Sign out</a>
+        
+        <form:form id="form1" action="${pageContext.request.contextPath}/logout" method="post">
+        <a class="dropdown-item" href="javascript:;" onclick="parentNode.submit()" style="background: #f3f1f4">Sign out</a>
+      	</form:form>
+      	
       </div>
     </li>
   </ul>

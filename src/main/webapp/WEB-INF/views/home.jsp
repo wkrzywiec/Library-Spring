@@ -26,19 +26,10 @@
     	<jsp:include page="shared/header.jsp"/>
 	</div>
 
-<h2>Home page</h2>
-
-
 	User <security:authentication property="principal.username"/>
 	<br>
 	Role: <security:authentication property="principal.authorities"/>
 	<br>
-	<form:form action="${pageContext.request.contextPath}/logout"
-		method="POST">
-		
-		<input type="submit" value="Logout" />
-		
-	</form:form>
 
 </body>
 </html>
