@@ -16,6 +16,7 @@
 		background: #556270;  /* fallback for old browsers */
 		background: -webkit-linear-gradient(to left, #FF6B6B, #556270);  /* Chrome 10-25, Safari 5.1-6 */
 		background: linear-gradient(to left, #FF6B6B, #556270); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	
+	
 	}
 	
 	h1 {
@@ -72,7 +73,6 @@
 						
 						<div class="panel-body" style="margin: 25px 50px 25px">
 						
-							Please provide your credentials below:
 							<form:form action="${pageContext.request.contextPath}/login" 
 							   method="POST" class="form-horizontal">
 							   
@@ -92,7 +92,7 @@
 										</div>
 									</c:if>
 							   </div>
-							   
+							   Please provide your credentials below:
 							   	<div style="margin-bottom: 25px" class="input-group">
 									<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span> 
 							

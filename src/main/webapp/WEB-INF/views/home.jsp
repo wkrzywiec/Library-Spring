@@ -7,11 +7,27 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+	<style>
+		body {
+		
+			margin:0;
+		
+		}
+	
+	</style>
+
 <title>Library portal - home page</title>
 </head>
 <body>
 
+	<div id="header">
+    	<jsp:include page="shared/header.jsp"/>
+	</div>
+
 <h2>Home page</h2>
+
 
 	User <security:authentication property="principal.username"/>
 	<br>
