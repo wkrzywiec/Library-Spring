@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="ChangesLogs">
+	<Appenders>
+		
+		<Console name="consoleAppender" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d | %level | %logger | %m" />
+		</Console>
+		
+		<JDBC name="userAppenderDB" tableName="user_logs">
+			<ConnectionFactory class="com.wkrzywiec.spring.library.config.LogsConnectionFactory" method="getDatabaseConnection" />
+			<Column name="level" pattern="%level"/>
+			<Column name="username" pattern="%X{username}"/>
+			<Column name="field" pattern="%X{field}"/>
+			<Column name="from_value" pattern="%X{from_value}"/>
+			<Column name="to_value" pattern="%X{to_value}"/>
+			<Column name="message" pattern="%message"/>
+		</JDBC>
+	</Appenders>
+
+	<Loggers>
+		<Root level="error">
+			<AppenderRef ref="consoleAppender" />
+		</Root>
+		
+		<Logger name="userLoggerDB" level="info">
+			<AppenderRef ref="consoleAppender" />
+			<AppenderRef ref="userAppenderDB" />
+		</Logger>
+		
+	</Loggers>
+
+</Configuration>

@@ -2,10 +2,13 @@ package com.wkrzywiec.spring.library.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+import org.jboss.logging.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +22,6 @@ import org.springframework.stereotype.Service;
 import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.Role;
-import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.UserDetail;
 
 
@@ -31,6 +33,8 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	private Logger userLogger = LogManager.getLogger("userLoggerDB");
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -53,6 +57,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 					authList)
 				;
 	}
+	
 	@Override
 	public boolean isUsernameAlreadyInUse(String username){
 		
@@ -73,12 +78,20 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	public void saveReaderUser(UserDTO user) {
 		com.wkrzywiec.spring.library.entity.User userEntity = convertUserDTOtoUserEntity(user);
 		userDAO.saveUser(userEntity);
+		
+		ThreadContext.put("username", user.getUsername());
+		ThreadContext.put("field", "ALL");
+		ThreadContext.put("from_value", "");
+		ThreadContext.put("to_value", user.toString());
+		userLogger.info("New user");
+		ThreadContext.clearAll();
 	}
 	
 	@Override
 	public Role getRoleByName(String roleName) {
 		return userDAO.getRoleByName(roleName);
 	}
+	
 	private Collection<? extends GrantedAuthority> getUserAuthorities(Set<Role> modelAuthSet) {
 		
 		List<Role> modelAuthList = convertRolesSetToList(modelAuthSet);
