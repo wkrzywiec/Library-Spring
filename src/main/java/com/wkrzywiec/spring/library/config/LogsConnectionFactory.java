@@ -11,9 +11,14 @@ import org.apache.commons.dbcp.PoolableConnection;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.env.Environment;
 
-@Component
+
 public class LogsConnectionFactory {
 
 	private static interface Singleton {
@@ -28,12 +33,13 @@ public class LogsConnectionFactory {
 	
 	private String pass = "library-spring";
 	
-	private LogsConnectionFactory() {
-			
+	private LogsConnectionFactory() {		 
+		
 	        Properties properties = new Properties();
 	        properties.setProperty("user", userName);
 	        properties.setProperty("password", pass);
-	 
+	        
+	        
 	        GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<PoolableConnection>();
 	        DriverManagerConnectionFactory connectionFactory = new DriverManagerConnectionFactory(
 	        		datasourceURL, properties
@@ -44,10 +50,10 @@ public class LogsConnectionFactory {
 	        );
 	 
 	        this.dataSource = new PoolingDataSource(pool);
-	    }
+	}
 	 
-	    public static Connection getDatabaseConnection() throws SQLException {
+	public static Connection getDatabaseConnection() throws SQLException {
 	        return Singleton.INSTANCE.dataSource.getConnection();
-	    }
-	    
+	}
+	
 }

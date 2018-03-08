@@ -27,8 +27,6 @@ public class UserDAOImpl implements UserDAO {
 	@Transactional
 	public User getActiveUser(String username) {
 		
-		List<User> userList = new ArrayList<User>();
-		
 		Query<User> query = getCurrentSession().createQuery("from User u where u.username = :username");
 		query.setParameter("username", username);
 		
@@ -44,8 +42,6 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	@Transactional
 	public User getActiveUserByEmail(String email) {
-		
-		List<User> userList = new ArrayList<User>();
 		
 		Query<User> query = getCurrentSession().createQuery("from User u where u.email = :email");
 		query.setParameter("email", email);
@@ -72,15 +68,22 @@ public class UserDAOImpl implements UserDAO {
 	@Transactional
 	public Role getRoleByName(String roleName) {
 		
-		List<Role> userList = new ArrayList<Role>();
-		
 		Query<Role> query = getCurrentSession().createQuery("from Role r where r.name = :name");
 		query.setParameter("name", roleName);
 
 		return query.getSingleResult();
 		
 	}
-
+	
+	@Override
+	@Transactional
+	public List<User> getAllUsers() {
+		
+		Query<User> query = getCurrentSession().createQuery("from User u");
+		List<User> userList = query.getResultList();
+		
+		return userList;
+	}
 
 	protected Session getCurrentSession(){
 		return sessionFactory.getCurrentSession();

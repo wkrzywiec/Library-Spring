@@ -1,12 +1,15 @@
 package com.wkrzywiec.spring.library.integration.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -14,6 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.wkrzywiec.spring.library.config.LibraryConfig;
 import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.entity.User;
+import com.wkrzywiec.spring.library.entity.UserDetail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= LibraryConfig.class)
@@ -64,6 +68,36 @@ public class UserDAOIntegrationTest {
 		User user = userDAO.getActiveUserByEmail(email);
 		//then
 		assertEquals("admin", user.getUsername());
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void givenCorrectUser_WhenSaveUser_ThenUserSavedInDb(){
+		
+		//given
+		
+		User user = new User();
+		user.setUsername("hound");
+		user.setPassword("killThemA11");
+		user.setEmail("sandor.clegane@mail.com");
+		user.setEnable(true);
+		
+		UserDetail userDetails = new UserDetail();
+		userDetails.setFirstName("Sandor");
+		userDetails.setLastName("Clegane");
+		userDetails.setPhone("123456789");
+		userDetails.setAddress("Field street 13 / 23");
+		userDetails.setPostalCode("12-345");
+		userDetails.setCity("King's Landing");
+		
+		user.setUserDetail(userDetails);
+		
+		//when
+		userDAO.saveUser(user);
+		
+		//then
+		assertEquals(user, userDAO.getActiveUser("hound"));
 	}
 	
 }

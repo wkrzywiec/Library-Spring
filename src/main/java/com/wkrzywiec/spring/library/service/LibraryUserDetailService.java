@@ -92,6 +92,13 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		return userDAO.getRoleByName(roleName);
 	}
 	
+	
+	
+	@Override
+	public List<com.wkrzywiec.spring.library.entity.User> getAllUsers() {
+		return userDAO.getAllUsers();
+	}
+
 	private Collection<? extends GrantedAuthority> getUserAuthorities(Set<Role> modelAuthSet) {
 		
 		List<Role> modelAuthList = convertRolesSetToList(modelAuthSet);

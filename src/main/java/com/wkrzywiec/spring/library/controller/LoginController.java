@@ -42,8 +42,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/loginPage")
-	public String showLoginPageAfterSignUp(Model model){
-		
+	public String showLoginPageAfterSignUp(){
 		return "loginPage";
 	}
 	

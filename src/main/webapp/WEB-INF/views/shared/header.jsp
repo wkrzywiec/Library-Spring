@@ -42,7 +42,7 @@
     
     <security:authorize access="hasAuthority('ADMIN')">
     	<li class="nav-item">
-      		<a class="nav-link" href="#">Users</a>
+      		<a class="nav-link" href="${pageContext.request.contextPath}/admin-panel">Users</a>
     	</li>
     </security:authorize>
     
