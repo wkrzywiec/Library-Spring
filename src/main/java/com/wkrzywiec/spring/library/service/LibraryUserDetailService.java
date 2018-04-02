@@ -78,20 +78,12 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	public void saveReaderUser(UserDTO user) {
 		com.wkrzywiec.spring.library.entity.User userEntity = convertUserDTOtoUserEntity(user);
 		userDAO.saveUser(userEntity);
-		
-		ThreadContext.put("username", user.getUsername());
-		ThreadContext.put("field", "ALL");
-		ThreadContext.put("from_value", "");
-		ThreadContext.put("to_value", user.toString());
-		userLogger.info("New user");
-		ThreadContext.clearAll();
 	}
 	
 	@Override
 	public Role getRoleByName(String roleName) {
 		return userDAO.getRoleByName(roleName);
 	}
-	
 	
 	
 	@Override

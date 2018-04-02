@@ -28,6 +28,7 @@ dependencies {
     def tomcatVersion = '8.0.46'
     def springWebMvcVersion = '5.0.2.RELEASE'
     def springSecurityVersion = '5.0.0.RELEASE'
+    def springAopVersion = '5.0.4.RELEASE'
     
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
            "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
@@ -44,7 +45,7 @@ dependencies {
 	compile "org.springframework.security:spring-security-web:${springSecurityVersion}"
 	compile "org.springframework.security:spring-security-config:${springSecurityVersion}"
 	compile "org.springframework.security:spring-security-taglibs:${springSecurityVersion}"
-	
+	compile "org.springframework:spring-aop:${springAopVersion}"
     
     compile 'mysql:mysql-connector-java:6.0.6'
     compile 'org.hibernate:hibernate-core:5.2.12.Final'
@@ -52,6 +53,8 @@ dependencies {
     compile 'org.glassfish:javax.el:3.0.1-b09'
 	compile 'com.mchange:c3p0:0.9.5.2'
 	compile 'commons-beanutils:commons-beanutils:1.9.3'
+	compile 'org.aspectj:aspectjweaver:1.8.13'
+	compile 'org.aspectj:aspectjrt:1.8.13'
 	
 	compile 'org.apache.logging.log4j:log4j-api:2.10.0'
 	compile 'org.apache.logging.log4j:log4j-core:2.10.0'
@@ -71,4 +74,4 @@ tomcat {
 	contextPath = '/library-spring'
 }
 
-build.finalizedBy(tomcatRun)
+//build.finalizedBy(tomcatRun)
