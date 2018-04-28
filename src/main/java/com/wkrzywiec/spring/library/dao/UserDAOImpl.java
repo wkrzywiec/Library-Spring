@@ -1,15 +1,16 @@
 package com.wkrzywiec.spring.library.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.search.FullTextQuery;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Repository;
 
 import com.wkrzywiec.spring.library.entity.Role;
@@ -20,38 +21,41 @@ import com.wkrzywiec.spring.library.entity.User;
 @Repository
 public class UserDAOImpl implements UserDAO {
 
-	@Autowired
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	@Transactional
 	public User getActiveUser(String username) {
 		
-		Query<User> query = getCurrentSession().createQuery("from User u where u.username = :username");
-		query.setParameter("username", username);
+		User user;
 		
 		try {
-			User user = query.getSingleResult();
-			return user;
-		} catch(NoResultException e) {
-			return null;
+			user = (User) entityManager.createQuery("from User u where u.username = :username")
+					.setParameter("username", username)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			user = null;
 		}
 		
+		return user;
 	}
 	
 	@Override
 	@Transactional
 	public User getActiveUserByEmail(String email) {
 		
-		Query<User> query = getCurrentSession().createQuery("from User u where u.email = :email");
-		query.setParameter("email", email);
+		User user;
 		
 		try {
-			User user = query.getSingleResult();
-			return user;
-		} catch(NoResultException e) {
-			return null;
+			user = (User) entityManager.createQuery("from User u where u.email = :email")
+					.setParameter("email", email)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			user = null;
 		}
+		
+		return user;
 	}
 
 	@Override
@@ -61,17 +65,22 @@ public class UserDAOImpl implements UserDAO {
 		Role userRole = getRoleByName(Roles.USER.toString());
 		user.addRole(userRole);
 		
-		getCurrentSession().persist(user);
+		entityManager.persist(user);
 	}
 
 	@Override
 	@Transactional
 	public Role getRoleByName(String roleName) {
-		
-		Query<Role> query = getCurrentSession().createQuery("from Role r where r.name = :name");
-		query.setParameter("name", roleName);
-
-		return query.getSingleResult();
+	
+		Role role;
+		try {
+			role = (Role) entityManager.createQuery("from Role r where r.name = :name")
+					.setParameter("name", roleName)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			role = null;
+		}
+		return role;
 		
 	}
 	
@@ -79,13 +88,10 @@ public class UserDAOImpl implements UserDAO {
 	@Transactional
 	public List<User> getAllUsers() {
 		
-		Query<User> query = getCurrentSession().createQuery("from User u");
-		List<User> userList = query.getResultList();
+		List<User> list = null;
+		list = entityManager.createQuery("from User u")
+				.getResultList();
 		
-		return userList;
-	}
-
-	protected Session getCurrentSession(){
-		return sessionFactory.getCurrentSession();
+		return list;
 	}
 }

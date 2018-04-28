@@ -3,7 +3,7 @@
 	<Appenders>
 		
 		<Console name="consoleAppender" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d | %level | %logger | %m" />
+			<PatternLayout pattern="%d | %level | %logger | %m%n" />
 		</Console>
 		
 		<JDBC name="userAppenderDB" tableName="user_logs">
@@ -21,6 +21,7 @@
 		<Root level="error">
 			<AppenderRef ref="consoleAppender" />
 		</Root>
+		
 		
 		<Logger name="userLoggerDB" level="info">
 			<AppenderRef ref="consoleAppender" />
