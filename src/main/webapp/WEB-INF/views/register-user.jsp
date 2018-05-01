@@ -85,8 +85,7 @@
 							<form:form action="${pageContext.request.contextPath}/register-user"
 							 	method="POST" modelAttribute="user" class="form-horizontal"
 							 	data-toggle="validator" role="form">
-							
-							
+													
 								<div class="form-group">
 									<div class="col-xs-6 col-sm-6 col-md-6">
 										<label for="firstName" class="control-label">First name:</label>

@@ -1,11 +1,8 @@
 package com.wkrzywiec.spring.library.controller;
 
-import java.util.Arrays;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,8 +16,6 @@ import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
 @Controller
 public class LoginController {
 
-	/*@Autowired
-    ApplicationContext applicationContext;*/
 	
 	@Autowired
 	LibraryUserDetailService userService;
@@ -37,8 +32,6 @@ public class LoginController {
 	
 	@GetMapping("/register-user")
 	public String registerUser(Model model){
-		
-		//System.out.println(Arrays.asList(applicationContext.getBeanDefinitionNames()));
 		
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("user", userDTO);

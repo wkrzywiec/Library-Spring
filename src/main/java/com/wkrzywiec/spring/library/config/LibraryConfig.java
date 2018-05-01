@@ -38,6 +38,8 @@ public class LibraryConfig implements WebMvcConfigurer {
 	@Autowired
     private Environment env;
 	
+	String indexesFolder = System.getProperty("user.dir");
+	
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -98,12 +100,13 @@ public class LibraryConfig implements WebMvcConfigurer {
 	   }
 	
 	private Properties additionalProperties() {
+		
 		Properties properties = new Properties();
 	    properties.setProperty("hibernate.hbm2ddl.auto", "validate");
 	    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 	    properties.setProperty("hibernate.search.default.directory_provider", "filesystem");
-	    properties.setProperty("hibernate.search.default.indexBase", "C:\\Users\\Wojtek\\workspace\\library-spring\\indexes");
-	    properties.setProperty("hibernate.show_sql", "true");
+	    properties.setProperty("hibernate.search.default.indexBase", "PATH_TO_FOLDER_WHERE_INDEXES_WILL_BE_STORED");
+	    //properties.setProperty("hibernate.show_sql", "true");
 	        
 	    return properties;
 	}

@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+
 @Entity
 @Table(name="user_detail")
 public class UserDetail {
@@ -21,9 +24,11 @@ public class UserDetail {
 	private int id;
 	
 	@Column(name="first_name")
+	@Field
 	private String firstName;
 	
 	@Column(name="last_name")
+	@Field
 	private String lastName;
 	
 	@Column(name="phone")
@@ -43,6 +48,7 @@ public class UserDetail {
 	
 	@OneToOne(mappedBy="userDetail",
 			cascade=CascadeType.ALL)
+	@ContainedIn
 	private User user;
 	
 	public UserDetail(){

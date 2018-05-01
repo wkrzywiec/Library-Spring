@@ -5,10 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
-import org.jboss.logging.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,13 +30,11 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	private Logger userLogger = LogManager.getLogger("userLoggerDB");
-	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		com.wkrzywiec.spring.library.entity.User user = userDAO.getActiveUser(username);
-		
+		System.out.println(user.getRoles());
 		boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
@@ -98,6 +92,34 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
         List<GrantedAuthority> authList = getGrantedUserAuthority(modelAuthList);
         return authList;
     }
+	
+	
+
+	@Override
+	public List<com.wkrzywiec.spring.library.entity.User> searchUsers(String searchText, int pageNo,
+			int resultsPerPage) {
+		
+		List<com.wkrzywiec.spring.library.entity.User> userList = userDAO.searchUsers(searchText, pageNo, resultsPerPage);
+		
+		return userList;
+	}
+
+	@Override
+	public int searchUserPagesCount(String searchText, int resultsPerPage) {
+		
+		long userCount = searchUsersResultsCount(searchText);
+		int pageCount = (int) Math.floorDiv(userCount, resultsPerPage) + 1;
+		
+		return pageCount;
+	}
+
+	@Override
+	public int searchUsersResultsCount(String searchText) {
+		
+		int userCount = userDAO.searchUsersTotalCount(searchText);
+		
+		return userCount;
+	}
 
 	private List<Role> convertRolesSetToList(Set<Role> modelAuthSet) {
 		return new ArrayList<Role>(modelAuthSet);

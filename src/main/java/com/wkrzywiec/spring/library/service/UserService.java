@@ -17,4 +17,10 @@ public interface UserService {
 	public Role getRoleByName(String roleName);
 	
 	public List<User> getAllUsers();
+	
+	public List<User> searchUsers(String searchText, int pageNo, int resultsPerPage);
+	
+	public int searchUserPagesCount(String searchText, int resultsPerPage);
+	
+	public int searchUsersResultsCount(String searchText);
 }

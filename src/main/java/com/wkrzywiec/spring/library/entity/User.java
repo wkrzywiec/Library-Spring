@@ -16,8 +16,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 @Entity
 @Table(name="user")
+@Indexed
 public class User {
 
 	@Id
@@ -26,19 +31,22 @@ public class User {
 	private int id;
 	
 	@Column(name="username", unique=true)
+	@Field
 	private String username;
 	
 	@Column(name="password")
 	private String password;
 	
 	@Column(name="email", unique=true)
+	@Field
 	private String email;
 	
 	@Column(name="enable")
 	private boolean enable;
 	
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name="user_detail_id")
+	@IndexedEmbedded(depth=1)
 	private UserDetail userDetail;
 
 	@ManyToMany(fetch=FetchType.EAGER,

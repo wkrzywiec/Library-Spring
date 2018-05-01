@@ -1,6 +1,11 @@
 /.gradle/
 /bin/
 /build/
+/indexes/*
+
+### Java ###
+*.class
+
 
 ### Eclipse ###
 .metadata

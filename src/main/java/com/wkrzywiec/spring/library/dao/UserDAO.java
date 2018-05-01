@@ -17,4 +17,10 @@ public interface UserDAO {
 	
 	public List<User> getAllUsers();
 	
+	public List<User> searchUsers(String searchText, int pageNo, int resultsPerPage);
+	
+	public int searchUsersTotalCount(String searchText);
+	
+	
+	
 }

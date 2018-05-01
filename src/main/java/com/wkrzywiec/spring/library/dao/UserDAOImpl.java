@@ -7,8 +7,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
-import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.stereotype.Repository;
@@ -93,5 +93,59 @@ public class UserDAOImpl implements UserDAO {
 				.getResultList();
 		
 		return list;
+	}
+
+	@Override
+	@Transactional
+	public List<User> searchUsers(String searchText, int pageNo, int resultsPerPage) {
+		
+		FullTextQuery jpaQuery = searchUsersQuery(searchText);
+		
+		jpaQuery.setMaxResults(resultsPerPage);
+		jpaQuery.setFirstResult((pageNo-1) * resultsPerPage);
+		
+		List<User> userList = jpaQuery.getResultList();
+		
+		return userList;
+	}
+
+	@Override
+	@Transactional
+	public int searchUsersTotalCount(String searchText) {
+		
+		FullTextQuery jpaQuery = searchUsersQuery(searchText);
+		
+		int usersCount = jpaQuery.getResultSize();
+		
+		return usersCount;
+	}
+	
+	private FullTextQuery searchUsersQuery (String searchText) {
+		
+		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+		QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
+				.buildQueryBuilder()
+				.forEntity(User.class)
+				.get();
+				
+		org.apache.lucene.search.Query luceneQuery = queryBuilder
+			.keyword()
+			.wildcard()
+			.onFields("username", "email", "userDetail.lastName")
+				.boostedTo(5f)
+			.andField("userDetail.firstName")
+			.matching(searchText + "*")
+			.createQuery();
+		
+		FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, User.class);
+
+		/*Sort sort = queryBuilder
+					.sort()
+						.byField("username")
+					.createSort();
+
+		jpaQuery.setSort(sort);*/
+		
+		return jpaQuery;
 	}
 }
