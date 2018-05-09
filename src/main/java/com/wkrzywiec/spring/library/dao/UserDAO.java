@@ -7,19 +7,19 @@ import com.wkrzywiec.spring.library.entity.User;
 
 public interface UserDAO {
 
-	public User getActiveUser(String username);
+	User getActiveUser(String username);
 	
-	public User getActiveUserByEmail(String email);
+	User getActiveUserByEmail(String email);
 	
-	public void saveUser(User user);
+	void saveUser(User user, String roleName);
 	
-	public Role getRoleByName(String roleName);
+	Role getRoleByName(String roleName);
 	
-	public List<User> getAllUsers();
+	List<User> getAllUsers();
 	
-	public List<User> searchUsers(String searchText, int pageNo, int resultsPerPage);
+	List<User> searchUsers(String searchText, int pageNo, int resultsPerPage);
 	
-	public int searchUsersTotalCount(String searchText);
+	int searchUsersTotalCount(String searchText);
 	
 	
 	

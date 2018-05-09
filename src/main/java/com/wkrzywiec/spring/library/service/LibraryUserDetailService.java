@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.Role;
+import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.UserDetail;
 
 
@@ -71,9 +72,25 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	@Override
 	public void saveReaderUser(UserDTO user) {
 		com.wkrzywiec.spring.library.entity.User userEntity = convertUserDTOtoUserEntity(user);
-		userDAO.saveUser(userEntity);
+		
+		userDAO.saveUser(userEntity, Roles.USER.toString());
 	}
 	
+	@Override
+	public void saveSpecialUser(UserDTO user) {
+		com.wkrzywiec.spring.library.entity.User userEntity = convertUserDTOtoUserEntity(user);
+		
+		String roleName;
+		
+		if (user.getRole().equals("ADMIN")){
+			roleName = Roles.ADMIN.toString();
+		} else {
+			roleName = Roles.LIBRARIAN.toString();
+		}
+		
+		userDAO.saveUser(userEntity, roleName);
+	}
+
 	@Override
 	public Role getRoleByName(String roleName) {
 		return userDAO.getRoleByName(roleName);

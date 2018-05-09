@@ -1,12 +1,19 @@
 package com.wkrzywiec.spring.library.controller;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
 
 @Controller
@@ -45,6 +52,31 @@ public class LibraryController {
 			model.addAttribute("userList", userService.searchUsers(searchText, pageNo, USERS_PER_PAGE));
 			return "admin-panel";
 	}
+	
+	@GetMapping("/admin-panel/new-user")
+	public String registerSpecialUser (Model model){
+		
+		UserDTO userDTO = new UserDTO();
+		model.addAttribute("user", userDTO);
+		
+		return "register-user-special";
+	}
 
+	@PostMapping("/admin-panel/new-user")
+	public String processRegisterSpecialUserForm(
+				@Valid @ModelAttribute("user") UserDTO userDTO,
+				BindingResult bindingResult,
+				Model model){
+		
+		if (bindingResult.hasErrors()){
+			return "register-user-special";
+		} else {
+			userService.saveSpecialUser(userDTO);
+			model.addAttribute("newUserRegister", true);
+			return "admin-panel";
+		}
+		
+		
+	}
 
 }

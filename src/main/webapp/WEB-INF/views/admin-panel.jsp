@@ -14,28 +14,34 @@
     	<jsp:include page="shared/header.jsp"/>
 	</div>
 	
-	<div class="container" style="margin-top: 50px;">
-		<div class="col-xs-3 col-sm-3 col-md-3">
-			
+	<c:if test="${newUserRegister == true}">
+		<div class="alert alert-success" role="alert">
+  			New user has been successfully created!
 		</div>
-		
-		<div class="col-xs-8 col-sm-8 col-md-8">
-			<div style="margin-bottom: 25px">
-				<form:form action="${pageContext.request.contextPath}/admin-panel" method="GET" role="form">
-						<label for="inputSearch">Find user (by username, name, email)</label>
-						<div class="input-group">
-      						<input class="form-control" placeholder="Search for..." id="search" name="search" type="text">
-      						<span class="input-group-btn">
-        						<button class="btn btn-secondary" type="submit">Search</button>
-      						</span>
-    					</div>
-    					<input type="hidden" name="pageNo" value=1>
+	</c:if>
+	
+	<div class="container" style="margin-top: 50px;">
+		<div class="row">
+			<div class="col-xs-10 col-sm-10 col-md-10">
+					<form:form action="${pageContext.request.contextPath}/admin-panel" method="GET" role="form">
+							<label for="inputSearch">Find user (by username, name, email)</label>
+							<div class="input-group">
+	      						<input class="form-control" placeholder="Search for..." id="search" name="search" type="text">
+	      						<span class="input-group-btn">
+	        						<button class="btn btn-secondary" type="submit">Search</button>
+	      						</span>
+	    					</div>
+	    					<input type="hidden" name="pageNo" value=1>
+					</form:form>
+			</div>
+			
+			<div class="col-xs-2 col-sm-2 col-md-2">
+				<form:form action="${pageContext.request.contextPath}/admin-panel/new-user" method="GET" role="form">
+					<div style="margin-top:32px">
+						<button class="btn btn-success bottom">Create new user</button>
+					</div>
 				</form:form>
 			</div>
-		
-		</div>
-		
-		<div class="col-xs-1 col-sm-1 col-md-1">
 		</div>
 	</div>
 	

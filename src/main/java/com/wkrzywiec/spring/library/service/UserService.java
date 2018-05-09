@@ -8,19 +8,21 @@ import com.wkrzywiec.spring.library.entity.User;
 
 public interface UserService {
 
-	public boolean isUsernameAlreadyInUse(String username);
+	boolean isUsernameAlreadyInUse(String username);
 	
-	public boolean isEmailAlreadyInUse(String email);
+	boolean isEmailAlreadyInUse(String email);
 	
-	public void saveReaderUser(UserDTO user);
+	void saveReaderUser(UserDTO user);
 	
-	public Role getRoleByName(String roleName);
+	void saveSpecialUser(UserDTO user);
 	
-	public List<User> getAllUsers();
+	Role getRoleByName(String roleName);
 	
-	public List<User> searchUsers(String searchText, int pageNo, int resultsPerPage);
+	List<User> getAllUsers();
 	
-	public int searchUserPagesCount(String searchText, int resultsPerPage);
+	List<User> searchUsers(String searchText, int pageNo, int resultsPerPage);
 	
-	public int searchUsersResultsCount(String searchText);
+	int searchUserPagesCount(String searchText, int resultsPerPage);
+	
+	int searchUsersResultsCount(String searchText);
 }

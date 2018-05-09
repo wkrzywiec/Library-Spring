@@ -70,6 +70,8 @@ public class UserDTO {
 	@Size(min=2,max=60)
 	private String city;
 	
+	private String role;
+	
 	public UserDTO(){
 		
 	}
@@ -173,26 +175,34 @@ public class UserDTO {
 		this.city = city;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	@Override
 	public String toString() {
-		return "UserDTO [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", birthday=" + birthday
-				+ ", phone=" + phone + ", address=" + address + ", postalCode=" + postalCode + ", city=" + city + "]";
+		return "UserDTO [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
+				+ email + ", birthday=" + birthday + ", phone=" + phone + ", address=" + address + ", postalCode="
+				+ postalCode + ", city=" + city + ", role=" + role + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 13;
+		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((birthday == null) ? 0 : birthday.hashCode());
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
-		result = prime * result + ((confirmPassword == null) ? 0 : confirmPassword.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((postalCode == null) ? 0 : postalCode.hashCode());
+		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -221,11 +231,6 @@ public class UserDTO {
 				return false;
 		} else if (!city.equals(other.city))
 			return false;
-		if (confirmPassword == null) {
-			if (other.confirmPassword != null)
-				return false;
-		} else if (!confirmPassword.equals(other.confirmPassword))
-			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -241,11 +246,6 @@ public class UserDTO {
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
 		if (phone == null) {
 			if (other.phone != null)
 				return false;
@@ -256,6 +256,11 @@ public class UserDTO {
 				return false;
 		} else if (!postalCode.equals(other.postalCode))
 			return false;
+		if (role == null) {
+			if (other.role != null)
+				return false;
+		} else if (!role.equals(other.role))
+			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -263,6 +268,8 @@ public class UserDTO {
 			return false;
 		return true;
 	}
+
+	
 	
 	
 }

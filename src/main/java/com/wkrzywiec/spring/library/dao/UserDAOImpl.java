@@ -60,10 +60,17 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	@Transactional
-	public void saveUser(User user) {
+	public void saveUser(User user, String roleName) {
 		
-		Role userRole = getRoleByName(Roles.USER.toString());
-		user.addRole(userRole);
+		Role role;
+		
+		role = getRoleByName(roleName);
+		user.addRole(role);
+		
+		if (roleName != Roles.USER.toString()){
+			role = getRoleByName(Roles.USER.toString());
+			user.addRole(role);
+		}
 		
 		entityManager.persist(user);
 	}
