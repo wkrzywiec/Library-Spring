@@ -62,7 +62,7 @@ dependencies {
 	compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
 	compile group: 'commons-pool', name: 'commons-pool', version: '1.6'
 	
-	
+	compileOnly'org.projectlombok:lombok:1.16.20'
 
     testImplementation 'junit:junit:4.12'
 }
