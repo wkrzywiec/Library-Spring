@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -32,14 +33,23 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @EnableTransactionManagement
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @ComponentScan(basePackages="com.wkrzywiec.spring.library")
-@PropertySource(value = { "classpath:properties/datasource.properties" })
+@PropertySource(value = { "classpath:properties/datasource.properties", "classpath:properties/hibernate.properties" })
 public class LibraryConfig implements WebMvcConfigurer {
 
 	@Autowired
     private Environment env;
 	
-	String indexesFolder = System.getProperty("user.dir");
+	@Value("${hibernate.hbm2ddl.auto}")
+	private String hibernatehbm2ddl;
 	
+	@Value("${hibernate.dialect}")
+	private String hibernateDialect;
+	
+	@Value("${hibernate.search.default.directory_provider}")
+	private String hibernateDirectoryProvider;
+	
+	@Value("${hibernate.search.default.indexBase}")
+	private String hibernateIndexBase;
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -101,13 +111,13 @@ public class LibraryConfig implements WebMvcConfigurer {
 	
 	private Properties additionalProperties() {
 		
+		
 		Properties properties = new Properties();
-	    properties.setProperty("hibernate.hbm2ddl.auto", "validate");
-	    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-	    properties.setProperty("hibernate.search.default.directory_provider", "filesystem");
-	    properties.setProperty("hibernate.search.default.indexBase", "PATH_TO_FOLDER_WHERE_INDEXES_WILL_BE_STORED");
-	    //properties.setProperty("hibernate.show_sql", "true");
-	        
+	    properties.setProperty("hibernate.hbm2ddl.auto", hibernatehbm2ddl);
+	    properties.setProperty("hibernate.dialect", hibernateDialect);
+	    properties.setProperty("hibernate.search.default.directory_provider", hibernateDirectoryProvider);
+	    properties.setProperty("hibernate.search.default.indexBase", hibernateIndexBase);
+	   
 	    return properties;
 	}
 	
