@@ -57,6 +57,24 @@ public class UserDAOImpl implements UserDAO {
 		
 		return user;
 	}
+	
+	
+
+	@Override
+	public User getUserById(int id) {
+		
+		User user;
+		
+		try {
+			user = (User) entityManager.createQuery("from User u where u.id = :id")
+					.setParameter("id", id)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			user = null;
+		}
+		
+		return user;
+	}
 
 	@Override
 	@Transactional
@@ -138,21 +156,14 @@ public class UserDAOImpl implements UserDAO {
 		org.apache.lucene.search.Query luceneQuery = queryBuilder
 			.keyword()
 			.wildcard()
-			.onFields("username", "email", "userDetail.lastName")
+			.onFields("username", "email", "lastName")
 				.boostedTo(5f)
-			.andField("userDetail.firstName")
+			.andField("firstName")
 			.matching(searchText + "*")
 			.createQuery();
 		
 		FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, User.class);
 
-		/*Sort sort = queryBuilder
-					.sort()
-						.byField("username")
-					.createSort();
-
-		jpaQuery.setSort(sort);*/
-		
 		return jpaQuery;
 	}
 }

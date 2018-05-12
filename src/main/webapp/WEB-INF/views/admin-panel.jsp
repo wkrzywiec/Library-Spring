@@ -26,7 +26,7 @@
 					<form:form action="${pageContext.request.contextPath}/admin-panel" method="GET" role="form">
 							<label for="inputSearch">Find user (by username, name, email)</label>
 							<div class="input-group">
-	      						<input class="form-control" placeholder="Search for..." id="search" name="search" type="text">
+	      						<input class="form-control" placeholder="Search for..." id="search" name="search" type="text" value="${param.search}">
 	      						<span class="input-group-btn">
 	        						<button class="btn btn-secondary" type="submit">Search</button>
 	      						</span>
@@ -74,7 +74,7 @@
 					</td>
 					<td>${user.enable}</td>
 					<td>
-						<button type="button" class="btn btn-sm btn-success">Edit</button> 
+						<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}" class="btn btn-sm btn-success" role="button">Edit</a> 
 					</td>
 					</tr>
 				</c:forEach>

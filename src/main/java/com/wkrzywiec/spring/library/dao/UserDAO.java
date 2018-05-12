@@ -11,6 +11,8 @@ public interface UserDAO {
 	
 	User getActiveUserByEmail(String email);
 	
+	User getUserById(int id);
+	
 	void saveUser(User user, String roleName);
 	
 	Role getRoleByName(String roleName);

@@ -10,10 +10,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wkrzywiec.spring.library.dto.UserDTO;
+import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
 
 @Controller
@@ -75,8 +77,18 @@ public class LibraryController {
 			model.addAttribute("newUserRegister", true);
 			return "admin-panel";
 		}
+	}
+	
+	@GetMapping("/admin-panel/user/{id}")
+	public String editUserByAdmin(@PathVariable("id") Integer id,
+									Model model) {
 		
+		User user = userService.getUserById(id);
 		
+		System.out.println(user);
+		
+		model.addAttribute("user", user);
+		return "edit-user-admin";
 	}
 
 }

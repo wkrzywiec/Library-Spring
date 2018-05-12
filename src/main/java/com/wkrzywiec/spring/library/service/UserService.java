@@ -20,6 +20,8 @@ public interface UserService {
 	
 	List<User> getAllUsers();
 	
+	User getUserById(int id);
+	
 	List<User> searchUsers(String searchText, int pageNo, int resultsPerPage);
 	
 	int searchUserPagesCount(String searchText, int resultsPerPage);

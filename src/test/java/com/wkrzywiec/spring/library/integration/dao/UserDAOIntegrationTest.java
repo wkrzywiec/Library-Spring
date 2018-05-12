@@ -17,7 +17,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.wkrzywiec.spring.library.config.LibraryConfig;
 import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.entity.User;
-import com.wkrzywiec.spring.library.entity.UserDetail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= LibraryConfig.class)
@@ -83,18 +82,15 @@ public class UserDAOIntegrationTest {
 		user.setEmail("sandor.clegane@mail.com");
 		user.setEnable(true);
 		
-		UserDetail userDetails = new UserDetail();
-		userDetails.setFirstName("Sandor");
-		userDetails.setLastName("Clegane");
-		userDetails.setPhone("123456789");
-		userDetails.setAddress("Field street 13 / 23");
-		userDetails.setPostalCode("12-345");
-		userDetails.setCity("King's Landing");
-		
-		user.setUserDetail(userDetails);
+		user.setFirstName("Sandor");
+		user.setLastName("Clegane");
+		user.setPhone("123456789");
+		user.setAddress("Field street 13 / 23");
+		user.setPostalCode("12-345");
+		user.setCity("King's Landing");
 		
 		//when
-		userDAO.saveUser(user);
+		userDAO.saveUser(user, "USER");
 		
 		//then
 		assertEquals(user, userDAO.getActiveUser("hound"));
