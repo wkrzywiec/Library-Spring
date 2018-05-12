@@ -8,22 +8,6 @@ CREATE DATABASE  IF NOT EXISTS `library_db`;
 
 USE `library_db`;
 
-DROP TABLE IF EXISTS `user_detail`;
-
-CREATE TABLE `user_detail` (
-	`id` int(6) NOT NULL AUTO_INCREMENT,
-    `first_name` varchar(60) DEFAULT NULL,
-    `last_name` varchar(60) DEFAULT NULL,
-    `phone` varchar(60) DEFAULT NULL,
-    `birthday` date DEFAULT NULL,
-    `address` varchar(120) DEFAULT NULL,
-	`postal` varchar(60) DEFAULT NULL,
-    `city` varchar(60) DEFAULT NULL,
-    
-	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
 DROP TABLE IF EXISTS `role`;
 
 CREATE TABLE `role` (
@@ -40,17 +24,18 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
 	`id` int(6) NOT NULL AUTO_INCREMENT,
     `username` varchar(64) NOT NULL UNIQUE,
-    `password` varchar(100) NOT NULL UNIQUE,
+    `password` varchar(100) NOT NULL,
     `email` varchar(60) NOT NULL UNIQUE,
     `enable` boolean NOT NULL,
-	`user_detail_id` int(6) NOT NULL,
+	`first_name` varchar(60) DEFAULT NULL,
+    `last_name` varchar(60) DEFAULT NULL,
+    `phone` varchar(60) DEFAULT NULL,
+    `birthday` date DEFAULT NULL,
+    `address` varchar(120) DEFAULT NULL,
+	`postal` varchar(60) DEFAULT NULL,
+    `city` varchar(60) DEFAULT NULL,
     
-    PRIMARY KEY (`id`),
-    
-    KEY `user_detail` (`user_detail_id`),
-    CONSTRAINT `FK_USER_DETAIL` FOREIGN KEY (`user_detail_id`)
-    REFERENCES `user_detail` (`id`)
-    ON DELETE NO ACTION ON UPDATE NO ACTION
+    PRIMARY KEY (`id`)
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -91,7 +76,7 @@ CREATE TABLE persistent_logins (
 
 DROP TABLE IF EXISTS `user_logs`;
 
-CREATE TABLE user_logs (
+CREATE TABLE `user_logs` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
     `level` varchar(10) NOT NULL,
     `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
@@ -114,19 +99,32 @@ CREATE TABLE user_logs (
 INSERT INTO `role` (`name`) VALUES
 	("USER"), ("ADMIN"), ("LIBRARIAN");
 	
+INSERT INTO `user` (`username`, `password`, `email`, `enable`, `first_name`, `last_name`) VALUES
 
-INSERT INTO `user_detail` (`first_name`, `last_name`) VALUES
-
-	("Edard", "Stark"),
-    ("Sam", "Tarly"),
-    ("Cersai", "Lanister")
-;
-
-INSERT INTO `user` (`username`, `password`, `email`, `enable`, `user_detail_id`) VALUES
-
-	("admin", "$2a$10$TDb0af7bDK9Gr4xAPoqZqunjFVLCM6togtL556J.M4BEJeUZd7psu", "edard.stark@winterfell.com", TRUE, 1),
-    ("book", "$2a$10$ZsA1jIBWe/GcMWgKRSwIt.wcFKUH86O1t63JsJ/.JCKlT3iJK/n0a", "sam.tarly@night-watch.com", TRUE, 2),
-    ("test", "$2a$10$a9WYkCHn5goa5wEgplC87.4Dy.A23khRSAssrU5OFYKMGva7.c9Ba", "cersai.lanister@kings-landing.com", TRUE, 3)
+	("admin", "$2a$10$TDb0af7bDK9Gr4xAPoqZqunjFVLCM6togtL556J.M4BEJeUZd7psu", "edard.stark@winterfell.com", TRUE, "Edard", "Stark"),
+    ("book", "$2a$10$ZsA1jIBWe/GcMWgKRSwIt.wcFKUH86O1t63JsJ/.JCKlT3iJK/n0a", "sam.tarly@night-watch.com", TRUE, "Sam", "Tarly"),
+    ("test", "$2a$10$a9WYkCHn5goa5wEgplC87.4Dy.A23khRSAssrU5OFYKMGva7.c9Ba", "cersai.lanister@kings-landing.com", TRUE, "Cersai", "Lanister"),
+    ("rob", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","rob.stark@winterfell.com",TRUE, "Rob", "Stark"),
+    ("lyanna", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","lyanna.stark@winterfell.com",TRUE, "Lyanna", "Stark"),
+    ("ramsay", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","ramsay.boltonk@winterfell.com",TRUE, "Ramsay", "Bolton"),
+    ("roose", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","roose.bolton@winterfell.com",TRUE, "Roose", "Bolton"),
+    ("walder", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","walder.frey@crossing.com",TRUE, "Walder", "Frey"),
+    ("theon", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","theon.greyjoy@pyke.com",TRUE, "Theon", "Greyjoy"),
+    ("balon", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","balon.greyjoy@pyke.com",FALSE, "Balon", "Greyjoy"),
+    ("yara", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","yara.greyjoy@pyke.com",TRUE, "Yara", "Greyjoy"),
+    ("euron", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","euron.greyjoy@pyke.com",FALSE, "Euron", "Greyjoy"),
+    ("jon", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","jon.aryyn@vale.com",TRUE, "Jon", "Arryn"),
+    ("lysa", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","lysa.aryyn@vale.com",TRUE, "Lysa", "Arryn"),
+    ("robin", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","robin.aryyn@vale.com",TRUE, "Robin", "Arryn"),
+    ("petyr", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","petyr.bealish@vale.com",TRUE, "Petyr", "Baelish"),
+    ("daenerys", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","denerys.targaryen@kings-landing.com",TRUE, "Daenerys", "Targaryen"),
+    ("varys", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","varys@westeros.com",TRUE, "Varys", "Spider"),
+    ("oberyn", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","oberyn.martell@dorne.com",TRUE, "Oberyn", "Martell"),
+    ("doran", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","doran.martell@dorne.com",TRUE, "Doran", "Martell"),
+    ("obara", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","obara.sand@dorne.com",TRUE, "Obara", "Sand"),
+    ("nymeria", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","nymeria.sand@dorne.com",TRUE, "Nymeria", "Sand"),
+    ("catelyn", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","catelyn.tully@riverrun.com",TRUE, "Catelyn", "Tully"),
+    ("brynden", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","brynden.tully@riverrun.com",FALSE, "Brynden", "Tully")
 ;
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
@@ -135,7 +133,26 @@ INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
     (1, 2),
     (2, 1),
     (2, 3),
-    (3, 1)
+    (3, 1),
+    (4, 1),
+    (5, 1),
+    (6, 1),
+    (7, 1),
+    (8, 1),
+    (9, 1),
+    (10, 1),
+    (11, 1),
+    (12, 1),
+    (13, 1),
+    (14, 1),
+    (15, 1),
+    (16, 1),
+    (17, 1),
+    (18, 1),
+    (19, 1),
+    (20, 1),
+    (21, 1),
+    (22, 1),
+    (23, 1),
+    (24, 1)
 ;
-
-insert into `user_logs` (`level`, `username`, `field`, `from`, `to`, `message`) VALUES ("debug", "tofik", "all", "", "all", "New User");

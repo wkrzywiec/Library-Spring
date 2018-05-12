@@ -19,7 +19,6 @@ import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.Roles;
-import com.wkrzywiec.spring.library.entity.UserDetail;
 
 
 @Service("userDetailService")
@@ -101,16 +100,11 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	public List<com.wkrzywiec.spring.library.entity.User> getAllUsers() {
 		return userDAO.getAllUsers();
 	}
-
-	private Collection<? extends GrantedAuthority> getUserAuthorities(Set<Role> modelAuthSet) {
-		
-		List<Role> modelAuthList = convertRolesSetToList(modelAuthSet);
-		
-        List<GrantedAuthority> authList = getGrantedUserAuthority(modelAuthList);
-        return authList;
-    }
 	
-	
+	@Override
+	public com.wkrzywiec.spring.library.entity.User getUserById(int id) {
+		return userDAO.getUserById(id);
+	}
 
 	@Override
 	public List<com.wkrzywiec.spring.library.entity.User> searchUsers(String searchText, int pageNo,
@@ -137,6 +131,14 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		
 		return userCount;
 	}
+	
+	private Collection<? extends GrantedAuthority> getUserAuthorities(Set<Role> modelAuthSet) {
+		
+		List<Role> modelAuthList = convertRolesSetToList(modelAuthSet);
+		
+        List<GrantedAuthority> authList = getGrantedUserAuthority(modelAuthList);
+        return authList;
+    }
 
 	private List<Role> convertRolesSetToList(Set<Role> modelAuthSet) {
 		return new ArrayList<Role>(modelAuthSet);
@@ -161,17 +163,14 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
 		userEntity.setEmail(user.getEmail());
 		userEntity.setEnable(true);
+		userEntity.setFirstName(user.getFirstName());
+		userEntity.setLastName(user.getLastName());
+		userEntity.setPhone(user.getPhone());
+		userEntity.setBirthday(user.getBirthday());
+		userEntity.setAddress(user.getAddress());
+		userEntity.setPostalCode(user.getPostalCode());
+		userEntity.setCity(user.getCity());
 		
-		UserDetail userDetail = new UserDetail();
-		userDetail.setFirstName(user.getFirstName());
-		userDetail.setLastName(user.getLastName());
-		userDetail.setPhone(user.getPhone());
-		userDetail.setBirthday(user.getBirthday());
-		userDetail.setAddress(user.getAddress());
-		userDetail.setPostalCode(user.getPostalCode());
-		userDetail.setCity(user.getCity());
-		
-		userEntity.setUserDetail(userDetail);
 		
 		return userEntity;
 	}
