@@ -26,10 +26,16 @@
     	<jsp:include page="shared/header.jsp"/>
 	</div>
 
-	User <security:authentication property="principal.username"/>
-	<br>
-	Role: <security:authentication property="principal.authorities"/>
-	<br>
-
+	<div class="container" style="margin-top: 30px;">
+		<div class="jumbotron">
+			<h1 class="display-4">Hello, <security:authentication property="principal.username"/>! Welcome to our Library!</h1>
+			<br>
+			<div align="right">
+	  			<p class="lead">${quote.quote}</p>
+	  			<hr class="my-4">
+	  			<p>- ${quote.author}</p>
+  			</div>
+		</div>
+	</div>
 </body>
 </html>

@@ -57,6 +57,9 @@ dependencies {
 	compile 'org.aspectj:aspectjweaver:1.8.13'
 	compile 'org.aspectj:aspectjrt:1.8.13'
 	
+	compile 'com.squareup.retrofit2:retrofit:2.4.0'
+	compile 'com.squareup.retrofit2:converter-gson:2.4.0'
+	
 	compile 'org.apache.logging.log4j:log4j-api:2.10.0'
 	compile 'org.apache.logging.log4j:log4j-core:2.10.0'
 	compile group: 'commons-dbcp', name: 'commons-dbcp', version: '1.4'
