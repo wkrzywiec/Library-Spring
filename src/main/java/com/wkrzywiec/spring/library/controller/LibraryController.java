@@ -1,6 +1,8 @@
 package com.wkrzywiec.spring.library.controller;
 
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.User;
+import com.wkrzywiec.spring.library.entity.UserLog;
+import com.wkrzywiec.spring.library.retrofit.RandomQuoteResponse;
 import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
+import com.wkrzywiec.spring.library.service.RandomQuoteService;
 
 @Controller
 public class LibraryController {
@@ -25,10 +30,16 @@ public class LibraryController {
 	
 	@Autowired
 	LibraryUserDetailService userService;
+	
+	@Autowired
+	RandomQuoteService quoteService;
 
 	@GetMapping("/")
-	public String showHomePage(){
+	public String showHomePage(Model model){
 		
+		RandomQuoteResponse quote = quoteService.getRandomResponse();
+		
+		model.addAttribute("quote", quote);
 		return "home";
 	}
 
@@ -80,15 +91,40 @@ public class LibraryController {
 	}
 	
 	@GetMapping("/admin-panel/user/{id}")
-	public String editUserByAdmin(@PathVariable("id") Integer id,
-									Model model) {
+	public String showDetailedUserInfoOnAdmin(	@PathVariable("id") Integer id,
+												@RequestParam(value="add", required=false)  Integer addId,
+												Model model) {
 		
 		User user = userService.getUserById(id);
-		
-		System.out.println(user);
+		List<UserLog> userLogs = null;
+		if (addId != null) {
+			if (addId == 1) {
+				userLogs = userService.getUserLogs(user.getId());
+			}
+			System.out.println(userLogs);
+			model.addAttribute("logs", userLogs);
+		}
 		
 		model.addAttribute("user", user);
+		
+		UserDTO userDTO = new UserDTO();
+		model.addAttribute("userDTO", userDTO);
+		
 		return "edit-user-admin";
+	}
+	
+	@PostMapping("/admin-panel/user/{id}/update")
+	public String updateUserByAdmin(@PathVariable("id") Integer id,
+									@ModelAttribute("user") UserDTO userDTO,
+									Model model) {
+		
+			userService.updateUser(id, userDTO);
+			
+			User updatedUser = userService.getUserById(id);
+			model.addAttribute("user", updatedUser);
+			
+			return "edit-user-admin";
+		
 	}
 
 }

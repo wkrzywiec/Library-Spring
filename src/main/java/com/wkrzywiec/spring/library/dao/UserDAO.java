@@ -1,9 +1,11 @@
 package com.wkrzywiec.spring.library.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.User;
+import com.wkrzywiec.spring.library.entity.UserLog;
 
 public interface UserDAO {
 
@@ -15,6 +17,8 @@ public interface UserDAO {
 	
 	void saveUser(User user, String roleName);
 	
+	void updateUser(int id, Map<String, String> changedFields);
+	
 	Role getRoleByName(String roleName);
 	
 	List<User> getAllUsers();
@@ -23,6 +27,6 @@ public interface UserDAO {
 	
 	int searchUsersTotalCount(String searchText);
 	
-	
+	List<UserLog> getUserLogs(int id);
 	
 }

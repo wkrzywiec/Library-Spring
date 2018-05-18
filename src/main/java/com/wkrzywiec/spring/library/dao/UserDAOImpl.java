@@ -1,24 +1,30 @@
 package com.wkrzywiec.spring.library.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.User;
+import com.wkrzywiec.spring.library.entity.UserLog;
 
 
 @Repository
+@Scope(proxyMode = ScopedProxyMode.INTERFACES)
 public class UserDAOImpl implements UserDAO {
 
 	@PersistenceContext
@@ -58,9 +64,8 @@ public class UserDAOImpl implements UserDAO {
 		return user;
 	}
 	
-	
-
 	@Override
+	@Transactional
 	public User getUserById(int id) {
 		
 		User user;
@@ -92,6 +97,22 @@ public class UserDAOImpl implements UserDAO {
 		
 		entityManager.persist(user);
 	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public void updateUser(int id, Map<String, String> changedFields) {
+		
+		User user = entityManager.find(User.class, id);
+		
+		if (changedFields.containsKey("email"))		this.updateUserEmail(user, changedFields.get("email"));
+		if (changedFields.containsKey("firstName"))		this.updateUserFirstName(user, changedFields.get("firstName"));
+		if (changedFields.containsKey("lastName"))		this.updateUserLastName(user, changedFields.get("lastName"));
+		if (changedFields.containsKey("phone"))		this.updateUserAddress(user, changedFields.get("phone"));
+		if (changedFields.containsKey("address"))		this.updateUserAddress(user, changedFields.get("address"));
+		if (changedFields.containsKey("postalCode"))		this.updateUserPostalCode(user, changedFields.get("postalCode"));
+		if (changedFields.containsKey("city"))		this.updateUserCity(user, changedFields.get("city"));
+	
+	}
 
 	@Override
 	@Transactional
@@ -106,7 +127,6 @@ public class UserDAOImpl implements UserDAO {
 			role = null;
 		}
 		return role;
-		
 	}
 	
 	@Override
@@ -145,6 +165,19 @@ public class UserDAOImpl implements UserDAO {
 		return usersCount;
 	}
 	
+	@Override
+	@Transactional
+	public List<UserLog> getUserLogs(int id) {
+		
+		List<UserLog> userLogList;
+		
+		userLogList = entityManager.createQuery("from UserLog u where u.user.id = :userId")
+					.setParameter("userId", id)
+					.getResultList();
+		
+		return userLogList;
+	}
+
 	private FullTextQuery searchUsersQuery (String searchText) {
 		
 		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
@@ -166,4 +199,47 @@ public class UserDAOImpl implements UserDAO {
 
 		return jpaQuery;
 	}
+	
+private void updateUserEmail(User user, String email) {		
+		
+		user.setEmail(email);
+		entityManager.merge(user);
+	}
+
+	private void updateUserFirstName(User user, String firstName) {
+		
+		user.setFirstName(firstName);
+		entityManager.merge(user);
+	}
+
+	private void updateUserLastName(User user, String lastName) {
+		
+		user.setLastName(lastName);
+		entityManager.merge(user);
+	}
+	
+	private void updateUserPhone(User user, String phone) {
+		
+		user.setPhone(phone);
+		entityManager.merge(user);
+	}
+
+	private void updateUserAddress(User user, String address) {
+		
+		user.setAddress(address);
+		entityManager.merge(user);
+	}
+
+	private void updateUserPostalCode(User user, String postalCode) {
+		
+		user.setPostalCode(postalCode);
+		entityManager.merge(user);
+	}
+
+	private void updateUserCity(User user, String city) {
+		
+		user.setCity(city);
+		entityManager.merge(user);
+	}
+
 }

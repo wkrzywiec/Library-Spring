@@ -64,18 +64,18 @@
     		<tbody>
 				<c:forEach items="${userList}" var="user">
 					<tr>
-					<td>${user.id}</td>
-					<td>${user.username}</td>
-					<td>${user.email}</td>
-					<td>
-						<c:forEach items="${user.roles}" var="role">
-							${role.name}
-						</c:forEach>
-					</td>
-					<td>${user.enable}</td>
-					<td>
-						<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}" class="btn btn-sm btn-success" role="button">Edit</a> 
-					</td>
+						<td>${user.id}</td>
+						<td>${user.username}</td>
+						<td>${user.email}</td>
+						<td>
+							<c:forEach items="${user.roles}" var="role">
+								${role.name}
+							</c:forEach>
+						</td>
+						<td>${user.enable}</td>
+						<td>
+							<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}" class="btn btn-sm btn-success" role="button">Edit</a> 
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

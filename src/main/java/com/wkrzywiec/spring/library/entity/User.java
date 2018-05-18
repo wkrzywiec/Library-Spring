@@ -1,7 +1,9 @@
 package com.wkrzywiec.spring.library.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,15 +16,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.Store;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,7 +31,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
+@ToString(callSuper=true, exclude="password")
 @NoArgsConstructor
 @Entity
 @Table(name="user")
@@ -81,6 +79,9 @@ public class User {
 	
 	@Column(name="city")
 	private String city;
+	
+	@Column(name="record_created")
+	private Timestamp recordCreated;
 
 	@ManyToMany(fetch=FetchType.EAGER,
 				cascade= {CascadeType.DETACH, CascadeType.MERGE,
