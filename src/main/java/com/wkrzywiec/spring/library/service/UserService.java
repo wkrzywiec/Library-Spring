@@ -13,11 +13,15 @@ public interface UserService {
 	
 	boolean isEmailAlreadyInUse(String email);
 	
-	void saveReaderUser(UserDTO user);
+	User saveReaderUser(UserDTO user, String changedByUsername);
 	
-	void saveSpecialUser(UserDTO user);
+	User saveSpecialUser(UserDTO user, String changedByUsername);
 	
-	void updateUser(int id, UserDTO userDTO);
+	User updateUser(int id, UserDTO userDTO, String changedByUsername);
+	
+	User enableUser(int id, String changedByUsername);
+	
+	User disableUser(int id, String changedByUsername);
 	
 	Role getRoleByName(String roleName);
 	

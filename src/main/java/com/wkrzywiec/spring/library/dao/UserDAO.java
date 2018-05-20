@@ -15,9 +15,13 @@ public interface UserDAO {
 	
 	User getUserById(int id);
 	
-	void saveUser(User user, String roleName);
+	User saveUser(User user, String roleName, String changedByUsername);
 	
-	void updateUser(int id, Map<String, String> changedFields);
+	User updateUser(int id, Map<String, String> changedFields, String changedByUsername);
+	
+	User enableUser(int id, String changedByUsername);
+	
+	User disableUser(int id, String changedByUsername);
 	
 	Role getRoleByName(String roleName);
 	

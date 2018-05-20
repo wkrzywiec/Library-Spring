@@ -104,18 +104,11 @@
 							 		<h5>Active: </h5>
 							 	</div>
 							 	<div class="col">
-							 		<div class="form-check">
-							 			<div class="custom-control form-control-lg custom-checkbox">
-							 				<c:if test="${user.enable}">
-							 					<input type="checkbox" class="custom-control-input" id="enable" name="enable" checked>
-    											<label class="custom-control-label" for="customCheck1" ></label>
-							 				</c:if>
-							 				<c:if test="${!user.enable}">
-							 					<input type="checkbox" class="custom-control-input" id="active" name="active">
-    											<label class="custom-control-label" for="customCheck1" ></label>
-							 				</c:if>
-										</div>
-							 		</div>
+							 		<form:checkbox path = "enable" />
+							 		<c:if test="${user.enable}">
+							 		</c:if>
+							 		<c:if test="${!user.enable}">
+							 		</c:if>
 							 	</div>
 						 	</div>
 						 	<div class="row" style="margin-top:20px">
@@ -266,6 +259,7 @@
 				<thead>
 	     	 		<tr>
 	        			<th>Id</th>
+	        			<th>Username</th>
 	        			<th>Date</th>
 	        			<th>Field</th>
 	        			<th>From</th>
@@ -278,12 +272,13 @@
 	    			<c:forEach items="${logs}" var="log">
 						<tr>
 							<td>${log.id}</td>
+							<td>${log.user.username}</td>
 							<td>${log.dated}</td>
 							<td>${log.field}</td>
 							<td>${log.fromValue}</td>
 							<td>${log.toValue}</td>
 							<td>${log.message}</td>
-							<td>${log.user.username}</td>
+							<td>${log.changedByUsername}</td>
 						</tr>
 					</c:forEach>
 	    		</tbody>

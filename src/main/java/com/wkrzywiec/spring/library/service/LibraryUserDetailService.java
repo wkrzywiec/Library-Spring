@@ -10,7 +10,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +20,7 @@ import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.Roles;
+import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
 
 
@@ -44,7 +44,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		
         Collection<? extends GrantedAuthority> authList = getUserAuthorities(user.getRoles());
         
-		return new User(
+		return new org.springframework.security.core.userdetails.User(
 					user.getUsername(),
 					user.getPassword(),
 					user.isEnable(),
@@ -72,15 +72,17 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	}
 
 	@Override
-	public void saveReaderUser(UserDTO user) {
-		com.wkrzywiec.spring.library.entity.User userEntity = convertUserDTOtoUserEntity(user);
+	public User saveReaderUser(UserDTO user, String changedByUsername) {
 		
-		userDAO.saveUser(userEntity, Roles.USER.toString());
+		User userEntity = convertUserDTOtoUserEntity(user);
+		userEntity = userDAO.saveUser(userEntity, Roles.USER.toString(), changedByUsername);
+		
+		return userEntity;
 	}
 	
 	@Override
-	public void saveSpecialUser(UserDTO user) {
-		com.wkrzywiec.spring.library.entity.User userEntity = convertUserDTOtoUserEntity(user);
+	public User saveSpecialUser(UserDTO user, String changedByUsername) {
+		User userEntity = convertUserDTOtoUserEntity(user);
 		
 		String roleName;
 		
@@ -90,17 +92,15 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 			roleName = Roles.LIBRARIAN.toString();
 		}
 		
-		userDAO.saveUser(userEntity, roleName);
+		userEntity = userDAO.saveUser(userEntity, roleName, changedByUsername);
+		return userEntity;
 	}
 
 	@Override
-	public void updateUser(int id, UserDTO userDTO) {
+	public User updateUser(int id, UserDTO userDTO, String changedByUsername) {
 		
-		com.wkrzywiec.spring.library.entity.User user = this.getUserById(id);
-		
-		System.out.println(userDTO.toString());
-		System.out.println(user.toString());
-		
+		User user = this.getUserById(id);
+			
 		Map<String, String> changedFields = new HashMap<String, String>();
 		
 		if (!userDTO.getEmail().isEmpty()) {
@@ -172,13 +172,31 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 				}
 			}
 		}
+		user = userDAO.updateUser(id, changedFields, changedByUsername);
 		
-		System.out.println(userDTO.getCity().isEmpty());
-		System.out.println(userDTO.getPostalCode().isEmpty());
+		return user;
+	}
+	
+	@Override
+	public User enableUser(int id, String changedByUsername) {
 		
-		System.out.println(changedFields.toString());
+		User user = this.getUserById(id);
+		if (!user.isEnable()) {
+			user = userDAO.enableUser(id, changedByUsername);
+		}
 		
-		userDAO.updateUser(id, changedFields);
+		return user;
+	}
+
+	@Override
+	public User disableUser(int id, String changedByUsername) {
+		
+		User user = this.getUserById(id);
+		if (user.isEnable()) {
+			user = userDAO.disableUser(id, changedByUsername);
+		}
+		
+		return user;
 	}
 
 	@Override
@@ -188,28 +206,28 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	
 	
 	@Override
-	public List<com.wkrzywiec.spring.library.entity.User> getAllUsers() {
+	public List<User> getAllUsers() {
 		return userDAO.getAllUsers();
 	}
 	
 	@Override
-	public com.wkrzywiec.spring.library.entity.User getUserById(int id) {
+	public User getUserById(int id) {
 		return userDAO.getUserById(id);
 	}
 	
 	
 
 	@Override
-	public com.wkrzywiec.spring.library.entity.User getUserByUsername(String username) {
+	public User getUserByUsername(String username) {
 		
 		return userDAO.getActiveUser(username);
 	}
 
 	@Override
-	public List<com.wkrzywiec.spring.library.entity.User> searchUsers(String searchText, int pageNo,
+	public List<User> searchUsers(String searchText, int pageNo,
 			int resultsPerPage) {
 		
-		List<com.wkrzywiec.spring.library.entity.User> userList = userDAO.searchUsers(searchText, pageNo, resultsPerPage);
+		List<User> userList = userDAO.searchUsers(searchText, pageNo, resultsPerPage);
 		
 		return userList;
 	}
@@ -260,9 +278,9 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		return authorities;
 	}
 	
-	private com.wkrzywiec.spring.library.entity.User convertUserDTOtoUserEntity(UserDTO user) {
+	private User convertUserDTOtoUserEntity(UserDTO user) {
 		
-		com.wkrzywiec.spring.library.entity.User userEntity = new com.wkrzywiec.spring.library.entity.User();
+		User userEntity = new User();
 		
 		userEntity.setUsername(user.getUsername());
 		userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -275,7 +293,6 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		userEntity.setAddress(user.getAddress());
 		userEntity.setPostalCode(user.getPostalCode());
 		userEntity.setCity(user.getCity());
-		
 		
 		return userEntity;
 	}

@@ -3,6 +3,8 @@ package com.wkrzywiec.spring.library.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,8 @@ public class LoginController {
 	
 	@Autowired
 	LibraryUserDetailService userService;
+	
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	
 	@GetMapping("/loginPage")
 	public String showLoginPage(){
@@ -49,10 +53,16 @@ public class LoginController {
 				@Valid @ModelAttribute("user") UserDTO userDTO,
 				BindingResult bindingResult) {
 		
+		String currentPrincipalName = "";
+		
+		if (authentication != null) {
+			currentPrincipalName = authentication.getName();
+		}
+	
 		if (bindingResult.hasErrors()){
 			return "register-user";
 		} else {
-			userService.saveReaderUser(userDTO);
+			userService.saveReaderUser(userDTO, currentPrincipalName);
 			return "successful-registration";
 		}
 	}

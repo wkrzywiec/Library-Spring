@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -81,10 +83,13 @@ public class LibraryController {
 				BindingResult bindingResult,
 				Model model){
 		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
+		
 		if (bindingResult.hasErrors()){
 			return "register-user-special";
 		} else {
-			userService.saveSpecialUser(userDTO);
+			userService.saveSpecialUser(userDTO, currentPrincipalName);
 			model.addAttribute("newUserRegister", true);
 			return "admin-panel";
 		}
@@ -101,7 +106,6 @@ public class LibraryController {
 			if (addId == 1) {
 				userLogs = userService.getUserLogs(user.getId());
 			}
-			System.out.println(userLogs);
 			model.addAttribute("logs", userLogs);
 		}
 		
@@ -118,13 +122,19 @@ public class LibraryController {
 									@ModelAttribute("user") UserDTO userDTO,
 									Model model) {
 		
-			userService.updateUser(id, userDTO);
-			
-			User updatedUser = userService.getUserById(id);
-			model.addAttribute("user", updatedUser);
-			
-			return "edit-user-admin";
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
 		
+		if (userDTO.isEnable()) {
+			userService.enableUser(id, currentPrincipalName);
+		} else {
+			userService.disableUser(id, currentPrincipalName);
+		}
+			
+		User updatedUser = userService.updateUser(id, userDTO, currentPrincipalName);
+			
+		model.addAttribute("user", updatedUser);
+		return "edit-user-admin";
 	}
 
 }

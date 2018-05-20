@@ -72,6 +72,8 @@ public class UserDTO {
 	
 	private String role;
 	
+	private boolean enable;
+	
 	public UserDTO(){
 		
 	}
@@ -181,6 +183,14 @@ public class UserDTO {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public boolean isEnable() {
+		return enable;
+	}
+
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	@Override

@@ -83,7 +83,7 @@ public class UserDAOImpl implements UserDAO {
 
 	@Override
 	@Transactional
-	public void saveUser(User user, String roleName) {
+	public User saveUser(User user, String roleName, String changedByUsername) {
 		
 		Role role;
 		
@@ -96,22 +96,48 @@ public class UserDAOImpl implements UserDAO {
 		}
 		
 		entityManager.persist(user);
+		
+		return user;
 	}
 	
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public void updateUser(int id, Map<String, String> changedFields) {
+	public User updateUser(int id, Map<String, String> changedFields, String changedByUsername) {
 		
 		User user = entityManager.find(User.class, id);
 		
-		if (changedFields.containsKey("email"))		this.updateUserEmail(user, changedFields.get("email"));
-		if (changedFields.containsKey("firstName"))		this.updateUserFirstName(user, changedFields.get("firstName"));
-		if (changedFields.containsKey("lastName"))		this.updateUserLastName(user, changedFields.get("lastName"));
-		if (changedFields.containsKey("phone"))		this.updateUserAddress(user, changedFields.get("phone"));
-		if (changedFields.containsKey("address"))		this.updateUserAddress(user, changedFields.get("address"));
-		if (changedFields.containsKey("postalCode"))		this.updateUserPostalCode(user, changedFields.get("postalCode"));
-		if (changedFields.containsKey("city"))		this.updateUserCity(user, changedFields.get("city"));
+		if (changedFields.containsKey("email"))		this.updateUserEmail(user, changedFields.get("email"), changedByUsername);
+		if (changedFields.containsKey("firstName"))		this.updateUserFirstName(user, changedFields.get("firstName"), changedByUsername);
+		if (changedFields.containsKey("lastName"))		this.updateUserLastName(user, changedFields.get("lastName"), changedByUsername);
+		if (changedFields.containsKey("phone"))		this.updateUserPhone(user, changedFields.get("phone"), changedByUsername);
+		if (changedFields.containsKey("address"))		this.updateUserAddress(user, changedFields.get("address"), changedByUsername);
+		if (changedFields.containsKey("postalCode"))		this.updateUserPostalCode(user, changedFields.get("postalCode"), changedByUsername);
+		if (changedFields.containsKey("city"))		this.updateUserCity(user, changedFields.get("city"), changedByUsername);
 	
+		return user;
+	}
+	
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public User enableUser(int id, String changedByUsername) {
+		
+		User user = entityManager.find(User.class, id);
+		
+		user.setEnable(true);
+		entityManager.persist(user);
+		return user;
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public User disableUser(int id, String changedByUsername) {
+		
+		User user = entityManager.find(User.class, id);
+		
+		user.setEnable(false);
+		entityManager.persist(user);
+		
+		return user;
 	}
 
 	@Override
@@ -200,43 +226,43 @@ public class UserDAOImpl implements UserDAO {
 		return jpaQuery;
 	}
 	
-private void updateUserEmail(User user, String email) {		
+	public void updateUserEmail(User user, String email, String changedByUsername) {		
 		
 		user.setEmail(email);
 		entityManager.merge(user);
 	}
 
-	private void updateUserFirstName(User user, String firstName) {
+	private void updateUserFirstName(User user, String firstName, String changedByUsername) {
 		
 		user.setFirstName(firstName);
 		entityManager.merge(user);
 	}
 
-	private void updateUserLastName(User user, String lastName) {
+	private void updateUserLastName(User user, String lastName, String changedByUsername) {
 		
 		user.setLastName(lastName);
 		entityManager.merge(user);
 	}
 	
-	private void updateUserPhone(User user, String phone) {
+	private void updateUserPhone(User user, String phone, String changedByUsername) {
 		
 		user.setPhone(phone);
 		entityManager.merge(user);
 	}
 
-	private void updateUserAddress(User user, String address) {
+	private void updateUserAddress(User user, String address, String changedByUsername) {
 		
 		user.setAddress(address);
 		entityManager.merge(user);
 	}
 
-	private void updateUserPostalCode(User user, String postalCode) {
+	private void updateUserPostalCode(User user, String postalCode, String changedByUsername) {
 		
 		user.setPostalCode(postalCode);
 		entityManager.merge(user);
 	}
 
-	private void updateUserCity(User user, String city) {
+	private void updateUserCity(User user, String city, String changedByUsername) {
 		
 		user.setCity(city);
 		entityManager.merge(user);
