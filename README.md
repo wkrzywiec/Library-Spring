@@ -24,6 +24,10 @@ key concepts of tools and frameworks that I use and also small code snippets tha
 * [Setting up Gradle web project in Eclispe (on Tomcar server)](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d)
 * [Project development history lesson with git](https://medium.com/@wkrzywiec/project-development-history-lesson-with-git-424b9940ad84)
 
+**Clean code**
+
+* [Project Lombok—how to make your model class simple](https://medium.com/@wkrzywiec/project-lombok-how-to-make-your-model-class-simple-ad71319c35d5)
+
 **Features**
 ###### User Log Events
 
