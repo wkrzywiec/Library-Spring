@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.springframework.stereotype.Component;
 
 import com.wkrzywiec.spring.library.retrofit.RandomQuoteAPI;
-import com.wkrzywiec.spring.library.retrofit.RandomQuoteResponse;
+import com.wkrzywiec.spring.library.retrofit.model.RandomQuoteResponse;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;

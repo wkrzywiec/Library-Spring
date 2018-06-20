@@ -15,7 +15,7 @@ public interface UserDAO {
 	
 	User getUserById(int id);
 	
-	User saveUser(User user, String roleName, String changedByUsername);
+	User saveUser(User user, String changedByUsername);
 	
 	User updateUser(int id, Map<String, String> changedFields, String changedByUsername);
 	

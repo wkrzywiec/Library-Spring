@@ -31,7 +31,6 @@ public class UserDAOImpl implements UserDAO {
 	private EntityManager entityManager;
 
 	@Override
-	@Transactional
 	public User getActiveUser(String username) {
 		
 		User user;
@@ -48,7 +47,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
-	@Transactional
 	public User getActiveUserByEmail(String email) {
 		
 		User user;
@@ -65,7 +63,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
-	@Transactional
 	public User getUserById(int id) {
 		
 		User user;
@@ -82,18 +79,7 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	@Transactional
-	public User saveUser(User user, String roleName, String changedByUsername) {
-		
-		Role role;
-		
-		role = getRoleByName(roleName);
-		user.addRole(role);
-		
-		if (roleName != Roles.USER.toString()){
-			role = getRoleByName(Roles.USER.toString());
-			user.addRole(role);
-		}
+	public User saveUser(User user, String changedByUsername) {
 		
 		entityManager.persist(user);
 		
@@ -101,7 +87,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public User updateUser(int id, Map<String, String> changedFields, String changedByUsername) {
 		
 		User user = entityManager.find(User.class, id);
@@ -118,7 +103,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public User enableUser(int id, String changedByUsername) {
 		
 		User user = entityManager.find(User.class, id);
@@ -129,7 +113,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public User disableUser(int id, String changedByUsername) {
 		
 		User user = entityManager.find(User.class, id);
@@ -156,7 +139,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
-	@Transactional
 	public List<User> getAllUsers() {
 		
 		List<User> list = null;
@@ -167,7 +149,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	@Transactional
 	public List<User> searchUsers(String searchText, int pageNo, int resultsPerPage) {
 		
 		FullTextQuery jpaQuery = searchUsersQuery(searchText);
@@ -181,7 +162,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	@Transactional
 	public int searchUsersTotalCount(String searchText) {
 		
 		FullTextQuery jpaQuery = searchUsersQuery(searchText);
@@ -192,7 +172,6 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
-	@Transactional
 	public List<UserLog> getUserLogs(int id) {
 		
 		List<UserLog> userLogList;
@@ -226,7 +205,7 @@ public class UserDAOImpl implements UserDAO {
 		return jpaQuery;
 	}
 	
-	public void updateUserEmail(User user, String email, String changedByUsername) {		
+	private void updateUserEmail(User user, String email, String changedByUsername) {		
 		
 		user.setEmail(email);
 		entityManager.merge(user);

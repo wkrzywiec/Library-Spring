@@ -31,7 +31,7 @@
     </li>
     
     <li class="nav-item">
-      <a class="nav-link" href="#">Books</a>
+      <a class="nav-link" href="${pageContext.request.contextPath}/books/add-book/">Books</a>
     </li>
     
     <security:authorize access="hasAuthority('LIBRARIAN')">

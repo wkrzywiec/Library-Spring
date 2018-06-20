@@ -34,6 +34,7 @@ CREATE TABLE `user` (
     `address` varchar(120) DEFAULT NULL,
 	`postal` varchar(60) DEFAULT NULL,
     `city` varchar(60) DEFAULT NULL,
+    `record_created` timestamp DEFAULT CURRENT_TIMESTAMP,
     
     PRIMARY KEY (`id`)
     
@@ -80,21 +81,130 @@ CREATE TABLE `user_logs` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
     `level` varchar(10) NOT NULL,
     `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
-    `username` varchar(64) NOT NULL,
+    `user_id` int(6) NOT NULL,
     `field` varchar(60) NOT NULL,
     `from_value` varchar(1000) NOT NULL DEFAULT '',
     `to_value` varchar(1000) NOT NULL DEFAULT '',
     `message` varchar(500) NOT NULL,
+    `changed_by_username` varchar(64) NOT NULL,
+    
+    PRIMARY KEY (`id`)
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `isbn` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `isbn_10` varchar(20) NOT NULL UNIQUE,
+    `isbn_13` varchar(20) NOT NULL UNIQUE,
+   
+    PRIMARY KEY (`id`)
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `book` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `google_id` varchar(100) NOT NULL UNIQUE,
+    `title` varchar(200) NOT NULL,
+    `publisher` varchar(200) DEFAULT NULL,
+    `published_date` varchar(100) DEFAULT NULL,
+    `isbn_id` int(12) DEFAULT NULL,
+    `page_count` int(6) DEFAULT NULL,
+    `rating` real(4,1) DEFAULT NULL,
+    `image_link` varchar(1000) DEFAULT NULL,
+    `description` text DEFAULT NULL,
+   
+    PRIMARY KEY (`id`),
+    
+    CONSTRAINT `FK_ISBN` FOREIGN KEY (`isbn_id`)
+    REFERENCES `isbn` (`id`)
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `author` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `name` varchar(200) NOT NULL UNIQUE,
+   
+    PRIMARY KEY (`id`)
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `bookcategory` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `name` varchar(200) NOT NULL UNIQUE,
+   
+    PRIMARY KEY (`id`)
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `book_author` (
+	`book_id` int(12) NOT NULL,
+    `author_id` int(12) NOT NULL,
+    
+    PRIMARY KEY (`book_id`, `author_id`),
+    
+    KEY `book` (`book_id`),
+    CONSTRAINT `FK_BOOK_AUTHOR` FOREIGN KEY (`book_id`)
+    REFERENCES `book` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    
+    KEY `author` (`author_id`),
+    CONSTRAINT `FK_AUTHOR_BOOK` FOREIGN KEY (`author_id`)
+	REFERENCES `author` (`id`)
+	ON DELETE NO ACTION ON UPDATE NO ACTION
+    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `book_bookcategory` (
+	`book_id` int(12) NOT NULL,
+    `bookcategory_id` int(12) NOT NULL,
+    
+    PRIMARY KEY (`book_id`, `bookcategory_id`),
+    
+    KEY `book` (`book_id`),
+    CONSTRAINT `FK_BOOK_CATEGORY` FOREIGN KEY (`book_id`)
+    REFERENCES `book` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    
+    KEY `bookcategory` (`bookcategory_id`),
+    CONSTRAINT `FK_CATEGORY_BOOK` FOREIGN KEY (`bookcategory_id`)
+	REFERENCES `bookcategory` (`id`)
+	ON DELETE NO ACTION ON UPDATE NO ACTION
+    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_book` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+	`user_id` int(6) NOT NULL,
+    `book_id` int(12) NOT NULL,
+    `dated` date NOT NULL,
+    `approval_date` date DEFAULT NULL,
+    `due_date` date DEFAULT NULL,
     
     PRIMARY KEY (`id`),
     
-    KEY `user` (`username`),
-    CONSTRAINT `FK_USERNAME` FOREIGN KEY (`username`)
-    REFERENCES `user` (`username`)
-    ON DELETE NO ACTION ON UPDATE NO ACTION
+    KEY `user` (`user_id`),
+    CONSTRAINT `FK_USER_BOOK` FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    
+    KEY `book` (`book_id`),
+    CONSTRAINT `FK_BOOK_USER` FOREIGN KEY (`book_id`)
+	REFERENCES `book` (`id`)
+	ON DELETE NO ACTION ON UPDATE NO ACTION
+    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `book_logs` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `level` varchar(10) NOT NULL,
+    `message` varchar(500) NOT NULL,
+    `book_id` int(12) NOT NULL,
+    `user_id` int(6) NOT NULL,
+    `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
+   
+    PRIMARY KEY (`id`)
+    
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 INSERT INTO `role` (`name`) VALUES
 	("USER"), ("ADMIN"), ("LIBRARIAN");

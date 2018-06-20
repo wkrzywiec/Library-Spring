@@ -90,7 +90,7 @@ public class UserDAOIntegrationTest {
 		user.setCity("King's Landing");
 		
 		//when
-		userDAO.saveUser(user, "USER");
+		userDAO.saveUser(user, "hound");
 		
 		//then
 		assertEquals(user, userDAO.getActiveUser("hound"));

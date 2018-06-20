@@ -1,4 +1,6 @@
-package com.wkrzywiec.spring.library.retrofit;
+package com.wkrzywiec.spring.library.retrofit.model;
+
+import java.util.List;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,11 +11,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
+@ToString()
 @NoArgsConstructor
-public class RandomQuoteResponse {
+public class GoogleBookRespond {
 
-	private String quote;
-	
-	private String author;
+	private List<ItemAPIModel> items;
 }

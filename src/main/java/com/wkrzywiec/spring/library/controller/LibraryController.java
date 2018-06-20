@@ -18,10 +18,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
-import com.wkrzywiec.spring.library.retrofit.RandomQuoteResponse;
+import com.wkrzywiec.spring.library.retrofit.model.RandomQuoteResponse;
+import com.wkrzywiec.spring.library.service.BookServiceImpl;
+import com.wkrzywiec.spring.library.service.GoogleBookServiceImpl;
 import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
 import com.wkrzywiec.spring.library.service.RandomQuoteService;
 
@@ -34,7 +37,13 @@ public class LibraryController {
 	LibraryUserDetailService userService;
 	
 	@Autowired
+	BookServiceImpl bookService;
+	
+	@Autowired
 	RandomQuoteService quoteService;
+	
+	@Autowired
+	GoogleBookServiceImpl googleBookService;
 
 	@GetMapping("/")
 	public String showHomePage(Model model){
@@ -44,28 +53,27 @@ public class LibraryController {
 		model.addAttribute("quote", quote);
 		return "home";
 	}
-
 	
 	@GetMapping("/admin-panel")
 	public String showAdminPanel(	@RequestParam(value="search", required=false) String searchText,
 									@RequestParam(value="pageNo", required=false) Integer pageNo,
 									ModelMap model){
 		
-			if (searchText == null && pageNo == null) {
-				return "admin-panel";
-			}
-			
-			if (searchText != null && pageNo == null){
-				pageNo = 1;
-				model.put("pageNo", 1);
-			}
-			
-			model.addAttribute("resultsCount", userService.searchUsersResultsCount(searchText));
-			
-			model.addAttribute("pageCount", userService.searchUserPagesCount(searchText, USERS_PER_PAGE));
-			
-			model.addAttribute("userList", userService.searchUsers(searchText, pageNo, USERS_PER_PAGE));
+		if (searchText == null && pageNo == null) {
 			return "admin-panel";
+		}
+			
+		if (searchText != null && pageNo == null){
+			pageNo = 1;
+			model.put("pageNo", 1);
+		}
+		
+		model.addAttribute("resultsCount", userService.searchUsersResultsCount(searchText));
+			
+		model.addAttribute("pageCount", userService.searchUserPagesCount(searchText, USERS_PER_PAGE));
+			
+		model.addAttribute("userList", userService.searchUsers(searchText, pageNo, USERS_PER_PAGE));
+		return "admin-panel";
 	}
 	
 	@GetMapping("/admin-panel/new-user")
@@ -135,6 +143,39 @@ public class LibraryController {
 			
 		model.addAttribute("user", updatedUser);
 		return "edit-user-admin";
+	}
+	
+	@GetMapping("/books/add-book")
+	public String findNewBook(	@RequestParam(value="search", required=false) String searchText,
+								Model model) {
+		
+		if (searchText == null) {
+			return "add-book";
+		}
+
+		model.addAttribute("bookList", googleBookService.searchBookList(searchText));
+		return "add-book";
+	}
+	
+	@GetMapping("/books/add-book/{googleId}")
+	public String addNewBook(	@PathVariable("googleId") String googleId,
+								@RequestParam(value="search", required=false) String searchText,
+								Model model) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
+		
+		boolean bookAlreadyInLibrary = true;
+		
+		if (searchText == null) {
+			return "add-book";
+		}
+		
+		BookDTO bookDTO = googleBookService.getSingleBook(googleId);
+		bookService.saveBook(bookDTO, currentPrincipalName);
+		
+		model.addAttribute("bookList", googleBookService.searchBookList(searchText));
+		return "add-book";
 	}
 
 }

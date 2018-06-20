@@ -15,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
@@ -34,10 +36,11 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		com.wkrzywiec.spring.library.entity.User user = userDAO.getActiveUser(username);
-		System.out.println(user.getRoles());
+		
 		boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
@@ -51,11 +54,11 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 					accountNonExpired,
 					credentialsNonExpired,
 					accountNonLocked,
-					authList)
-				;
+					authList);
 	}
 	
 	@Override
+	@Transactional
 	public boolean isUsernameAlreadyInUse(String username){
 		
 		boolean userInDb = true;
@@ -64,6 +67,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	}
 	
 	@Override
+	@Transactional
 	public boolean isEmailAlreadyInUse(String email){
 		
 		boolean userInDb = true;
@@ -72,19 +76,21 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	}
 
 	@Override
+	@Transactional
 	public User saveReaderUser(UserDTO user, String changedByUsername) {
 		
-		User userEntity = convertUserDTOtoUserEntity(user);
-		userEntity = userDAO.saveUser(userEntity, Roles.USER.toString(), changedByUsername);
+		User userEntity = convertUserDTOtoUserEntity(user, Roles.USER.toString());
+		userEntity = userDAO.saveUser(userEntity, changedByUsername);
 		
 		return userEntity;
 	}
 	
 	@Override
+	@Transactional
 	public User saveSpecialUser(UserDTO user, String changedByUsername) {
-		User userEntity = convertUserDTOtoUserEntity(user);
 		
 		String roleName;
+		User userEntity; 
 		
 		if (user.getRole().equals("ADMIN")){
 			roleName = Roles.ADMIN.toString();
@@ -92,11 +98,14 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 			roleName = Roles.LIBRARIAN.toString();
 		}
 		
-		userEntity = userDAO.saveUser(userEntity, roleName, changedByUsername);
+		userEntity = convertUserDTOtoUserEntity(user, roleName);
+		
+		userEntity = userDAO.saveUser(userEntity, changedByUsername);
 		return userEntity;
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public User updateUser(int id, UserDTO userDTO, String changedByUsername) {
 		
 		User user = this.getUserById(id);
@@ -178,6 +187,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	}
 	
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public User enableUser(int id, String changedByUsername) {
 		
 		User user = this.getUserById(id);
@@ -189,6 +199,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public User disableUser(int id, String changedByUsername) {
 		
 		User user = this.getUserById(id);
@@ -206,11 +217,13 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	
 	
 	@Override
+	@Transactional
 	public List<User> getAllUsers() {
 		return userDAO.getAllUsers();
 	}
 	
 	@Override
+	@Transactional
 	public User getUserById(int id) {
 		return userDAO.getUserById(id);
 	}
@@ -218,12 +231,14 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	
 
 	@Override
+	@Transactional
 	public User getUserByUsername(String username) {
 		
 		return userDAO.getActiveUser(username);
 	}
 
 	@Override
+	@Transactional
 	public List<User> searchUsers(String searchText, int pageNo,
 			int resultsPerPage) {
 		
@@ -242,6 +257,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	}
 
 	@Override
+	@Transactional
 	public int searchUsersResultsCount(String searchText) {
 		
 		int userCount = userDAO.searchUsersTotalCount(searchText);
@@ -250,6 +266,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	}
 	
 	@Override
+	@Transactional
 	public List<UserLog> getUserLogs(int id) {
 		
 		return userDAO.getUserLogs(id);
@@ -278,9 +295,10 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		return authorities;
 	}
 	
-	private User convertUserDTOtoUserEntity(UserDTO user) {
+	private User convertUserDTOtoUserEntity(UserDTO user, String userRole) {
 		
 		User userEntity = new User();
+		Role role;
 		
 		userEntity.setUsername(user.getUsername());
 		userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -293,6 +311,9 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 		userEntity.setAddress(user.getAddress());
 		userEntity.setPostalCode(user.getPostalCode());
 		userEntity.setCity(user.getCity());
+		
+		role = this.getRoleByName(userRole);
+		userEntity.addRole(role);
 		
 		return userEntity;
 	}

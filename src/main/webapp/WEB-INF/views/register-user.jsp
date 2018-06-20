@@ -83,7 +83,7 @@
 						<div class="panel-body" style="margin: 25px 50px 25px">
 						
 							<form:form action="${pageContext.request.contextPath}/register-user"
-							 	method="POST" modelAttribute="user" class="form-horizontal"
+							 	method="POST" modelAttribute="book" class="form-horizontal"
 							 	data-toggle="validator" role="form">
 													
 								<div class="form-group">
