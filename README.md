@@ -40,8 +40,7 @@ key concepts of tools and frameworks that I use and also small code snippets tha
 
 ###### User registration
 
-* [How to check if user exist in database using Hibernate Validator]
-(https://medium.com/@wkrzywiec/how-to-check-if-user-exist-in-database-using-hibernate-validator-eab110429a6)
+* [How to check if user exist in database using Hibernate Validator](https://medium.com/@wkrzywiec/how-to-check-if-user-exist-in-database-using-hibernate-validator-eab110429a6)
 
 ### Tools & Frameworks
 
