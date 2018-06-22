@@ -38,6 +38,11 @@ key concepts of tools and frameworks that I use and also small code snippets tha
 
 * [Full-text search with Hibernate Search (Lucene) — part 1](https://medium.com/@wkrzywiec/full-text-search-with-hibernate-search-lucene-part-1-e245b889aa8e)
 
+###### User registration
+
+* [How to check if user exist in database using Hibernate Validator]
+(https://medium.com/@wkrzywiec/how-to-check-if-user-exist-in-database-using-hibernate-validator-eab110429a6)
+
 ### Tools & Frameworks
 
 ### Database Schema
