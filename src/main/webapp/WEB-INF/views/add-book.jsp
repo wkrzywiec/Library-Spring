@@ -14,6 +14,16 @@
 	    	<jsp:include page="shared/header.jsp"/>
 	</div>
 	
+	<div class="container">
+		<div class="form-group">
+			<c:if test="${message != null}">
+				<div class="alert alert-warning col-xs-offset-1 col-xs-10">
+				${message}
+				</div>				
+			</c:if>
+		</div>
+	</div>
+	
 	<div class="container" style="margin-top: 50px;">
 		<div class="row">
 			<div class="col-xs-10 col-sm-10 col-md-10">

@@ -172,10 +172,16 @@ public class LibraryController {
 		boolean bookAlreadyInLibrary = true;
 		
 		bookAlreadyInLibrary = bookService.isBookInLibrary(googleId);
-		
+		BookDTO bookDTO = null;
 		if (!bookAlreadyInLibrary) {
-			BookDTO bookDTO = googleBookService.getSingleBook(googleId);
+			bookDTO = googleBookService.getSingleBook(googleId);
 			bookService.saveBook(bookDTO, currentPrincipalName);
+		}
+		
+		if (bookAlreadyInLibrary) {
+			model.addAttribute("message", "Book with this Google Id: " + googleId + " is already in the library.");
+		} else {
+			model.addAttribute("message", "Book: '" + bookDTO.getTitle() + "' with GoogleID " + googleId + " was added to library.");
 		}
 		
 		model.addAttribute("bookList", googleBookService.searchBookList(searchText));
