@@ -20,6 +20,22 @@ public class BookDAOImpl implements BookDAO {
 	private EntityManager entityManager;
 	
 	@Override
+	public Book getBookByGoogleId(String googleId) {
+		
+		Book book = null;
+		
+		try {
+			book = (Book) entityManager.createQuery("from Book a where a.googleId = :googleId")
+					.setParameter("googleId", googleId)
+					.getSingleResult();
+		} catch (NoResultException nre) {
+			
+		}
+		
+		return book;
+	}
+
+	@Override
 	public Author getAuthorByName(String authorName) {
 		
 		Author author = null;

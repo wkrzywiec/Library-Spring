@@ -20,6 +20,19 @@ public class BookServiceImpl implements BookService {
 	
 	@Autowired
 	BookDAO bookDAO;
+	
+	@Override
+	@Transactional
+	public boolean isBookInLibrary(String googleId) {
+		
+		boolean bookInLibrary = true;
+		
+		if (bookDAO.getBookByGoogleId(googleId) == null) {
+			bookInLibrary = false;
+		};
+		
+		return bookInLibrary;
+	}
 
 	@Override
 	@Transactional

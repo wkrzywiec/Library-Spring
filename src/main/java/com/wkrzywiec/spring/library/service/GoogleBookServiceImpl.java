@@ -12,6 +12,7 @@ import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.retrofit.GoogleBookAPI;
 import com.wkrzywiec.spring.library.retrofit.model.BookDetailsRespond;
 import com.wkrzywiec.spring.library.retrofit.model.GoogleBookRespond;
+import com.wkrzywiec.spring.library.retrofit.model.IsbnAPIModel;
 import com.wkrzywiec.spring.library.retrofit.model.ItemAPIModel;
 import com.wkrzywiec.spring.library.retrofit.model.VolumeInfoModel;
 
@@ -106,8 +107,14 @@ public class GoogleBookServiceImpl implements GoogleBookService {
 		book.setAuthors(volume.getAuthors());
 		book.setPublisher(volume.getPublisher());
 		book.setPublishedDate(volume.getPublishedDate());
-		book.setIsbn_10(volume.getIndustryIdentifiers().get(0).getIdentifier());
-		book.setIsbn_13(volume.getIndustryIdentifiers().get(1).getIdentifier());
+		
+		if (volume.getIndustryIdentifiers() != null) {
+			for (IsbnAPIModel isbn : volume.getIndustryIdentifiers()) {
+				if (isbn.getType().equals("ISBN_10")) book.setIsbn_10(isbn.getIdentifier());
+				if (isbn.getType().equals("ISBN_13")) book.setIsbn_13(isbn.getIdentifier());
+			}
+		}
+		
 		book.setRating(volume.getAverageRating());
 		book.setPageCount(volume.getPageCount());
 		book.setBookCategories(volume.getCategories());
@@ -124,8 +131,6 @@ public class GoogleBookServiceImpl implements GoogleBookService {
 		
 		for (ItemAPIModel apiModel: itemsAPIList) {
 			
-			System.out.println(apiModel.getVolumeInfo());
-			
 			book = new BookDTO();
 			book.setGoogleId(apiModel.getId());
 			book.setTitle(apiModel.getVolumeInfo().getTitle());
@@ -139,10 +144,7 @@ public class GoogleBookServiceImpl implements GoogleBookService {
 				book.setImageLink(apiModel.getVolumeInfo().getImageLinks().getThumbnail());
 			book.setDescription(apiModel.getVolumeInfo().getDescription());
 			book.setBookCategories(apiModel.getVolumeInfo().getCategories());
-			
-			//book.setIsbn_10(apiModel.getVolumeInfo().getIndustryIdentifiers());
-			//book.setIsbn_13(apiModel.getVolumeInfo().getIndustryIdentifiers());
-			
+
 			booksList.add(book);
 		}
 		

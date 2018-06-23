@@ -165,14 +165,18 @@ public class LibraryController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String currentPrincipalName = authentication.getName();
 		
-		boolean bookAlreadyInLibrary = true;
-		
 		if (searchText == null) {
 			return "add-book";
 		}
 		
-		BookDTO bookDTO = googleBookService.getSingleBook(googleId);
-		bookService.saveBook(bookDTO, currentPrincipalName);
+		boolean bookAlreadyInLibrary = true;
+		
+		bookAlreadyInLibrary = bookService.isBookInLibrary(googleId);
+		
+		if (!bookAlreadyInLibrary) {
+			BookDTO bookDTO = googleBookService.getSingleBook(googleId);
+			bookService.saveBook(bookDTO, currentPrincipalName);
+		}
 		
 		model.addAttribute("bookList", googleBookService.searchBookList(searchText));
 		return "add-book";
