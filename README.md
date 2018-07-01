@@ -19,6 +19,9 @@ key concepts of tools and frameworks that I use and also small code snippets tha
 
 **[Library Portal — Spring Project Overview](https://medium.com/@wkrzywiec/library-portal-spring-project-overview-ddbf910dcb95)**
 
+**General**
+* [Why Spring framework is so cool](https://medium.com/@wkrzywiec/why-spring-framework-is-so-cool-8472ceabaab1)
+
 **Configurations**
 
 * [Setting up Gradle web project in Eclispe (on Tomcar server)](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d)
