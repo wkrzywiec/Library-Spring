@@ -31,7 +31,9 @@ import com.wkrzywiec.spring.library.service.RandomQuoteService;
 @Controller
 public class LibraryController {
 	
-	public static final int USERS_PER_PAGE = 20;
+	public final int USERS_PER_PAGE = 20;
+	
+	public final int BOOKS_PER_PAGE = 20;
 	
 	@Autowired
 	LibraryUserDetailService userService;
@@ -143,6 +145,36 @@ public class LibraryController {
 			
 		model.addAttribute("user", updatedUser);
 		return "edit-user-admin";
+	}
+	
+	@GetMapping("/books/search")
+	public String showSearchBook(	@RequestParam(value="search", required=false) String searchText,
+									@RequestParam(value="pageNo", required=false) Integer pageNo,
+									ModelMap model) {
+		
+		int bookResultsCount = 0;
+		int bookPageCount = 0;
+		List<BookDTO> bookList = null;
+		
+		if (searchText == null && pageNo == null) {
+			return "search-book";
+		}
+			
+		if (searchText != null && pageNo == null){
+			pageNo = 1;
+			model.put("pageNo", 1);
+		}
+		
+		bookResultsCount = bookService.searchBooksResultsCount(searchText);
+		model.addAttribute("resultsCount", bookResultsCount);
+		
+		bookPageCount = bookService.searchBookPagesCount(searchText, BOOKS_PER_PAGE);
+		model.addAttribute("pageCount", bookPageCount);
+		
+		bookList =  bookService.searchBookList(searchText, pageNo, BOOKS_PER_PAGE);
+		model.addAttribute("bookList", bookList);
+
+		return "search-book";
 	}
 	
 	@GetMapping("/books/add-book")

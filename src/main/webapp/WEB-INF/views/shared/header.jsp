@@ -23,29 +23,60 @@
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 
-  <a class="navbar-brand" href="#">Library portal</a>
+  <a class="navbar-brand" href="${pageContext.request.contextPath}/">Library portal</a>
 
   <ul class="navbar-nav">
     <li class="nav-item">
-      <a class="nav-link" href="#">Home</a>
+      <a class="nav-link" href="${pageContext.request.contextPath}/">Home</a>
     </li>
     
-    <li class="nav-item">
-      <a class="nav-link" href="${pageContext.request.contextPath}/books/add-book/">Books</a>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+      		Books
+      </a>
+      
+      <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/books/search">Search book</a>
+        
+        <security:authorize access="hasAuthority('LIBRARIAN')">
+        	<a class="dropdown-item" href="${pageContext.request.contextPath}/books/add-book/">Add new book</a>
+        </security:authorize>
+        
+         <security:authorize access="hasAuthority('ADMIN')">
+        	<a class="dropdown-item" href="${pageContext.request.contextPath}/books/add-book/">Add new book</a>
+        </security:authorize>
+        
+        <security:authorize access="hasAuthority('LIBRARIAN')">
+        	<a class="dropdown-item" href="#">Manage books</a>
+        </security:authorize>
+
+      </div>
     </li>
-    
-    <security:authorize access="hasAuthority('LIBRARIAN')">
-	    <li class="nav-item">
-	      <a class="nav-link" href="#">Manager</a>
-	    </li>
-	</security:authorize>
     
     <security:authorize access="hasAuthority('ADMIN')">
-    	<li class="nav-item">
-      		<a class="nav-link" href="${pageContext.request.contextPath}/admin-panel">Users</a>
-    	</li>
     </security:authorize>
     
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
+      		Users
+      </a>
+      
+      <div class="dropdown-menu dropdown-menu-right">
+      
+        <security:authorize access="hasAuthority('ADMIN')">
+        	<a class="nav-link" href="${pageContext.request.contextPath}/admin-panel">Manage user profile</a>
+        </security:authorize>
+        
+         <security:authorize access="hasAuthority('ADMIN')">
+        	<a class="dropdown-item" href="#">Check user book account</a>
+        </security:authorize>
+        
+        <security:authorize access="hasAuthority('LIBRARIAN')">
+        	<a class="dropdown-item" href="#">User book account</a>
+        </security:authorize>
+
+      </div>
+    </li>
   </ul>
   
   <ul class="navbar-nav ml-auto">

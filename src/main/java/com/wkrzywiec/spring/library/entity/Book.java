@@ -12,11 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -31,6 +34,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name="book")
+@Indexed
 public class Book {
 
 	@Id
@@ -42,6 +46,7 @@ public class Book {
 	private String googleId;
 	
 	@Column(name="title")
+	@Field
 	private String title;
 	
 	@ManyToMany(fetch=FetchType.EAGER,
@@ -51,9 +56,11 @@ public class Book {
 			name="book_author",
 			joinColumns=@JoinColumn(name="book_id"),
 			inverseJoinColumns=@JoinColumn(name="author_id"))
+	@IndexedEmbedded(depth=1)
 	private Set<Author> authors;
 	
 	@Column(name="publisher")
+	@Field
 	private String publisher;
 	
 	@Column(name="published_date")
@@ -75,6 +82,7 @@ public class Book {
 			name="book_bookcategory",
 			joinColumns=@JoinColumn(name="book_id"),
 			inverseJoinColumns=@JoinColumn(name="bookcategory_id"))
+	@IndexedEmbedded(depth=1)
 	private Set<BookCategory> categories;
 	
 	@Column(name="rating")
@@ -85,6 +93,7 @@ public class Book {
 	
 	@Column(name="description")
 	@Type(type="text")
+	@Field
 	private String description;
 	
 }

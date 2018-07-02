@@ -44,4 +44,6 @@ public class BookDTO {
 	private String imageLink;
 	
 	private String description;
+	
+	private String status;
 }

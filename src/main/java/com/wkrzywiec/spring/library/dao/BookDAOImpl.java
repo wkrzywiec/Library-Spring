@@ -1,12 +1,19 @@
 package com.wkrzywiec.spring.library.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
@@ -69,7 +76,28 @@ public class BookDAOImpl implements BookDAO {
 		return category;
 	}
 
+	@Override
+	public List<Book> searchBookList(String searchText, int pageNo, int resultsPerPage) {
+		
+		FullTextQuery jpaQuery = this.searchBooksQuery(searchText);
+		
+		jpaQuery.setMaxResults(resultsPerPage);
+		jpaQuery.setFirstResult((pageNo-1) * resultsPerPage);
+		
+		List<Book> bookList = jpaQuery.getResultList();
+		
+		return bookList;
+	}
 
+	@Override
+	@Transactional
+	public int searchBookResultsCount(String searchText) {
+		
+		FullTextQuery jpaQuery = this.searchBooksQuery(searchText);
+		
+		int booksCount = jpaQuery.getResultSize();
+		return booksCount;
+	}
 
 	@Override
 	public Book saveBook(Book book, String changedByUsername) {
@@ -77,6 +105,30 @@ public class BookDAOImpl implements BookDAO {
 		entityManager.persist(book);
 		
 		return null;
+	}
+	
+	private FullTextQuery searchBooksQuery (String searchText) {
+		
+		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+		QueryBuilder queryBuilder = fullTextEntityManager.getSearchFactory()
+				.buildQueryBuilder()
+				.forEntity(Book.class)
+				.get();
+				
+		org.apache.lucene.search.Query luceneQuery = queryBuilder
+			.keyword()
+			.wildcard()
+			.onFields("title", "authors.name")
+				.boostedTo(5f)
+			.andField("description")
+			.andField("categories.name")
+			.andField("publisher")
+			.matching(searchText + "*")
+			.createQuery();
+		
+		FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, Book.class);
+
+		return jpaQuery;
 	}
 
 	

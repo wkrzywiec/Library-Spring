@@ -250,7 +250,7 @@ public class LibraryUserDetailService implements UserDetailsService, UserService
 	@Override
 	public int searchUserPagesCount(String searchText, int resultsPerPage) {
 		
-		long userCount = searchUsersResultsCount(searchText);
+		int userCount = searchUsersResultsCount(searchText);
 		int pageCount = (int) Math.floorDiv(userCount, resultsPerPage) + 1;
 		
 		return pageCount;

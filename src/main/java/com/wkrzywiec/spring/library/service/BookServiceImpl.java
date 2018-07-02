@@ -1,5 +1,6 @@
 package com.wkrzywiec.spring.library.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,6 +37,47 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	@Transactional
+	public List<BookDTO> searchBookList(String searchText, int pageNo, int resultsPerPage) {
+		
+		List<Book> bookEntitiesList = null;
+		List<BookDTO> bookDTOList = new ArrayList<BookDTO>();
+		
+		bookEntitiesList = bookDAO.searchBookList(searchText, pageNo, resultsPerPage);
+		
+		if (bookEntitiesList != null) {
+			for (Book bookEntity : bookEntitiesList) {
+				BookDTO bookDTO = new BookDTO();
+				bookDTO = this.convertBookEntityToBookDTO(bookEntity);
+				bookDTOList.add(bookDTO);
+			}
+		}
+	
+		return bookDTOList;
+	}
+	
+	@Override
+	@Transactional
+	public int searchBooksResultsCount(String searchText) {
+		
+		int bookResultsCount = 0;
+		bookResultsCount = bookDAO.searchBookResultsCount(searchText);
+		
+		return bookResultsCount;
+	}
+
+	@Override
+	public int searchBookPagesCount(String searchText, int resultsPerPage) {
+		
+		int bookCount = 0;
+		int searchBookPagesCount = 1;
+		bookCount = this.searchBooksResultsCount(searchText);
+		searchBookPagesCount = (int) Math.floorDiv(bookCount, resultsPerPage) + 1;
+		
+		return searchBookPagesCount;
+	}
+
+	@Override
+	@Transactional
 	public Book saveBook(BookDTO bookDTO, String changedByUsername) {
 		
 		Book book = null;
@@ -68,8 +110,42 @@ public class BookServiceImpl implements BookService {
 		book.setRating(bookDTO.getRating());
 		book.setImageLink(bookDTO.getImageLink());
 		book.setDescription(bookDTO.getDescription());
-		
+	
 		return book;		
+	}
+	
+	private BookDTO convertBookEntityToBookDTO(Book bookEntity) {
+		
+		
+		BookDTO bookDTO = new BookDTO();
+		List<String> authors = new ArrayList<String>();
+		List<String> categories = new ArrayList<String>();
+		
+		bookDTO.setGoogleId(bookEntity.getGoogleId());
+		bookDTO.setTitle(bookEntity.getTitle());
+		
+		for (Author author : bookEntity.getAuthors()) {
+			authors.add(author.getName());
+		}
+		bookDTO.setAuthors(authors);
+		
+		bookDTO.setPublisher(bookEntity.getPublisher());
+		bookDTO.setPublishedDate(bookEntity.getPublishedDate());
+		bookDTO.setIsbn_10(bookEntity.getIsbn().getIsbn10());
+		bookDTO.setIsbn_13(bookEntity.getIsbn().getIsbn13());
+		bookDTO.setPageCount(bookEntity.getPageCount());
+		
+		for (BookCategory category: bookEntity.getCategories()) {
+			categories.add(category.getName());
+		}
+		bookDTO.setBookCategories(categories);
+		
+		bookDTO.setRating(bookEntity.getRating());
+		bookDTO.setImageLink(bookEntity.getImageLink());
+		bookDTO.setDescription(bookEntity.getDescription());
+		//TODO status
+		bookDTO.setStatus("AVAILABLE");
+		return bookDTO;
 	}
 
 	private Set<Author> getAuthorsByName(List<String> authorsListString){
