@@ -45,6 +45,11 @@ key concepts of tools and frameworks that I use and also small code snippets tha
 
 * [How to check if user exist in database using Hibernate Validator](https://medium.com/@wkrzywiec/how-to-check-if-user-exist-in-database-using-hibernate-validator-eab110429a6)
 
+###### Add book to library
+
+* [Making use of open REST API with Retrofit](https://medium.com/@wkrzywiec/making-use-of-open-rest-api-with-retrofit-dac6094f0522)
+
+
 ### Tools & Frameworks
 
 ### Database Schema
