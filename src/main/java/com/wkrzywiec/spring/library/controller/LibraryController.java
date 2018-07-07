@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
+import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
 import com.wkrzywiec.spring.library.retrofit.model.RandomQuoteResponse;
@@ -32,7 +33,6 @@ import com.wkrzywiec.spring.library.service.RandomQuoteService;
 public class LibraryController {
 	
 	public final int USERS_PER_PAGE = 20;
-	
 	public final int BOOKS_PER_PAGE = 20;
 	
 	@Autowired
@@ -157,7 +157,7 @@ public class LibraryController {
 		List<BookDTO> bookList = null;
 		
 		if (searchText == null && pageNo == null) {
-			return "search-book";
+			return "book-search";
 		}
 			
 		if (searchText != null && pageNo == null){
@@ -174,7 +174,18 @@ public class LibraryController {
 		bookList =  bookService.searchBookList(searchText, pageNo, BOOKS_PER_PAGE);
 		model.addAttribute("bookList", bookList);
 
-		return "search-book";
+		return "book-search";
+	}
+	
+	@GetMapping("/books/{id}")
+	public String showBookDetails(	@PathVariable("id") Integer id,
+									@ModelAttribute("user") UserDTO userDTO,
+									Model model) {
+		
+		BookDTO book = bookService.getBookDTOById(id);
+		model.addAttribute("book", book);
+		
+		return "book-details";
 	}
 	
 	@GetMapping("/books/add-book")

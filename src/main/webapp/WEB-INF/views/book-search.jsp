@@ -42,15 +42,14 @@
 	    		<div class="card">
 	      			<div class="row">
 	      				<div class="col-md-4">
-	          				<div style="width: 15rem; height: 20rem; background: url(${book.imageLink}) center no-repeat; background-size: cover;">
-	          				</div>
+	          				<div style="width: 15rem; height: 20rem; background: url(${book.imageLink}) center no-repeat; background-size: cover;"></div>
 	        			</div>
 	        			<div class="col-md-8">
 	          				<div class="card-block">
-	            				<h4 class="card-title">${book.title}</h4><span>${book.status}</span>
+	            				<h4 class="card-title"><a href="${pageContext.request.contextPath}/books/${book.id}">${book.title}</a></h4><span>${book.status}</span>
 	            				<p class="card-text">${book.authors}	${book.publishedDate}</p>
 	            				<p class="card-text">${book.description}</p>
-	            				<a href="${pageContext.request.contextPath}/books/${book.googleId}" class="btn btn-primary">View Book details</a>
+	            				<a href="${pageContext.request.contextPath}/books/${book.id}" class="btn btn-primary">View Book details</a>
 	          				</div>
 	        			</div>
 	      			</div>

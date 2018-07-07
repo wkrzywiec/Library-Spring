@@ -15,6 +15,8 @@ public interface BookService {
 	
 	int searchBookPagesCount(String searchText, int resultsPerPage);
 	
+	BookDTO getBookDTOById(int id);
+	
 	Book saveBook(BookDTO bookDTO, String changedByUsername);
 	
 }

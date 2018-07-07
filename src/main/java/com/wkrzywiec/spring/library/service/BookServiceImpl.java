@@ -77,6 +77,18 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
+	public BookDTO getBookDTOById(int id) {
+		
+		BookDTO bookDTO  = null;
+		Book book = null;
+		
+		book = bookDAO.getBookById(id);
+		bookDTO = this.convertBookEntityToBookDTO(book);
+		
+		return bookDTO;
+	}
+
+	@Override
 	@Transactional
 	public Book saveBook(BookDTO bookDTO, String changedByUsername) {
 		
@@ -121,6 +133,7 @@ public class BookServiceImpl implements BookService {
 		List<String> authors = new ArrayList<String>();
 		List<String> categories = new ArrayList<String>();
 		
+		bookDTO.setId(bookEntity.getId());
 		bookDTO.setGoogleId(bookEntity.getGoogleId());
 		bookDTO.setTitle(bookEntity.getTitle());
 		

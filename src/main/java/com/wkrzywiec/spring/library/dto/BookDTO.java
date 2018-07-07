@@ -20,6 +20,8 @@ import lombok.ToString;
 @ToString()
 @NoArgsConstructor
 public class BookDTO {
+	
+	private int id;
 
 	private String googleId;
 	

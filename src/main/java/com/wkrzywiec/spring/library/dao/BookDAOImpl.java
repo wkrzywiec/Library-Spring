@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
+import com.wkrzywiec.spring.library.entity.User;
 
 @Repository
 @Scope(proxyMode = ScopedProxyMode.INTERFACES)
@@ -97,6 +98,21 @@ public class BookDAOImpl implements BookDAO {
 		
 		int booksCount = jpaQuery.getResultSize();
 		return booksCount;
+	}
+
+	@Override
+	public Book getBookById(int id) {
+
+		Book book = null;
+		
+		try {
+			book = (Book) entityManager.createQuery("from Book b where b.id = :id")
+					.setParameter("id", id)
+					.getSingleResult();
+		} catch (NoResultException e) {
+		}
+		
+		return book;
 	}
 
 	@Override

@@ -18,6 +18,8 @@ public interface BookDAO {
 	
 	int searchBookResultsCount(String searchText);
 	
+	Book getBookById(int id);
+	
 	Book saveBook(Book book, String changedByUsername);
 
 }
