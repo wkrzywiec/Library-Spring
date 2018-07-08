@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -38,6 +39,20 @@
 				<div class="row"><b>Google ID:</b>	&nbsp; <a href="http://books.google.pl/books?id=${book.googleId}">${book.googleId}</a></div>
 				<div class="row"><b>ISBN 10:</b>	&nbsp; ${book.isbn_10}</div>
 				<div class="row"><b>ISBN 13:</b>	&nbsp; ${book.isbn_13}</div>
+				<div class="row align-items-center">
+					<div class="col-1 align-middle" style="padding: 0px 5px 0px 0px;"><b>Action:</b></div>
+					<div class="col-4">
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserveModal">
+  						Reserve
+						</button>
+						<security:authorize access="hasAuthority('ADMIN')">
+        					<a href="${pageContext.request.contextPath}/books/${book.id}?addit=1" class="btn btn-info" role="button">Show logs</a>
+        				</security:authorize>
+        				<security:authorize access="hasAuthority('LIBRARIAN')">
+        					<a href="${pageContext.request.contextPath}/books/${book.id}?addit=1" class="btn btn-info" role="button">Show logs</a>
+        				</security:authorize>
+					</div>
+				</div>
 			</div>
 		</div>
 		<hr>
@@ -58,6 +73,26 @@
 		</div>
 	</div>
 	
+	<div class="modal fade" id="reserveModal" tabindex="-1" role="dialog" aria-labelledby="reserveModalLabel" aria-hidden="true">
+  		<div class="modal-dialog" role="document">
+    		<div class="modal-content">
+      			<div class="modal-header">
+        			<h5 class="modal-title" id="exampleModalLabel">Make a reservation</h5>
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          				<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			<div class="modal-body">
+        		<p>Please confirm that you would like to make a reservation for <b>${book.title}</b>.</p>
+        		<p>Remember that you have <b><u>2 days</u></b> to pick up the book from our library. Otherwise it will be canceled.
+      			</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        			<button type="button" class="btn btn-primary">Confirm</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
 	
 </body>
 </html>

@@ -124,7 +124,7 @@
 							 		<h5>User Logs: </h5>
 							 	</div>
 							 	<div class="col">
-							 		<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}?add=1">Show user logs</a>
+							 		<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}?addit=1">Show user logs</a>
 							 	</div>
 						 	</div>
 						 	<div class="row" style="margin-top:20px">
@@ -254,7 +254,7 @@
 				<button class="btn btn-success" type="submit">Save changes</button>
 			</div>
 		</form:form>
-		<c:if test="${param.add == 1}">
+		<c:if test="${param.addit == 1}">
 			<table class="table table-striped" align="center">
 				<thead>
 	     	 		<tr>
