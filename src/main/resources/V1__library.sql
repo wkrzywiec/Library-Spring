@@ -172,27 +172,47 @@ CREATE TABLE `book_bookcategory` (
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `user_book` (
+CREATE TABLE `reserved` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
-	`user_id` int(6) NOT NULL,
     `book_id` int(12) NOT NULL,
-    `dated` date NOT NULL,
-    `approval_date` date DEFAULT NULL,
-    `due_date` date DEFAULT NULL,
+    `user_id` int(6) NOT NULL,
+    `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
+    `deadline_date` DATE NOT NULL,
     
     PRIMARY KEY (`id`),
     
     KEY `user` (`user_id`),
-    CONSTRAINT `FK_USER_BOOK` FOREIGN KEY (`user_id`)
+    CONSTRAINT `FK_USER_RESERVED` FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
     
     KEY `book` (`book_id`),
-    CONSTRAINT `FK_BOOK_USER` FOREIGN KEY (`book_id`)
+    CONSTRAINT `FK_BOOK_RESERVED` FOREIGN KEY (`book_id`)
 	REFERENCES `book` (`id`)
 	ON DELETE NO ACTION ON UPDATE NO ACTION
     
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `borrowed` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `book_id` int(12) NOT NULL,
+    `user_id` int(6) NOT NULL,
+    `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
+    `deadline_date` DATE NOT NULL,
+    
+    PRIMARY KEY (`id`),
+    
+    KEY `user` (`user_id`),
+    CONSTRAINT `FK_USER_BORROWED` FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    
+    KEY `book` (`book_id`),
+    CONSTRAINT `FK_BOOK_BORROWED` FOREIGN KEY (`book_id`)
+	REFERENCES `book` (`id`)
+	ON DELETE NO ACTION ON UPDATE NO ACTION
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `book_logs` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
@@ -208,6 +228,32 @@ CREATE TABLE `book_logs` (
 
 INSERT INTO `role` (`name`) VALUES
 	("USER"), ("ADMIN"), ("LIBRARIAN");
+	
+DELIMITER //
+CREATE PROCEDURE bookReserve(
+	bookId int(12),
+    userId int(6),
+    days int(2))
+BEGIN
+    INSERT INTO `reserved` (`book_id`, `user_id`, `deadline_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
+END //
+
+
+CREATE PROCEDURE bookBorrow(
+	bookId int(12),
+    userId int(6),
+    days int(2))
+BEGIN
+	INSERT INTO `borrowed` (`book_id`, `user_id`, `deadline_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
+	DELETE FROM `reserved` WHERE book_id= bookId;
+END //
+
+CREATE PROCEDURE bookReturn(
+	bookId int(12))
+BEGIN
+	DELETE FROM `borrowed` WHERE book_id = bookId;
+END //
+DELIMITER ;
 	
 INSERT INTO `user` (`username`, `password`, `email`, `enable`, `first_name`, `last_name`) VALUES
 
