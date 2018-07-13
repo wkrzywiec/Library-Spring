@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
@@ -18,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
-import com.wkrzywiec.spring.library.entity.User;
 
 @Repository
 @Scope(proxyMode = ScopedProxyMode.INTERFACES)
@@ -26,7 +27,7 @@ public class BookDAOImpl implements BookDAO {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	@Override
 	public Book getBookByGoogleId(String googleId) {
 		
@@ -123,6 +124,28 @@ public class BookDAOImpl implements BookDAO {
 		return null;
 	}
 	
+	@Override
+	public Book reserveBook(int id, int userId, int days) {
+		
+		Book book = null;
+		System.out.println("bookId: " + id + ", userId: " + userId + ", days: " + days);
+		
+		StoredProcedureQuery query = entityManager
+				.createStoredProcedureQuery("bookReserve")
+				.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+				.registerStoredProcedureParameter(2, Integer.class, ParameterMode.IN)
+				.registerStoredProcedureParameter(3, Integer.class, ParameterMode.IN)
+				.setParameter(1, id)
+				.setParameter(2, userId)
+				.setParameter(3, days);
+		
+		query.execute();
+		
+		book = this.getBookById(id);
+		
+		return book;
+	}
+
 	private FullTextQuery searchBooksQuery (String searchText) {
 		
 		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);

@@ -19,4 +19,6 @@ public interface BookService {
 	
 	Book saveBook(BookDTO bookDTO, String changedByUsername);
 	
+	BookDTO reserveBook(int id, String username);
+	
 }

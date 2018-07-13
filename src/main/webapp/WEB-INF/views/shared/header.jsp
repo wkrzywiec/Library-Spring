@@ -42,7 +42,7 @@
         	<a class="dropdown-item" href="${pageContext.request.contextPath}/books/add-book/">Add new book</a>
         </security:authorize>
         
-         <security:authorize access="hasAuthority('ADMIN')">
+        <security:authorize access="hasAuthority('ADMIN')">
         	<a class="dropdown-item" href="${pageContext.request.contextPath}/books/add-book/">Add new book</a>
         </security:authorize>
         

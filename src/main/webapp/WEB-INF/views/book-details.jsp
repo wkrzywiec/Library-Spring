@@ -88,7 +88,7 @@
       			</div>
       			<div class="modal-footer">
         			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        			<button type="button" class="btn btn-primary">Confirm</button>
+        			<a href="${pageContext.request.contextPath}/books/${book.id}?action=reserve" class="btn btn-primary" role="button">Confirm</a>
       			</div>
     		</div>
   		</div>

@@ -20,14 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
-import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
 import com.wkrzywiec.spring.library.retrofit.model.RandomQuoteResponse;
 import com.wkrzywiec.spring.library.service.BookServiceImpl;
 import com.wkrzywiec.spring.library.service.GoogleBookServiceImpl;
-import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
 import com.wkrzywiec.spring.library.service.RandomQuoteService;
+import com.wkrzywiec.spring.library.service.UserService;
 
 @Controller
 public class LibraryController {
@@ -36,7 +35,7 @@ public class LibraryController {
 	public final int BOOKS_PER_PAGE = 20;
 	
 	@Autowired
-	LibraryUserDetailService userService;
+	UserService userService;
 	
 	@Autowired
 	BookServiceImpl bookService;
@@ -107,13 +106,13 @@ public class LibraryController {
 	
 	@GetMapping("/admin-panel/user/{id}")
 	public String showDetailedUserInfoOnAdmin(	@PathVariable("id") Integer id,
-												@RequestParam(value="add", required=false)  Integer addId,
+												@RequestParam(value="addit", required=false)  Integer additional,
 												Model model) {
 		
 		User user = userService.getUserById(id);
 		List<UserLog> userLogs = null;
-		if (addId != null) {
-			if (addId == 1) {
+		if (additional != null) {
+			if (additional == 1) {
 				userLogs = userService.getUserLogs(user.getId());
 			}
 			model.addAttribute("logs", userLogs);
@@ -179,14 +178,27 @@ public class LibraryController {
 	
 	@GetMapping("/books/{id}")
 	public String showBookDetails(	@PathVariable("id") Integer id,
+									@RequestParam(value="action", required=false) String action,
 									@ModelAttribute("user") UserDTO userDTO,
 									Model model) {
 		
-		BookDTO book = bookService.getBookDTOById(id);
+		BookDTO book = null;
+		
+		if (action != null) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String currentPrincipalName = authentication.getName();
+			
+			book = bookService.reserveBook(id, currentPrincipalName);
+	
+		} else {
+			book = bookService.getBookDTOById(id);
+		}
+		
 		model.addAttribute("book", book);
 		
 		return "book-details";
 	}
+	
 	
 	@GetMapping("/books/add-book")
 	public String findNewBook(	@RequestParam(value="search", required=false) String searchText,

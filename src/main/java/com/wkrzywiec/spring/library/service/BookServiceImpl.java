@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wkrzywiec.spring.library.dao.BookDAO;
+import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
@@ -20,7 +21,12 @@ import com.wkrzywiec.spring.library.entity.Isbn;
 public class BookServiceImpl implements BookService {
 	
 	@Autowired
-	BookDAO bookDAO;
+	private BookDAO bookDAO;
+	
+	@Autowired
+	private UserDAO userDAO;
+	
+	private int DAYS_AFTER_RESERVATION = 2;
 	
 	@Override
 	@Transactional
@@ -99,6 +105,22 @@ public class BookServiceImpl implements BookService {
 		return book;
 	}
 	
+	@Override
+	@Transactional
+	public BookDTO reserveBook(int id, String username) {
+		
+		BookDTO bookDTO = null;
+		Book bookEntity = null;
+		
+		int userId = 0;
+		userId = userDAO.getActiveUser(username).getId();
+		
+		bookEntity = bookDAO.reserveBook(id, userId, DAYS_AFTER_RESERVATION);
+		bookDTO = this.convertBookEntityToBookDTO(bookEntity);
+		
+		return bookDTO;
+	}
+
 	private Book convertBookDTOToBookEntity(BookDTO bookDTO) {
 		
 		Book book = new Book();

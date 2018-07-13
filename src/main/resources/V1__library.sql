@@ -236,6 +236,7 @@ CREATE PROCEDURE bookReserve(
     days int(2))
 BEGIN
     INSERT INTO `reserved` (`book_id`, `user_id`, `deadline_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
+    SELECT * FROM book WHERE id=bookId;
 END //
 
 
@@ -248,11 +249,13 @@ BEGIN
 	DELETE FROM `reserved` WHERE book_id= bookId;
 END //
 
+
 CREATE PROCEDURE bookReturn(
 	bookId int(12))
 BEGIN
 	DELETE FROM `borrowed` WHERE book_id = bookId;
 END //
+
 DELIMITER ;
 	
 INSERT INTO `user` (`username`, `password`, `email`, `enable`, `first_name`, `last_name`) VALUES
