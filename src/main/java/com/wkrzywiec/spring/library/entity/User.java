@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.search.annotations.Field;
@@ -89,6 +90,12 @@ public class User {
 				joinColumns=@JoinColumn(name="user_id"),
 				inverseJoinColumns=@JoinColumn(name="role_id"))
 	private Set<Role> roles;
+	
+	@OneToMany(	mappedBy="user",
+				cascade= {CascadeType.DETACH, CascadeType.MERGE,
+						CascadeType.PERSIST, CascadeType.REFRESH},
+				fetch=FetchType.LAZY)
+	private Set<Reserved> reservedBooks; 
 	
 	public User(String username, String password, String email, boolean enable, String firstName, String lastName) {
 		super();

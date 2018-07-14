@@ -96,4 +96,10 @@ public class Book {
 	@Field
 	private String description;
 	
+	@OneToOne(mappedBy="book",
+			cascade= {CascadeType.DETACH, CascadeType.MERGE,
+					CascadeType.PERSIST, CascadeType.REFRESH},
+			fetch=FetchType.LAZY)
+	private Reserved reserved;
+	
 }

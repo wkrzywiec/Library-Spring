@@ -23,4 +23,8 @@ public interface BookDAO {
 	Book saveBook(Book book, String changedByUsername);
 
 	Book reserveBook(int id, int userId, int days);
+	
+	boolean isBookReserved(int id);
+	
+	boolean isBookBorrowed(int id);
 }

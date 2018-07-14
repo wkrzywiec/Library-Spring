@@ -31,7 +31,21 @@
 								${author} |
 					</c:forEach>
 				</h3></div>
-				<div class="row"><b>Status:</b> &nbsp; ${book.status}</div>
+				<div class="row"><b>Status:</b> &nbsp; 
+					<c:choose>
+						<c:when test="${book.status == 'AVAILABLE'}">
+							<span class="book-status-available">
+						</c:when>
+						<c:when test="${book.status == 'RESERVED'}">
+							<span class="book-status-reserved">
+						</c:when>
+						<c:otherwise>
+							<span class="book-status-borrowed">
+						</c:otherwise>
+					</c:choose>
+	            	${book.status}
+	            	</span>
+				</div>
 				<div class="row"><b>Publisher:</b>	&nbsp; ${book.publisher}</div>
 				<div class="row"><b>Published date:</b>	 &nbsp; ${book.publishedDate}</div>
 				<div class="row"><b>Pages:</b>	&nbsp; ${book.pageCount}</div>
@@ -42,7 +56,14 @@
 				<div class="row align-items-center">
 					<div class="col-1 align-middle" style="padding: 0px 5px 0px 0px;"><b>Action:</b></div>
 					<div class="col-4">
-						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserveModal">
+						<c:choose>
+							<c:when test="${book.status == 'AVAILABLE'}">
+								<button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserveModal">
+							</c:when>
+							<c:otherwise>
+								<button type="button" class="btn btn-success" data-toggle="modal" data-target="#reserveModal" disabled>
+							</c:otherwise>
+						</c:choose>
   						Reserve
 						</button>
 						<security:authorize access="hasAuthority('ADMIN')">

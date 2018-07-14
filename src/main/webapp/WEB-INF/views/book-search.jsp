@@ -6,7 +6,6 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
 <title>Search book in Library</title>
 </head>
 <body>
@@ -46,7 +45,21 @@
 	        			</div>
 	        			<div class="col-md-8">
 	          				<div class="card-block">
-	            				<h4 class="card-title"><a href="${pageContext.request.contextPath}/books/${book.id}">${book.title}</a></h4><span>${book.status}</span>
+	            				<h4 class="card-title"><a href="${pageContext.request.contextPath}/books/${book.id}">${book.title}</a></h4>
+	            				
+	            				<c:choose>
+									<c:when test="${book.status == 'AVAILABLE'}">
+										<span class="book-status-available">
+									</c:when>
+									<c:when test="${book.status == 'RESERVED'}">
+										<span class="book-status-reserved">
+									</c:when>
+									<c:otherwise>
+										<span class="book-status-borrowed">
+									</c:otherwise>
+								</c:choose>
+	            					${book.status}
+	            				</span>
 	            				<p class="card-text">${book.authors}	${book.publishedDate}</p>
 	            				<p class="card-text">${book.description}</p>
 	            				<a href="${pageContext.request.contextPath}/books/${book.id}" class="btn btn-primary">View Book details</a>

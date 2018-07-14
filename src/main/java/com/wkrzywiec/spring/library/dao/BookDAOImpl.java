@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
+import com.wkrzywiec.spring.library.entity.Reserved;
 
 @Repository
 @Scope(proxyMode = ScopedProxyMode.INTERFACES)
@@ -128,7 +129,6 @@ public class BookDAOImpl implements BookDAO {
 	public Book reserveBook(int id, int userId, int days) {
 		
 		Book book = null;
-		System.out.println("bookId: " + id + ", userId: " + userId + ", days: " + days);
 		
 		StoredProcedureQuery query = entityManager
 				.createStoredProcedureQuery("bookReserve")
@@ -144,6 +144,47 @@ public class BookDAOImpl implements BookDAO {
 		book = this.getBookById(id);
 		
 		return book;
+	}
+	
+	
+
+	@Override
+	public boolean isBookReserved(int id) {
+		
+		Reserved reserved = null;
+		try {
+			reserved =  (Reserved) entityManager.createQuery("from Reserved r where r.book.id = :bookId")
+					.setParameter("bookId", id)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return false;
+		}
+	
+		if (reserved != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isBookBorrowed(int id) {
+		
+		Object object = null;
+		
+		try {
+			object =  entityManager.createQuery("from Borrowed b where b.id = :id")
+					.setParameter("id", id)
+					.getSingleResult();
+		} catch (NoResultException e) {
+			return false;
+		}
+		
+		if (object != null) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private FullTextQuery searchBooksQuery (String searchText) {

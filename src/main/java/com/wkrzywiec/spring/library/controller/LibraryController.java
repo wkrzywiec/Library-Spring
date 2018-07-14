@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -189,7 +190,7 @@ public class LibraryController {
 			String currentPrincipalName = authentication.getName();
 			
 			book = bookService.reserveBook(id, currentPrincipalName);
-	
+			
 		} else {
 			book = bookService.getBookDTOById(id);
 		}

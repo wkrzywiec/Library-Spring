@@ -178,8 +178,8 @@ public class BookServiceImpl implements BookService {
 		bookDTO.setRating(bookEntity.getRating());
 		bookDTO.setImageLink(bookEntity.getImageLink());
 		bookDTO.setDescription(bookEntity.getDescription());
-		//TODO status
-		bookDTO.setStatus("AVAILABLE");
+
+		bookDTO.setStatus(this.checkBookStatus(bookEntity.getId()));
 		return bookDTO;
 	}
 
@@ -216,6 +216,22 @@ public class BookServiceImpl implements BookService {
 		}
 		
 		return categories;
-		
 	}
+	
+	@Transactional
+	private String checkBookStatus(int id) {
+		
+		String status = null;
+		
+		if (bookDAO.isBookReserved(id)) {
+			status = "RESERVED";
+		} else {
+			status = "AVAILABLE";
+		}
+		
+	/*} else if (bookDAO.isBookBorrowed(id)) {
+		status = "BORROWED";*/
+		return status;
+	}
+	
 }

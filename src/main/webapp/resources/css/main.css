@@ -5,3 +5,22 @@
 	color: #3f4449;
 	margin: 5px 0px 30px 0px;
 }
+
+
+.book-status-available {
+	padding: 1px 5px 1px 5px;
+	border-radius: 2px;
+	background-color: rgba(25,216,83,0.5);
+}
+
+.book-status-reserved {
+	padding: 1px 5px 1px 5px;
+	border-radius: 2px;
+	background-color: rgba(247,201,30,0.5);
+}
+
+.book-status-borrowed {
+	padding: 1px 5px 1px 5px;
+	border-radius: 2px;
+	background-color: rgba(245,66,48,0.5);
+}
