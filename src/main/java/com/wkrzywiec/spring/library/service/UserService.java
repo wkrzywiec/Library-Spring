@@ -38,4 +38,5 @@ public interface UserService {
 	int searchUsersResultsCount(String searchText);
 	
 	List<UserLog> getUserLogs(int id);
+	
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +25,7 @@ import com.wkrzywiec.spring.library.entity.UserLog;
 import com.wkrzywiec.spring.library.retrofit.model.RandomQuoteResponse;
 import com.wkrzywiec.spring.library.service.BookServiceImpl;
 import com.wkrzywiec.spring.library.service.GoogleBookServiceImpl;
+import com.wkrzywiec.spring.library.service.LibraryService;
 import com.wkrzywiec.spring.library.service.RandomQuoteService;
 import com.wkrzywiec.spring.library.service.UserService;
 
@@ -40,6 +40,9 @@ public class LibraryController {
 	
 	@Autowired
 	BookServiceImpl bookService;
+	
+	@Autowired
+	LibraryService libraryService;
 	
 	@Autowired
 	RandomQuoteService quoteService;
@@ -189,7 +192,15 @@ public class LibraryController {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			String currentPrincipalName = authentication.getName();
 			
-			book = bookService.reserveBook(id, currentPrincipalName);
+			int userId = userService.getUserByUsername(currentPrincipalName).getId();
+			
+			
+			if (libraryService.isUserExceedBooksLimit(userId)) {
+				model.addAttribute("message", "You have exceeded allowed books total count. Please return one of books to be able to make a reservation on this one.");
+				book = bookService.getBookDTOById(id);
+			} else {
+				book = bookService.reserveBook(id, currentPrincipalName);
+			}
 			
 		} else {
 			book = bookService.getBookDTOById(id);

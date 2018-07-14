@@ -14,6 +14,16 @@
     	<jsp:include page="shared/header.jsp"/>
 	</div>
 	
+	<div class="container">
+		<div class="form-group">
+			<c:if test="${message != null}">
+				<div class="alert alert-warning col-xs-offset-1 col-xs-10">
+				${message}
+				</div>				
+			</c:if>
+		</div>
+	</div>
+	
 	<div class="container" style="margin-top: 30px;">
 		<a href="javascript:history.back()">&#8592; Go back to Search Page</a>
 	</div>

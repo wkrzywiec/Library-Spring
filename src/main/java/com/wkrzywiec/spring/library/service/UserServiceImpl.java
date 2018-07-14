@@ -27,7 +27,7 @@ import com.wkrzywiec.spring.library.entity.UserLog;
 
 
 @Service("userDetailService")
-public class LibraryUserDetailService implements UserDetailsService, UserService {
+public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Autowired
 	private UserDAO userDAO;

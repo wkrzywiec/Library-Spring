@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.wkrzywiec.spring.library.dto.UserDTO;
-import com.wkrzywiec.spring.library.service.LibraryUserDetailService;
+import com.wkrzywiec.spring.library.service.UserServiceImpl;
 
 @Controller
 public class LoginController {
 
 	
 	@Autowired
-	LibraryUserDetailService userService;
+	UserServiceImpl userService;
 	
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
+import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.Reserved;
 
 @Repository
@@ -170,21 +171,47 @@ public class BookDAOImpl implements BookDAO {
 	@Override
 	public boolean isBookBorrowed(int id) {
 		
-		Object object = null;
+		Borrowed borrowed = null;
 		
 		try {
-			object =  entityManager.createQuery("from Borrowed b where b.id = :id")
-					.setParameter("id", id)
+			borrowed =  (Borrowed) entityManager.createQuery("from Borrowed b where b.book.id = :bookId")
+					.setParameter("bookId", id)
 					.getSingleResult();
 		} catch (NoResultException e) {
 			return false;
 		}
 		
-		if (object != null) {
+		if (borrowed != null) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public int getReservedBooksTotalCountByUser(int userId) {
+		
+		int count = 0;
+		try {
+			count =  entityManager.createQuery("from Reserved r where r.user.id = :userId")
+					.setParameter("userId", userId)
+					.getResultList().size();
+		} catch (NoResultException e) {
+		}
+		return count;
+	}
+
+	@Override
+	public int getBorrowedBooksTotalCountByUser(int userId) {
+		
+		int count = 0;
+		try {
+			count =  entityManager.createQuery("from Borrowed b where b.user.id = :userId")
+					.setParameter("userId", userId)
+					.getResultList().size();
+		} catch (NoResultException e) {
+		}
+		return count;
 	}
 
 	private FullTextQuery searchBooksQuery (String searchText) {

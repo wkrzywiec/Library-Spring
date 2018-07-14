@@ -27,4 +27,8 @@ public interface BookDAO {
 	boolean isBookReserved(int id);
 	
 	boolean isBookBorrowed(int id);
+	
+	int getReservedBooksTotalCountByUser(int userId);
+	
+	int getBorrowedBooksTotalCountByUser(int userId);
 }
