@@ -5,6 +5,8 @@ import java.util.List;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
+import com.wkrzywiec.spring.library.entity.Borrowed;
+import com.wkrzywiec.spring.library.entity.Reserved;
 
 public interface BookDAO {
 
@@ -31,4 +33,12 @@ public interface BookDAO {
 	int getReservedBooksTotalCountByUser(int userId);
 	
 	int getBorrowedBooksTotalCountByUser(int userId);
+	
+	int getReservedBooksTotalCount();
+	
+	int getBorrowedBooksTotalCount();
+	
+	List<Reserved> getAllReservedBooks();
+	
+	List<Borrowed> getAllBorrowedBooks();
 }

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wkrzywiec.spring.library.dto.BookDTO;
+import com.wkrzywiec.spring.library.dto.ManageDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
@@ -34,6 +35,7 @@ public class LibraryController {
 	
 	public final int USERS_PER_PAGE = 20;
 	public final int BOOKS_PER_PAGE = 20;
+	public final int MANAGE_PER_PAGE = 30;
 	
 	@Autowired
 	UserService userService;
@@ -159,6 +161,7 @@ public class LibraryController {
 		int bookPageCount = 0;
 		List<BookDTO> bookList = null;
 		
+		
 		if (searchText == null && pageNo == null) {
 			return "book-search";
 		}
@@ -210,6 +213,73 @@ public class LibraryController {
 		
 		return "book-details";
 	}
+	
+	@GetMapping("/books/manager")
+	public String bookManager(	@RequestParam(value="search", required=false) String searchText,
+								@RequestParam(value="pageNo", required=false) Integer pageNo,
+								@RequestParam(value="type", required=false) Integer typeNo,
+								@RequestParam(value="status", required=false) Integer statusNo,
+								ModelMap model) {
+		
+		int resultsCount = 0;
+		int pageCount = 0;
+		List<ManageDTO> manageList = null;
+		
+		if (searchText == null && pageNo == null) {
+			return "book-manager";
+		}
+		
+		if (searchText != null && pageNo == null){
+			pageNo = 1;
+			model.put("pageNo", (int) pageNo);
+			
+			if (typeNo == null) {
+				typeNo = 3;
+				model.put("optionNo", (int) typeNo);
+			}
+			
+			if (statusNo == null) {
+				statusNo = 3;
+				model.put("statusNo", (int) statusNo);
+			}
+		}
+		
+		resultsCount = libraryService.searchManageResultsCount(searchText, typeNo, statusNo);
+		model.addAttribute("resultsCount", resultsCount);
+		
+		pageCount = libraryService.calculateManagePagesCount(resultsCount, MANAGE_PER_PAGE);
+		model.addAttribute("pageCount", pageCount);
+		
+		manageList = libraryService.searchManageList(searchText, typeNo, statusNo, pageNo, MANAGE_PER_PAGE);
+		model.addAttribute("resultsList", manageList);
+		
+		return "book-manager";
+	}
+	
+	@GetMapping("/books/manager/showAll")
+	public String bookManager(	@RequestParam(value="pageNo", required=false) Integer pageNo,
+								ModelMap model) {
+		
+		if (pageNo == null) {
+			pageNo = 1;
+			model.put("pageNo", pageNo);
+		}
+		
+		int resultsCount = 0;
+		int pageCount = 0;
+		List<ManageDTO> manageList = null;
+		
+		resultsCount = libraryService.allManageResultsCount();
+		model.addAttribute("resultsCount", resultsCount);
+		
+		pageCount = libraryService.calculateManagePagesCount(resultsCount, MANAGE_PER_PAGE);
+		model.addAttribute("pageCount", pageCount);
+		
+		manageList = libraryService.allManageList(pageNo, MANAGE_PER_PAGE);
+		model.addAttribute("manageList", manageList);
+		
+		return "book-manager";
+	};
 	
 	
 	@GetMapping("/books/add-book")

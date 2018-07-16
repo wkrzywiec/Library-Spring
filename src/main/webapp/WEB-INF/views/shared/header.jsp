@@ -46,8 +46,12 @@
         	<a class="dropdown-item" href="${pageContext.request.contextPath}/books/add-book/">Add new book</a>
         </security:authorize>
         
+        <security:authorize access="hasAuthority('ADMIN')">
+        	<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager/">Manage books</a>
+        </security:authorize>
+        
         <security:authorize access="hasAuthority('LIBRARIAN')">
-        	<a class="dropdown-item" href="#">Manage books</a>
+        	<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager/">Manage books</a>
         </security:authorize>
 
       </div>

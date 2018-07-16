@@ -1,5 +1,6 @@
 package com.wkrzywiec.spring.library.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -212,6 +213,56 @@ public class BookDAOImpl implements BookDAO {
 		} catch (NoResultException e) {
 		}
 		return count;
+	}
+
+	@Override
+	public int getReservedBooksTotalCount() {
+		
+		int count = 0;
+		try {
+			count =  entityManager.createQuery("from Reserved r")
+					.getResultList().size();
+		} catch (NoResultException e) {
+		}
+		return count;
+	}
+
+	@Override
+	public int getBorrowedBooksTotalCount() {
+		
+		int count = 0;
+		try {
+			count =  entityManager.createQuery("from Borrowed b")
+					.getResultList().size();
+		} catch (NoResultException e) {
+		}
+		return count;
+	}
+
+	@Override
+	public List<Reserved> getAllReservedBooks() {
+		
+		List<Reserved> reservedList = null;
+		try {
+			reservedList =  entityManager.createQuery("from Reserved r")
+					.getResultList();
+		} catch (NoResultException e) {
+			reservedList = new ArrayList<Reserved>();
+		}
+		return reservedList;
+	}
+
+	@Override
+	public List<Borrowed> getAllBorrowedBooks() {
+		
+		List<Borrowed> borrowedList = null;
+		try {
+			borrowedList =  entityManager.createQuery("from Borrowed b")
+					.getResultList();
+		} catch (NoResultException e) {
+			borrowedList = new ArrayList<Borrowed>();
+		}
+		return borrowedList;
 	}
 
 	private FullTextQuery searchBooksQuery (String searchText) {
