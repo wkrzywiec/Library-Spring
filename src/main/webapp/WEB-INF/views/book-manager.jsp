@@ -81,10 +81,10 @@
 						<td>
 							<c:choose>
 								<c:when test="${manage.bookStatus == 'RESERVED'}">
-									<a href="${pageContext.request.contextPath}/books/manager/${user.id}" class="btn btn-sm btn-warning" role="button">Borrow</a>
+									<a href="${pageContext.request.contextPath}/books/manager/action?action=1&id=${manage.bookId}" class="btn btn-sm btn-warning" role="button">Borrow</a>
 								</c:when>
 								<c:otherwise>
-									<a href="${pageContext.request.contextPath}/books/manager/${user.id}" class="btn btn-sm btn-success" role="button">Receive</a>
+									<a href="${pageContext.request.contextPath}/books/manager/action?action=2&id=${manage.bookId}" class="btn btn-sm btn-success" role="button">Return</a>
 								</c:otherwise>
 							</c:choose>
 							 

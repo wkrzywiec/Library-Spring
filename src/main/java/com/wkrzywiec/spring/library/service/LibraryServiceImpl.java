@@ -9,7 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.wkrzywiec.spring.library.dao.BookDAO;
 import com.wkrzywiec.spring.library.dao.UserDAO;
+import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
+import com.wkrzywiec.spring.library.entity.Author;
+import com.wkrzywiec.spring.library.entity.Book;
+import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.Reserved;
 
@@ -17,6 +21,9 @@ import com.wkrzywiec.spring.library.entity.Reserved;
 public class LibraryServiceImpl implements LibraryService {
 
 	public final int MAX_BOOKS_COUNT_PER_USER = 3;
+	public final int DAYS_AFTER_RESERVATION = 3;
+	public final int DAYS_AFTER_BORROWED = 30;
+	
 	@Autowired
 	private BookDAO bookDAO;
 	
@@ -75,7 +82,7 @@ public class LibraryServiceImpl implements LibraryService {
 		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
 		List <Reserved> reservedList = null;
 		List <Borrowed> borrowedList = null;
-		//TODO implementacja DAO
+		
 		reservedList = bookDAO.getAllReservedBooks();
 		borrowedList = bookDAO.getAllBorrowedBooks();
 		
@@ -100,6 +107,34 @@ public class LibraryServiceImpl implements LibraryService {
 			int resultsPerPage) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	@Transactional
+	public BookDTO reserveBook(int id, String username) {
+		
+		BookDTO bookDTO = null;
+		Book bookEntity = null;
+		
+		int userId = 0;
+		userId = userDAO.getActiveUser(username).getId();
+		
+		bookEntity = bookDAO.reserveBook(id, userId, DAYS_AFTER_RESERVATION);
+		bookDTO = this.convertBookEntityToBookDTO(bookEntity);
+		
+		return bookDTO;
+	}
+	
+	@Override
+	@Transactional
+	public void borrowBook(int bookId, int userId) {
+		bookDAO.borrowBook(bookId, userId, DAYS_AFTER_BORROWED);
+	}
+
+	@Override
+	@Transactional
+	public void returnBook(int bookId, String username) {
+		bookDAO.returnBook(bookId);
 	}
 
 	private int reservedBooksTotalCountByUser(int userId) {
@@ -146,6 +181,56 @@ public class LibraryServiceImpl implements LibraryService {
 		manageDTO.setDueDate(borrowed.getDeadlineDate());
 		
 		return manageDTO;
+	}
+	
+	private BookDTO convertBookEntityToBookDTO(Book bookEntity) {
+		
+		
+		BookDTO bookDTO = new BookDTO();
+		List<String> authors = new ArrayList<String>();
+		List<String> categories = new ArrayList<String>();
+		
+		bookDTO.setId(bookEntity.getId());
+		bookDTO.setGoogleId(bookEntity.getGoogleId());
+		bookDTO.setTitle(bookEntity.getTitle());
+		
+		for (Author author : bookEntity.getAuthors()) {
+			authors.add(author.getName());
+		}
+		bookDTO.setAuthors(authors);
+		
+		bookDTO.setPublisher(bookEntity.getPublisher());
+		bookDTO.setPublishedDate(bookEntity.getPublishedDate());
+		bookDTO.setIsbn_10(bookEntity.getIsbn().getIsbn10());
+		bookDTO.setIsbn_13(bookEntity.getIsbn().getIsbn13());
+		bookDTO.setPageCount(bookEntity.getPageCount());
+		
+		for (BookCategory category: bookEntity.getCategories()) {
+			categories.add(category.getName());
+		}
+		bookDTO.setBookCategories(categories);
+		
+		bookDTO.setRating(bookEntity.getRating());
+		bookDTO.setImageLink(bookEntity.getImageLink());
+		bookDTO.setDescription(bookEntity.getDescription());
+
+		bookDTO.setStatus(this.checkBookStatus(bookEntity.getId()));
+		return bookDTO;
+	}
+
+	@Transactional
+	private String checkBookStatus(int id) {
+	
+		String status = null;
+		
+		if (bookDAO.isBookReserved(id)) {
+			status = "RESERVED";
+		} else if (bookDAO.isBookBorrowed(id)) {
+			status = "BORROWED";
+		} else {
+			status = "AVAILABLE";
+		}
+		return status;
 	}
 
 }

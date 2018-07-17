@@ -104,22 +104,6 @@ public class BookServiceImpl implements BookService {
 		
 		return book;
 	}
-	
-	@Override
-	@Transactional
-	public BookDTO reserveBook(int id, String username) {
-		
-		BookDTO bookDTO = null;
-		Book bookEntity = null;
-		
-		int userId = 0;
-		userId = userDAO.getActiveUser(username).getId();
-		
-		bookEntity = bookDAO.reserveBook(id, userId, DAYS_AFTER_RESERVATION);
-		bookDTO = this.convertBookEntityToBookDTO(bookEntity);
-		
-		return bookDTO;
-	}
 
 	private Book convertBookDTOToBookEntity(BookDTO bookDTO) {
 		
@@ -225,12 +209,11 @@ public class BookServiceImpl implements BookService {
 		
 		if (bookDAO.isBookReserved(id)) {
 			status = "RESERVED";
+		} else if (bookDAO.isBookBorrowed(id)) {
+			status = "BORROWED";
 		} else {
 			status = "AVAILABLE";
 		}
-		
-	/*} else if (bookDAO.isBookBorrowed(id)) {
-		status = "BORROWED";*/
 		return status;
 	}
 

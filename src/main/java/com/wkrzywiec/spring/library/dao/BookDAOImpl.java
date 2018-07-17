@@ -148,7 +148,33 @@ public class BookDAOImpl implements BookDAO {
 		return book;
 	}
 	
-	
+	@Override
+	public void borrowBook(int bookId, int userId, int days) {
+		
+		StoredProcedureQuery query = entityManager
+				.createStoredProcedureQuery("bookBorrow")
+				.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+				.registerStoredProcedureParameter(2, Integer.class, ParameterMode.IN)
+				.registerStoredProcedureParameter(3, Integer.class, ParameterMode.IN)
+				.setParameter(1, bookId)
+				.setParameter(2, userId)
+				.setParameter(3, days);
+		
+		query.execute();
+		
+	}
+
+	@Override
+	public void returnBook(int bookId) {
+		
+		StoredProcedureQuery query = entityManager
+				.createStoredProcedureQuery("bookReturn")
+				.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+				.setParameter(1, bookId);
+		
+		query.execute();
+		
+	}
 
 	@Override
 	public boolean isBookReserved(int id) {

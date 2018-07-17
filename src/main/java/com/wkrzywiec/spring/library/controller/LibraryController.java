@@ -202,7 +202,7 @@ public class LibraryController {
 				model.addAttribute("message", "You have exceeded allowed books total count. Please return one of books to be able to make a reservation on this one.");
 				book = bookService.getBookDTOById(id);
 			} else {
-				book = bookService.reserveBook(id, currentPrincipalName);
+				book = libraryService.reserveBook(id, currentPrincipalName);
 			}
 			
 		} else {
@@ -281,6 +281,32 @@ public class LibraryController {
 		return "book-manager";
 	};
 	
+	@GetMapping("/books/manager/action")
+	public String processBook(	@RequestParam(value="action", required=false) Integer action,
+								@RequestParam(value="id", required=false) Integer bookId,
+								Model model) {
+		
+		if (action != null) {
+			
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String currentPrincipalName = authentication.getName();
+			
+			int userId = userService.getUserByUsername(currentPrincipalName).getId();
+			
+			if (action == 1) {
+				libraryService.borrowBook(bookId, userId);
+			} else if (action == 2) {
+				libraryService.returnBook(bookId, currentPrincipalName);
+			}
+			
+			//TODO reload search
+			
+		} else {
+			//TODO reload search
+		}
+		
+		return "book-manager";
+	}
 	
 	@GetMapping("/books/add-book")
 	public String findNewBook(	@RequestParam(value="search", required=false) String searchText,
