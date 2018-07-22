@@ -153,13 +153,15 @@ public class LibraryServiceImpl implements LibraryService {
 	
 	@Override
 	@Transactional
-	public void borrowBook(int bookId, int userId) {
+	public void borrowBook(int bookId, int librarianId) {
+		Reserved reserved = bookDAO.getReservedBooksByBookId(bookId).get(0);
+		int userId = reserved.getUser().getId();
 		bookDAO.borrowBook(bookId, userId, DAYS_AFTER_BORROWED);
 	}
 
 	@Override
 	@Transactional
-	public void returnBook(int bookId, String username) {
+	public void returnBook(int bookId, int librarianId) {
 		bookDAO.returnBook(bookId);
 	}
 

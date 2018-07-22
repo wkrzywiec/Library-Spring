@@ -255,7 +255,7 @@ public class LibraryController {
 			if (action == 1) {
 				libraryService.borrowBook(bookId, userId);
 			} else if (action == 2) {
-				libraryService.returnBook(bookId, currentPrincipalName);
+				libraryService.returnBook(bookId, userId);
 			}
 		}
 		
@@ -291,7 +291,7 @@ public class LibraryController {
 			if (action == 1) {
 				libraryService.borrowBook(bookId, userId);
 			} else if (action == 2) {
-				libraryService.returnBook(bookId, currentPrincipalName);
+				libraryService.returnBook(bookId, userId);
 			}
 			
 		}

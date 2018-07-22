@@ -21,7 +21,7 @@ public interface LibraryService {
 	
 	BookDTO reserveBook(int id, String username);
 	
-	void borrowBook(int bookId, int userId);
+	void borrowBook(int bookId, int librarianId);
 	
-	void returnBook(int bookId, String username);
+	void returnBook(int bookId, int librarianId);
 }
