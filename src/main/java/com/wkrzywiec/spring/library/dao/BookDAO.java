@@ -54,9 +54,9 @@ public interface BookDAO {
 	
 	List<Borrowed> getBorrowedBooksByUserId(int userId);
 	
-	List<Reserved> getReservedBooksByBookId(int bookId, int pageNo, int resultsPerPage);
+	List<Reserved> getReservedBooksByBookId(int bookId);
 	
-	List<Borrowed> getBorrowedBooksByBookId(int bookId, int pageNo, int resultsPerPage);
+	List<Borrowed> getBorrowedBooksByBookId(int bookId);
 	
 	
 }

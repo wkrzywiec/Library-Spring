@@ -344,7 +344,7 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<Reserved> getReservedBooksByBookId(int bookId, int pageNo, int resultsPerPage) {
+	public List<Reserved> getReservedBooksByBookId(int bookId) {
 		
 		List<Reserved> reservedList = null;
 		try {
@@ -357,7 +357,7 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<Borrowed> getBorrowedBooksByBookId(int bookId, int pageNo, int resultsPerPage) {
+	public List<Borrowed> getBorrowedBooksByBookId(int bookId) {
 		
 		List<Borrowed> borrowedList = null;
 		try {

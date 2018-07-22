@@ -76,7 +76,7 @@ public class LibraryServiceImpl implements LibraryService {
 			
 		} else if (typeNo == 2) {
 			
-			bookList = bookDAO.searchBookList(searchText, 1, 5);
+			bookList = bookDAO.searchBookList(searchText, 1, 100);
 			idList = this.getIDFromEachBookInList(bookList);
 			resultsCount = this.getMangeResultTotalCountForBookIdList(idList, statusNo);
 		
@@ -316,20 +316,30 @@ public class LibraryServiceImpl implements LibraryService {
 	private List<ManageDTO> getManageDTOListByBookIdList(List<Integer> idList, int statusNo, int pageNo, int resultsPerPage){
 		
 		List<ManageDTO> manageList = null;
-		List<Reserved> reservedList = null;
-		List<Borrowed> borrowedList = null;
-		
+		List<Reserved> reservedList = new ArrayList<Reserved>();
+		List<Reserved> reservedListTemp = null;
+		List<Borrowed> borrowedList = new ArrayList<Borrowed>();
+		List<Borrowed> borrowedListTemp = null;
+
 		if (statusNo == 1) {
-			for (Integer bookId : idList) reservedList = bookDAO.getReservedBooksByBookId(bookId, pageNo, resultsPerPage);	
+			for (Integer bookId : idList) {
+				reservedListTemp = bookDAO.getReservedBooksByBookId(bookId);
+				reservedList.addAll(reservedListTemp);
+			}
 		} else if (statusNo == 2) {
-			for (Integer bookId : idList) borrowedList = bookDAO.getBorrowedBooksByBookId(bookId, pageNo, resultsPerPage);
+			for (Integer bookId : idList) {
+				borrowedListTemp = bookDAO.getBorrowedBooksByBookId(bookId);
+				borrowedList.addAll(borrowedListTemp);
+			}
+			
 		} else {
 			for (Integer bookId : idList) {
-				reservedList = bookDAO.getReservedBooksByBookId(bookId, pageNo, resultsPerPage);
-				borrowedList = bookDAO.getBorrowedBooksByBookId(bookId, pageNo, resultsPerPage);
+				reservedListTemp = bookDAO.getReservedBooksByBookId(bookId);
+				reservedList.addAll(reservedListTemp);
+				borrowedListTemp = bookDAO.getBorrowedBooksByBookId(bookId);
+				borrowedList.addAll(borrowedListTemp);
 			}
 		}
-		
 		manageList = this.combineReservedAndBorrowedBooksList(reservedList, borrowedList);
 		
 		return manageList;

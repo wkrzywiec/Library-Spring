@@ -14,8 +14,7 @@ In my Library Portal I plan to have three types of users:
 
 ### Blog Posts
 
-During my work on this project I've parallely create some blog posts to describe my path to working application. In the entires I've tried to explain some
-key concepts of tools and frameworks that I use and also small code snippets that are their implementation in my project. Here is the list of all entries that was written so far:
+During work on this project I've parallely created some blog posts that describe my path to the working application. In those entires I've tried to explain some of key concepts, tools and frameworks that I used. Here is the list of all entries that was written so far:
 
 **[Library Portal — Spring Project Overview](https://medium.com/@wkrzywiec/library-portal-spring-project-overview-ddbf910dcb95)**
 
