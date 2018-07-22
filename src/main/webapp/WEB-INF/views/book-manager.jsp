@@ -31,9 +31,9 @@
 					<div class="row" style="margin-top: 5px;">
 						<span style="margin-right: 15px;">Search for: </span>
 						<label  class="radio-inline">
-							<input type="radio" name="option" id="user"  value="1"/>User
-							<input type="radio" name="option" id="book"  value="2"/>Book
-							<input type="radio" name="option" id="both"  value="3"/>Both
+							<input type="radio" name="type" id="user"  value="1" checked/>User
+							<input type="radio" name="type" id="book"  value="2"/>Book
+							<input type="radio" name="type" id="both"  value="3"/>Both
 						</label>
 					</div>	
 					<div class="row" style="margin-top: 5px;">
@@ -41,7 +41,7 @@
 						<label  class="radio-inline">
 							<input type="radio" name="status" id="user"  value="1"/>Reserved
 							<input type="radio" name="status" id="book"  value="2"/>Borrowed
-							<input type="radio" name="status" id="user"  value="3"/>Both
+							<input type="radio" name="status" id="user"  value="3" checked/>Both
 						</label>
 					</div>	
 				</form:form>
@@ -81,10 +81,10 @@
 						<td>
 							<c:choose>
 								<c:when test="${manage.bookStatus == 'RESERVED'}">
-									<a href="${pageContext.request.contextPath}/books/manager/action?action=1&id=${manage.bookId}" class="btn btn-sm btn-warning" role="button">Borrow</a>
+									<a href="${pageContext.request.contextPath}/books/manager/showAll?action=1&id=${manage.bookId}" class="btn btn-sm btn-warning" role="button">Borrow</a>
 								</c:when>
 								<c:otherwise>
-									<a href="${pageContext.request.contextPath}/books/manager/action?action=2&id=${manage.bookId}" class="btn btn-sm btn-success" role="button">Return</a>
+									<a href="${pageContext.request.contextPath}/books/manager/showAll?action=2&id=${manage.bookId}" class="btn btn-sm btn-success" role="button">Return</a>
 								</c:otherwise>
 							</c:choose>
 							 

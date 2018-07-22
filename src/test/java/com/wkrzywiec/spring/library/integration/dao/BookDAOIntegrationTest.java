@@ -48,4 +48,28 @@ public class BookDAOIntegrationTest {
 		//then
 		assertTrue(resultCount > 0);
 	}
+	
+	@Test
+	@Transactional
+	public void givenUserId_whenGetReservedBooksCountForUser_thenReceiveUserReservedBooksTotalCount() {
+		//given
+		int userId = 1;
+		int resultCount = 0;
+		//when
+		resultCount = bookDAO.getReservedBooksTotalCountByUser(userId);
+		//then
+		assertTrue(resultCount > 0);
+	}
+	
+	@Test
+	@Transactional
+	public void givenUserId_whenGetBorrowedBooksCountForUser_thenReceiveUserBorrowedBooksTotalCount() {
+		//given
+		int userId = 1;
+		int resultCount = 0;
+		//when
+		resultCount = bookDAO.getBorrowedBooksTotalCountByUser(userId);
+		//then
+		assertTrue(resultCount > 0);
+	}
 }

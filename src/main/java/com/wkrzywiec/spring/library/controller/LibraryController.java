@@ -219,6 +219,8 @@ public class LibraryController {
 								@RequestParam(value="pageNo", required=false) Integer pageNo,
 								@RequestParam(value="type", required=false) Integer typeNo,
 								@RequestParam(value="status", required=false) Integer statusNo,
+								@RequestParam(value="action", required=false) Integer action,
+								@RequestParam(value="id", required=false) Integer bookId,
 								ModelMap model) {
 		
 		int resultsCount = 0;
@@ -234,13 +236,26 @@ public class LibraryController {
 			model.put("pageNo", (int) pageNo);
 			
 			if (typeNo == null) {
-				typeNo = 3;
+				typeNo = 2;
 				model.put("optionNo", (int) typeNo);
 			}
 			
 			if (statusNo == null) {
 				statusNo = 3;
 				model.put("statusNo", (int) statusNo);
+			}
+		}
+		
+		if (action != null) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String currentPrincipalName = authentication.getName();
+			
+			int userId = userService.getUserByUsername(currentPrincipalName).getId();
+			
+			if (action == 1) {
+				libraryService.borrowBook(bookId, userId);
+			} else if (action == 2) {
+				libraryService.returnBook(bookId, currentPrincipalName);
 			}
 		}
 		
@@ -251,18 +266,34 @@ public class LibraryController {
 		model.addAttribute("pageCount", pageCount);
 		
 		manageList = libraryService.searchManageList(searchText, typeNo, statusNo, pageNo, MANAGE_PER_PAGE);
-		model.addAttribute("resultsList", manageList);
+		model.addAttribute("manageList", manageList);
 		
 		return "book-manager";
 	}
 	
 	@GetMapping("/books/manager/showAll")
 	public String bookManager(	@RequestParam(value="pageNo", required=false) Integer pageNo,
+								@RequestParam(value="action", required=false) Integer action,
+								@RequestParam(value="id", required=false) Integer bookId,
 								ModelMap model) {
 		
 		if (pageNo == null) {
 			pageNo = 1;
 			model.put("pageNo", pageNo);
+		}
+		
+		if (action != null) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String currentPrincipalName = authentication.getName();
+			
+			int userId = userService.getUserByUsername(currentPrincipalName).getId();
+			
+			if (action == 1) {
+				libraryService.borrowBook(bookId, userId);
+			} else if (action == 2) {
+				libraryService.returnBook(bookId, currentPrincipalName);
+			}
+			
 		}
 		
 		int resultsCount = 0;
@@ -281,32 +312,6 @@ public class LibraryController {
 		return "book-manager";
 	};
 	
-	@GetMapping("/books/manager/action")
-	public String processBook(	@RequestParam(value="action", required=false) Integer action,
-								@RequestParam(value="id", required=false) Integer bookId,
-								Model model) {
-		
-		if (action != null) {
-			
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			String currentPrincipalName = authentication.getName();
-			
-			int userId = userService.getUserByUsername(currentPrincipalName).getId();
-			
-			if (action == 1) {
-				libraryService.borrowBook(bookId, userId);
-			} else if (action == 2) {
-				libraryService.returnBook(bookId, currentPrincipalName);
-			}
-			
-			//TODO reload search
-			
-		} else {
-			//TODO reload search
-		}
-		
-		return "book-manager";
-	}
 	
 	@GetMapping("/books/add-book")
 	public String findNewBook(	@RequestParam(value="search", required=false) String searchText,

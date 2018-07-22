@@ -242,6 +242,32 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
+	public int getReservedBooksTotalCountByBook(int bookId) {
+		
+		int count = 0;
+		try {
+			count =  entityManager.createQuery("from Reserved r where r.book.id = :bookId")
+					.setParameter("bookId", bookId)
+					.getResultList().size();
+		} catch (NoResultException e) {
+		}
+		return count;
+	}
+
+	@Override
+	public int getBorrowedBooksTotalCountByBook(int bookId) {
+		
+		int count = 0;
+		try {
+			count =  entityManager.createQuery("from Borrowed b where b.book.id = :bookId")
+					.setParameter("bookId", bookId)
+					.getResultList().size();
+		} catch (NoResultException e) {
+		}
+		return count;
+	}
+
+	@Override
 	public int getReservedBooksTotalCount() {
 		
 		int count = 0;
@@ -287,6 +313,58 @@ public class BookDAOImpl implements BookDAO {
 					.getResultList();
 		} catch (NoResultException e) {
 			borrowedList = new ArrayList<Borrowed>();
+		}
+		return borrowedList;
+	}
+
+	@Override
+	public List<Reserved> getReservedBooksByUserId(int userId) {
+		
+		List<Reserved> reservedList = null;
+		try {
+			reservedList =  entityManager.createQuery("from Reserved r where r.user.id = :userId")
+					.setParameter("userId", userId)
+					.getResultList();
+		} catch (NoResultException e) {
+		}
+		return reservedList;
+	}
+
+	@Override
+	public List<Borrowed> getBorrowedBooksByUserId(int userId) {
+		
+		List<Borrowed> borrowedList = null;
+		try {
+			borrowedList =  entityManager.createQuery("from Borrowed b where b.user.id = :userId")
+					.setParameter("userId", userId)
+					.getResultList();
+		} catch (NoResultException e) {
+		}
+		return borrowedList;
+	}
+
+	@Override
+	public List<Reserved> getReservedBooksByBookId(int bookId, int pageNo, int resultsPerPage) {
+		
+		List<Reserved> reservedList = null;
+		try {
+			reservedList =  entityManager.createQuery("from Reserved r where r.book.id = :bookId")
+					.setParameter("bookId", bookId)
+					.getResultList();
+		} catch (NoResultException e) {
+		}
+		return reservedList;
+	}
+
+	@Override
+	public List<Borrowed> getBorrowedBooksByBookId(int bookId, int pageNo, int resultsPerPage) {
+		
+		List<Borrowed> borrowedList = null;
+		try {
+			borrowedList =  entityManager.createQuery("from Borrowed b where b.book.id = :bookId")
+					.setParameter("bookId", bookId)
+					.getResultList();
+		} catch (NoResultException e) {
 		}
 		return borrowedList;
 	}

@@ -16,6 +16,7 @@ import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.Reserved;
+import com.wkrzywiec.spring.library.entity.User;
 
 @Service("libraryService")
 public class LibraryServiceImpl implements LibraryService {
@@ -61,8 +62,26 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	@Transactional
 	public int searchManageResultsCount(String searchText, int typeNo, int statusNo) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int resultsCount = 0;
+		List<Integer> idList = null;
+		List<User> userList = null;
+		List<Book> bookList = null;
+		
+		if (typeNo == 1) {
+			
+			userList = userDAO.searchUsers(searchText, 1, 5);
+			idList = this.getIDFromEachUserInList(userList);
+			resultsCount = this.getMangeResultTotalCountForUsersIdList(idList, statusNo);
+			
+		} else if (typeNo == 2) {
+			
+			bookList = bookDAO.searchBookList(searchText, 1, 5);
+			idList = this.getIDFromEachBookInList(bookList);
+			resultsCount = this.getMangeResultTotalCountForBookIdList(idList, statusNo);
+		
+		}
+		return resultsCount;
 	}
 
 	@Override
@@ -86,17 +105,7 @@ public class LibraryServiceImpl implements LibraryService {
 		reservedList = bookDAO.getAllReservedBooks();
 		borrowedList = bookDAO.getAllBorrowedBooks();
 		
-		ManageDTO manageDTO = null;
-		for (Reserved reserved : reservedList) {
-			
-			manageDTO = this.convertReservedToManageDTO(reserved);
-			manageList.add(manageDTO);
-		}
-		
-		for (Borrowed borrowed : borrowedList) {
-			manageDTO = this.convertBorrowedToManageDTO(borrowed);
-			manageList.add(manageDTO);
-		}
+		manageList = this.combineReservedAndBorrowedBooksList(reservedList, borrowedList);
 		
 		return manageList;
 	}
@@ -105,8 +114,25 @@ public class LibraryServiceImpl implements LibraryService {
 	@Transactional
 	public List<ManageDTO> searchManageList(String searchText, int typeNo, int statusNo, int pageNo,
 			int resultsPerPage) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
+		List<Integer> idList = null;
+		List<User> userList = null;
+		List<Book> bookList = null;
+		
+		if (typeNo == 1) {
+			
+			userList = userDAO.searchUsers(searchText, 1, 7);
+			idList = this.getIDFromEachUserInList(userList);
+			manageList = this.getManageDTOListByUserIdList(idList, statusNo);
+			
+		} else if (typeNo == 2) {
+			
+			bookList = bookDAO.searchBookList(searchText, 1, resultsPerPage);
+			idList = this.getIDFromEachBookInList(bookList);
+			manageList = this.getManageDTOListByBookIdList(idList, statusNo, pageNo, resultsPerPage);
+		}
+		return manageList;
 	}
 	
 	@Override
@@ -151,6 +177,28 @@ public class LibraryServiceImpl implements LibraryService {
 	
 	private int borrowedBooksTotalCount() {
 		return bookDAO.getBorrowedBooksTotalCount();
+	}
+	
+	private List<ManageDTO> combineReservedAndBorrowedBooksList(List<Reserved> reservedList, List<Borrowed> borrowedList){
+		
+		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
+		ManageDTO manageDTO = null;
+		
+		if (reservedList != null) {
+			for (Reserved reserved : reservedList) {
+				
+				manageDTO = this.convertReservedToManageDTO(reserved);
+				manageList.add(manageDTO);
+			}
+		}
+		
+		if (borrowedList != null) {
+			for (Borrowed borrowed : borrowedList) {
+				manageDTO = this.convertBorrowedToManageDTO(borrowed);
+				manageList.add(manageDTO);
+			}
+		}
+		return manageList;
 	}
 	
 	private ManageDTO convertReservedToManageDTO(Reserved reserved) {
@@ -231,6 +279,136 @@ public class LibraryServiceImpl implements LibraryService {
 			status = "AVAILABLE";
 		}
 		return status;
+	}
+	
+	private List<ManageDTO> getManageDTOListByUserIdList(List<Integer> idList, int statusNo){
+		
+		List<ManageDTO> manageList = null;
+		List<Reserved> reservedList = new ArrayList<Reserved>();
+		List<Reserved> reservedListTemp = null;
+		List<Borrowed> borrowedList = new ArrayList<Borrowed>();
+		List<Borrowed> borrowedListTemp = null;
+
+		if (statusNo == 1) {
+			for (Integer userId : idList) {
+				reservedListTemp = bookDAO.getReservedBooksByUserId(userId);
+				reservedList.addAll(reservedListTemp);
+			}
+		} else if (statusNo == 2) {
+			for (Integer userId : idList) {
+				borrowedListTemp = bookDAO.getBorrowedBooksByUserId(userId);
+				borrowedList.addAll(borrowedListTemp);
+			}
+			
+		} else {
+			for (Integer userId : idList) {
+				reservedListTemp = bookDAO.getReservedBooksByUserId(userId);
+				reservedList.addAll(reservedListTemp);
+				borrowedListTemp = bookDAO.getBorrowedBooksByUserId(userId);
+				borrowedList.addAll(borrowedListTemp);
+			}
+		}
+		manageList = this.combineReservedAndBorrowedBooksList(reservedList, borrowedList);
+		
+		return manageList;
+	}
+	
+	private List<ManageDTO> getManageDTOListByBookIdList(List<Integer> idList, int statusNo, int pageNo, int resultsPerPage){
+		
+		List<ManageDTO> manageList = null;
+		List<Reserved> reservedList = null;
+		List<Borrowed> borrowedList = null;
+		
+		if (statusNo == 1) {
+			for (Integer bookId : idList) reservedList = bookDAO.getReservedBooksByBookId(bookId, pageNo, resultsPerPage);	
+		} else if (statusNo == 2) {
+			for (Integer bookId : idList) borrowedList = bookDAO.getBorrowedBooksByBookId(bookId, pageNo, resultsPerPage);
+		} else {
+			for (Integer bookId : idList) {
+				reservedList = bookDAO.getReservedBooksByBookId(bookId, pageNo, resultsPerPage);
+				borrowedList = bookDAO.getBorrowedBooksByBookId(bookId, pageNo, resultsPerPage);
+			}
+		}
+		
+		manageList = this.combineReservedAndBorrowedBooksList(reservedList, borrowedList);
+		
+		return manageList;
+	}
+	
+	private List<Integer> getIDFromEachUserInList(List<User> userList){
+		
+		List<Integer> idList = new ArrayList<Integer>();
+		
+		for (User user : userList) {
+			idList.add(user.getId());
+		}
+		return idList;
+	}
+	
+	private List<Integer> getIDFromEachBookInList(List<Book> bookList){
+		
+		List<Integer> idList = new ArrayList<Integer>();
+		
+		for (Book book : bookList) {
+			idList.add(book.getId());
+		}
+		return idList;
+	}
+	
+	private int getMangeResultTotalCountForUsersIdList(List<Integer> userIdList, int statusNo) {
+		
+		int resultsCount = 0;
+		if (statusNo == 1) {
+			for (Integer userId : userIdList) resultsCount += bookDAO.getReservedBooksTotalCountByUser(userId);
+		} else if (statusNo == 2) {
+			for (Integer userId : userIdList) resultsCount += bookDAO.getBorrowedBooksTotalCountByUser(userId);
+		} else {
+			for (Integer userId : userIdList) {
+				resultsCount += bookDAO.getReservedBooksTotalCountByUser(userId);
+				resultsCount += bookDAO.getBorrowedBooksTotalCountByUser(userId);
+			}
+		}
+		return resultsCount;
+	}
+	
+	private int getMangeResultTotalCountForBookIdList(List<Integer> bookIdList, int statusNo) {
+		
+		int resultsCount = 0;
+		if (statusNo == 1) {
+			for (Integer bookId : bookIdList) resultsCount += bookDAO.getReservedBooksTotalCountByBook(bookId);
+		} else if (statusNo == 2) {
+			for (Integer bookId : bookIdList) resultsCount += bookDAO.getBorrowedBooksTotalCountByBook(bookId);
+		} else {
+			for (Integer bookId : bookIdList) {
+				resultsCount += bookDAO.getReservedBooksTotalCountByBook(bookId);
+				resultsCount += bookDAO.getBorrowedBooksTotalCountByBook(bookId);
+			}
+		}
+		return resultsCount;
+	}
+	
+	private List<ManageDTO> convertReservedListToManageDTOList(List<Reserved> reservedList){
+		
+		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
+		ManageDTO manageDTO = null;
+		
+		for (Reserved reserved : reservedList) {
+			manageDTO = this.convertReservedToManageDTO(reserved);
+			manageList.add(manageDTO);
+		}
+		return manageList;
+	}
+	
+	private List<ManageDTO> convertBorrowedListToManageDTOList(List<Borrowed> borrowedList){
+		
+		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
+		ManageDTO manageDTO = null;
+		
+		for (Borrowed borrowed : borrowedList) {
+			manageDTO = this.convertBorrowedToManageDTO(borrowed);
+			manageList.add(manageDTO);
+		}
+		return manageList;
 	}
 
 }

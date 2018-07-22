@@ -38,6 +38,10 @@ public interface BookDAO {
 	
 	int getBorrowedBooksTotalCountByUser(int userId);
 	
+	int getReservedBooksTotalCountByBook(int bookId);
+	
+	int getBorrowedBooksTotalCountByBook(int bookId);
+	
 	int getReservedBooksTotalCount();
 	
 	int getBorrowedBooksTotalCount();
@@ -45,4 +49,14 @@ public interface BookDAO {
 	List<Reserved> getAllReservedBooks();
 	
 	List<Borrowed> getAllBorrowedBooks();
+	
+	List<Reserved> getReservedBooksByUserId(int userId);
+	
+	List<Borrowed> getBorrowedBooksByUserId(int userId);
+	
+	List<Reserved> getReservedBooksByBookId(int bookId, int pageNo, int resultsPerPage);
+	
+	List<Borrowed> getBorrowedBooksByBookId(int bookId, int pageNo, int resultsPerPage);
+	
+	
 }
