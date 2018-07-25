@@ -99,7 +99,7 @@
     		<tbody>
 				<c:forEach items="${manageList}" var="manage">
 					<tr>
-						<td>${manage.bookTitle}</td>
+						<td><a href="${pageContext.request.contextPath}/books/${manage.bookId}">${manage.bookTitle}</a></td>
 						<td>${manage.userFirstName} ${manage.userLastName}</td>
 						<td>${manage.bookStatus}</td>
 						<td>${manage.dueDate}</td>

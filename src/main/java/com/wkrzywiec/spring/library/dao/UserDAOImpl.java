@@ -162,6 +162,7 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
+	@Transactional
 	public int searchUsersTotalCount(String searchText) {
 		
 		FullTextQuery jpaQuery = searchUsersQuery(searchText);
