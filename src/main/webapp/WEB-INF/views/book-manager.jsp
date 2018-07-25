@@ -72,15 +72,13 @@
 		    				Sort by
 		  				</button>
 		  				<div class="dropdown-menu">
-		  					<a class="dropdown-item">Relevance</a>
-		    				<a class="dropdown-item" href="#">Book: A to Z</a>
-		    				<a class="dropdown-item" href="#">Book: Z to A</a>
-		    				<a class="dropdown-item" href="#">User: A to Z</a>
-		    				<a class="dropdown-item" href="#">User: Z to A</a>
-		    				<a class="dropdown-item" href="#">Status: A to Z</a>
-		    				<a class="dropdown-item" href="#">Status: Z to A</a>
-		    				<a class="dropdown-item" href="#">Due date: ending soon</a>
-		    				<a class="dropdown-item" href="#">Due date: latest</a>
+		  					<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager?search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=rel">Relevance</a>
+		    				<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager?search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=bookAsc">Book: A to Z</a>
+		    				<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager?search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=bookDes">Book: Z to A</a>
+		    				<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager?search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=userAsc">User: A to Z</a>
+		    				<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager?search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=userDes">User: Z to A</a>
+		    				<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager?search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=statusAsc">Status: A to Z</a>
+		    				<a class="dropdown-item" href="${pageContext.request.contextPath}/books/manager?search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=statusDes">Status: Z to A</a>
 		  				</div>
 					</div>
 				</div>
@@ -108,10 +106,10 @@
 						<td>
 							<c:choose>
 								<c:when test="${manage.bookStatus == 'RESERVED'}">
-									<a href="${pageContext.request.contextPath}/books/manager?action=1&id=${manage.bookId}&search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}" class="btn btn-sm btn-warning" role="button">Borrow</a>
+									<a href="${pageContext.request.contextPath}/books/manager?action=1&id=${manage.bookId}&search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=${param.sort}" class="btn btn-sm btn-warning" role="button">Borrow</a>
 								</c:when>
 								<c:otherwise>
-									<a href="${pageContext.request.contextPath}/books/manager?action=2&id=${manage.bookId}&search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}" class="btn btn-sm btn-success" role="button">Return</a>
+									<a href="${pageContext.request.contextPath}/books/manager?action=2&id=${manage.bookId}&search=${param.search}&pageNo=${param.pageNo}&type=${param.type}&status=${param.status}&sort=${param.sort}" class="btn btn-sm btn-success" role="button">Return</a>
 								</c:otherwise>
 							</c:choose>
 							 

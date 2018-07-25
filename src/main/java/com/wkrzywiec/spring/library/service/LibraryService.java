@@ -24,4 +24,6 @@ public interface LibraryService {
 	void borrowBook(int bookId, int librarianId);
 	
 	void returnBook(int bookId, int librarianId);
+	
+	List<ManageDTO> sortManageList(List<ManageDTO> manageDTO, String sortBy);
 }

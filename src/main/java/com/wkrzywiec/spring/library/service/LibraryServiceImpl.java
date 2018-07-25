@@ -1,6 +1,8 @@
 package com.wkrzywiec.spring.library.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,6 +165,32 @@ public class LibraryServiceImpl implements LibraryService {
 	@Transactional
 	public void returnBook(int bookId, int librarianId) {
 		bookDAO.returnBook(bookId);
+	}
+	
+	@Override
+	public List<ManageDTO> sortManageList(List<ManageDTO> manageDTO, String sortBy) {
+		
+		Comparator<ManageDTO> manageComparator = null;
+		
+		if (sortBy.equals("bookAsc")) {
+			manageComparator = Comparator.comparing(ManageDTO::getBookTitle);
+		} else if (sortBy.equals("bookDes")) {
+			manageComparator = Comparator.comparing(ManageDTO::getBookTitle).reversed();
+		} else if (sortBy.equals("userAsc")) {
+			manageComparator = Comparator.comparing(ManageDTO::getUserLastName);
+		} else if (sortBy.equals("userDes")) {
+			manageComparator = Comparator.comparing(ManageDTO::getUserLastName).reversed();
+		} else if (sortBy.equals("statusAsc")) {
+			manageComparator = Comparator.comparing(ManageDTO::getBookStatus);
+		} else if (sortBy.equals("statusDes")) {
+			manageComparator = Comparator.comparing(ManageDTO::getBookStatus).reversed();
+		} else {
+			return manageDTO;
+		}
+		
+		Collections.sort(manageDTO, manageComparator);
+		
+		return manageDTO;
 	}
 
 	private int reservedBooksTotalCountByUser(int userId) {

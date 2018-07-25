@@ -219,6 +219,7 @@ public class LibraryController {
 								@RequestParam(value="pageNo", required=false) Integer pageNo,
 								@RequestParam(value="type", required=false) Integer typeNo,
 								@RequestParam(value="status", required=false) Integer statusNo,
+								@RequestParam(value="sort", required=false) String sortBy,
 								@RequestParam(value="action", required=false) Integer action,
 								@RequestParam(value="id", required=false) Integer bookId,
 								ModelMap model) {
@@ -246,6 +247,11 @@ public class LibraryController {
 			}
 		}
 		
+		if (sortBy == null) {
+			sortBy = "rel";
+			model.put("sort", sortBy);
+		}
+		
 		if (action != null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			String currentPrincipalName = authentication.getName();
@@ -266,6 +272,9 @@ public class LibraryController {
 		model.addAttribute("pageCount", pageCount);
 		
 		manageList = libraryService.searchManageList(searchText, typeNo, statusNo, pageNo, MANAGE_PER_PAGE);
+		
+		manageList = libraryService.sortManageList(manageList, sortBy);
+		
 		model.addAttribute("manageList", manageList);
 		
 		return "book-manager";
