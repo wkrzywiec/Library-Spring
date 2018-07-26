@@ -25,7 +25,7 @@
 	</div>
 	
 	<div class="container" style="margin-top: 30px;">
-		<a href="javascript:history.back()">&#8592; Go back to Search Page</a>
+		<a href="javascript:history.back()">&#8592; Go back</a>
 	</div>
 
 	<div class="container" style="margin-top: 50px;">

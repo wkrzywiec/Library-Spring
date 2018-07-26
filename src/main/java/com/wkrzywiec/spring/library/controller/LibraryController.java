@@ -129,7 +129,7 @@ public class LibraryController {
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("userDTO", userDTO);
 		
-		return "edit-user-admin";
+		return "user-details";
 	}
 	
 	@PostMapping("/admin-panel/user/{id}/update")
@@ -149,7 +149,7 @@ public class LibraryController {
 		User updatedUser = userService.updateUser(id, userDTO, currentPrincipalName);
 			
 		model.addAttribute("user", updatedUser);
-		return "edit-user-admin";
+		return "user-details";
 	}
 	
 	@GetMapping("/books/search")

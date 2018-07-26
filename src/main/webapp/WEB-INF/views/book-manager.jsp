@@ -100,7 +100,7 @@
 				<c:forEach items="${manageList}" var="manage">
 					<tr>
 						<td><a href="${pageContext.request.contextPath}/books/${manage.bookId}">${manage.bookTitle}</a></td>
-						<td>${manage.userFirstName} ${manage.userLastName}</td>
+						<td><a href="${pageContext.request.contextPath}/admin-panel/user/${manage.userId}">${manage.userFirstName} ${manage.userLastName}</a></td>
 						<td>${manage.bookStatus}</td>
 						<td>${manage.dueDate}</td>
 						<td>

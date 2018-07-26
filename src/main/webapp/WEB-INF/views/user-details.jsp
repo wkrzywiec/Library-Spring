@@ -25,7 +25,7 @@
 	
 	
 	<div class="container" style="margin-top: 30px;">
-		<a href="javascript:history.back()">&#8592; Go back to Admin Panel</a>
+		<a href="javascript:history.back()">&#8592; Go back </a>
 		<h2>${user.firstName} ${user.lastName}</h2>
 	</div>
 	<div class="container" style="margin-top: 30px;">
@@ -104,7 +104,7 @@
 							 		<h5>Active: </h5>
 							 	</div>
 							 	<div class="col">
-							 		<form:checkbox path = "enable" />
+							 		<form:checkbox path = "enable"/>
 							 		<c:if test="${user.enable}">
 							 		</c:if>
 							 		<c:if test="${!user.enable}">
