@@ -19,7 +19,7 @@ public interface LibraryService {
 
 	List<ManageDTO> searchManageList(String searchText, int typeNo, int statusNo, int pageNo, int resultsPerPage);
 	
-	BookDTO reserveBook(int id, String username);
+	BookDTO reserveBook(int id, int userId);
 	
 	void borrowBook(int bookId, int librarianId);
 	

@@ -16,17 +16,28 @@
 			<Column name="message" pattern="%message"/>
 			<Column name="changed_by_username" pattern="%X{changed_by_username}"/>
 		</JDBC>
+		
+		<JDBC name="libraryAppenderDB" tableName="library_logs">
+			<ConnectionFactory class="com.wkrzywiec.spring.library.config.LogsConnectionFactory" method="getDatabaseConnection" />
+			<Column name="level" pattern="%level"/>
+			<Column name="message" pattern="%message"/>
+			<Column name="book_id" pattern="%X{book_id}"/>
+			<Column name="user_id" pattern="%X{user_id}"/>
+			<Column name="changed_by_username" pattern="%X{changed_by_username}"/>
+		</JDBC>
 	</Appenders>
 
 	<Loggers>
 		<Root level="error">
 			<AppenderRef ref="consoleAppender" />
 		</Root>
-		
-		
+	
 		<Logger name="userLoggerDB" level="info">
-			<AppenderRef ref="consoleAppender" />
 			<AppenderRef ref="userAppenderDB" />
+		</Logger>
+		
+		<Logger name="libraryLoggerDB" level="info">
+			<AppenderRef ref="libraryAppenderDB" />
 		</Logger>
 		
 	</Loggers>

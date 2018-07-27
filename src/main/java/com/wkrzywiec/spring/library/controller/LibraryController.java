@@ -184,7 +184,7 @@ public class LibraryController {
 	}
 	
 	@GetMapping("/books/{id}")
-	public String showBookDetails(	@PathVariable("id") Integer id,
+	public String showBookDetails(	@PathVariable("id") Integer bookId,
 									@RequestParam(value="action", required=false) String action,
 									@ModelAttribute("user") UserDTO userDTO,
 									Model model) {
@@ -194,19 +194,17 @@ public class LibraryController {
 		if (action != null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			String currentPrincipalName = authentication.getName();
-			
 			int userId = userService.getUserByUsername(currentPrincipalName).getId();
-			
 			
 			if (libraryService.isUserExceedBooksLimit(userId)) {
 				model.addAttribute("message", "You have exceeded allowed books total count. Please return one of books to be able to make a reservation on this one.");
-				book = bookService.getBookDTOById(id);
+				book = bookService.getBookDTOById(bookId);
 			} else {
-				book = libraryService.reserveBook(id, currentPrincipalName);
+				book = libraryService.reserveBook(bookId, userId);
 			}
 			
 		} else {
-			book = bookService.getBookDTOById(id);
+			book = bookService.getBookDTOById(bookId);
 		}
 		
 		model.addAttribute("book", book);

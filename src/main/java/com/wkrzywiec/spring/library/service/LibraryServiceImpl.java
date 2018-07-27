@@ -139,13 +139,10 @@ public class LibraryServiceImpl implements LibraryService {
 	
 	@Override
 	@Transactional
-	public BookDTO reserveBook(int id, String username) {
+	public BookDTO reserveBook(int id, int userId) {
 		
 		BookDTO bookDTO = null;
 		Book bookEntity = null;
-		
-		int userId = 0;
-		userId = userDAO.getActiveUser(username).getId();
 		
 		bookEntity = bookDAO.reserveBook(id, userId, DAYS_AFTER_RESERVATION);
 		bookDTO = this.convertBookEntityToBookDTO(bookEntity);

@@ -18,12 +18,13 @@ import com.wkrzywiec.spring.library.service.UserService;
 
 @Aspect
 @Component
-public class UserLoggingAspect {
+public class UserLogsAspect {
 	
 	@Autowired
 	UserService userService;
 	
 	private Logger userLogger = LogManager.getLogger("userLoggerDB");
+	
 	
 	@Pointcut("execution(* com.wkrzywiec.spring.library.dao.UserDAOImpl.saveUser(..))")
 	public void saveUser() {}
