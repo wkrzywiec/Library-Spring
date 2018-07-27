@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.User;
@@ -177,7 +178,7 @@ public class UserDAOImpl implements UserDAO {
 		
 		List<UserLog> userLogList;
 		
-		userLogList = entityManager.createQuery("from UserLog u where u.user.id = :userId")
+		userLogList = entityManager.createQuery("from UserLog u where u.user.id = :userId order by u.dated desc")
 					.setParameter("userId", id)
 					.getResultList();
 		

@@ -22,6 +22,7 @@ import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
+import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.Reserved;
 
 @Repository
@@ -367,6 +368,31 @@ public class BookDAOImpl implements BookDAO {
 		} catch (NoResultException e) {
 		}
 		return borrowedList;
+	}
+
+	@Override
+	public List<LibraryLog> getLibraryLogsByUser(int userId) {
+		
+		List<LibraryLog> libraryLogs = null;
+		try {
+			libraryLogs =  entityManager.createQuery("from LibraryLog l where l.user.id = :userId order by l.dated desc")
+					.setParameter("userId", userId)
+					.getResultList();
+		} catch (NoResultException e) {
+		}
+		return libraryLogs;
+	}
+
+	@Override
+	public List<LibraryLog> getLibraryLogsByBook(int bookId) {
+		List<LibraryLog> libraryLogs = null;
+		try {
+			libraryLogs =  entityManager.createQuery("from LibraryLog l where l.book.id = :bookId order by l.dated desc")
+					.setParameter("bookId", bookId)
+					.getResultList();
+		} catch (NoResultException e) {
+		}
+		return libraryLogs;
 	}
 
 	private FullTextQuery searchBooksQuery (String searchText) {

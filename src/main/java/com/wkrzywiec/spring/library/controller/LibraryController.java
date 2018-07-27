@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
+import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
 import com.wkrzywiec.spring.library.retrofit.model.RandomQuoteResponse;
@@ -117,11 +118,17 @@ public class LibraryController {
 		
 		User user = userService.getUserById(id);
 		List<UserLog> userLogs = null;
+		List<LibraryLog> libraryLogs = null;
+		
 		if (additional != null) {
 			if (additional == 1) {
 				userLogs = userService.getUserLogs(user.getId());
+				model.addAttribute("logs", userLogs);
+			} else if (additional == 2) {
+				libraryLogs = libraryService.getLibraryLogsByUser(user.getId());
+				model.addAttribute("logs", libraryLogs);
 			}
-			model.addAttribute("logs", userLogs);
+			
 		}
 		
 		model.addAttribute("user", user);
@@ -186,15 +193,17 @@ public class LibraryController {
 	@GetMapping("/books/{id}")
 	public String showBookDetails(	@PathVariable("id") Integer bookId,
 									@RequestParam(value="action", required=false) String action,
+									@RequestParam(value="addit", required=false)  Integer additional,
 									@ModelAttribute("user") UserDTO userDTO,
 									Model model) {
 		
 		BookDTO book = null;
-		
+		List<LibraryLog> libraryLogs = null;
+		int userId = 0;
 		if (action != null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			String currentPrincipalName = authentication.getName();
-			int userId = userService.getUserByUsername(currentPrincipalName).getId();
+			userId = userService.getUserByUsername(currentPrincipalName).getId();
 			
 			if (libraryService.isUserExceedBooksLimit(userId)) {
 				model.addAttribute("message", "You have exceeded allowed books total count. Please return one of books to be able to make a reservation on this one.");
@@ -205,6 +214,13 @@ public class LibraryController {
 			
 		} else {
 			book = bookService.getBookDTOById(bookId);
+		}
+		
+		if (additional != null) {
+			if (additional == 1) {
+				libraryLogs = libraryService.getLibraryLogsByBook(bookId);
+				model.addAttribute("logs", libraryLogs);
+			} 	
 		}
 		
 		model.addAttribute("book", book);

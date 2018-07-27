@@ -3,6 +3,7 @@ package com.wkrzywiec.spring.library.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;

@@ -6,6 +6,7 @@ import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
+import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.Reserved;
 
 public interface BookDAO {
@@ -58,5 +59,7 @@ public interface BookDAO {
 	
 	List<Borrowed> getBorrowedBooksByBookId(int bookId);
 	
+	List<LibraryLog> getLibraryLogsByUser(int userId);
 	
+	List<LibraryLog> getLibraryLogsByBook(int bookId);
 }

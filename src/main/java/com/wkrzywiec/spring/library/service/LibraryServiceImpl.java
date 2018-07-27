@@ -17,6 +17,7 @@ import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
+import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.Reserved;
 import com.wkrzywiec.spring.library.entity.User;
 
@@ -188,6 +189,23 @@ public class LibraryServiceImpl implements LibraryService {
 		Collections.sort(manageDTO, manageComparator);
 		
 		return manageDTO;
+	}
+	
+	@Override
+	@Transactional
+	public List<LibraryLog> getLibraryLogsByUser(int userId) {
+		
+		List<LibraryLog> libraryLogs = null;
+		libraryLogs = bookDAO.getLibraryLogsByUser(userId);
+		return libraryLogs;
+	}
+	
+	@Override
+	public List<LibraryLog> getLibraryLogsByBook(int bookId) {
+		
+		List<LibraryLog> libraryLogs = null;
+		libraryLogs = bookDAO.getLibraryLogsByBook(bookId);
+		return libraryLogs;
 	}
 
 	private int reservedBooksTotalCountByUser(int userId) {

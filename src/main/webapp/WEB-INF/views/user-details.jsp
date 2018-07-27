@@ -132,7 +132,7 @@
 							 		<h5>User book history: </h5>
 							 	</div>
 							 	<div class="col">
-							 		<a href="#">Show user book history</a>
+							 		<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}?addit=2">Show user book history</a>
 							 	</div>
 						 	</div>
 						 	<div class="row" style="margin-top:20px">
@@ -285,25 +285,27 @@
 	    	</table>
 		</c:if>
 	
-		<c:if test="${param.add == 2}">
+		<c:if test="${param.addit == 2}">
 			<table class="table table-striped" align="center">
 				<thead>
 	     	 		<tr>
 	        			<th>Id</th>
 	        			<th>Book Title</th>
-	        			<th>Book Author</th>
-	        			<th>From</th>
-	        			<th>To</th>
+	        			<th>User</th>
+	        			<th>Details</th>
+	        			<th>Dated</th>
+	        			<th>Actioned by</th>
 	      			</tr>
 	    		</thead>
 	    		<tbody>
-	    			<c:forEach items="${books}" var="book">
+	    			<c:forEach items="${logs}" var="log">
 						<tr>
-							<td>${book.id}</td>
-							<td>${book.title}</td>
-							<td>${book.author}</td>
-							<td>${book.fromDate}</td>
-							<td>${book.toDate}</td>
+							<td>${log.id}</td>
+							<td><a href="${pageContext.request.contextPath}/books/${log.book}">${log.book.title}</a></td>
+							<td>${log.user.firstName} ${log.user.lastName}</td>
+							<td>${log.message}</td>
+							<td>${log.dated}</td>
+							<td>${log.changedByUsername}</td>
 						</tr>
 					</c:forEach>
 	    		</tbody>

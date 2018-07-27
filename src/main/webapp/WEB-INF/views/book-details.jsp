@@ -99,10 +99,39 @@
 		<div class="row">
 			<h3>Description:</h3>
 		</div>
-		<div class="row">
+		<div class="row" style="margin-bottom: 50px;">
 			${book.description}
 		</div>
+		
+		<c:if test="${param.addit == 1}">
+			<table class="table table-striped" align="center">
+				<thead>
+	     	 		<tr>
+	        			<th>Id</th>
+	        			<th>Book Title</th>
+	        			<th>User</th>
+	        			<th>Details</th>
+	        			<th>Dated</th>
+	        			<th>Actioned by</th>
+	      			</tr>
+	    		</thead>
+	    		<tbody>
+	    			<c:forEach items="${logs}" var="log">
+						<tr>
+							<td>${log.id}</td>
+							<td>${log.book.title}</td>
+							<td><a href="${pageContext.request.contextPath}/admin-panel/user/${manage.userId}">${log.user.firstName} ${log.user.lastName}</a></td>
+							<td>${log.message}</td>
+							<td>${log.dated}</td>
+							<td>${log.changedByUsername}</td>
+						</tr>
+					</c:forEach>
+	    		</tbody>
+	    	</table>
+		</c:if>
 	</div>
+	
+	
 	
 	<div class="modal fade" id="reserveModal" tabindex="-1" role="dialog" aria-labelledby="reserveModalLabel" aria-hidden="true">
   		<div class="modal-dialog" role="document">
