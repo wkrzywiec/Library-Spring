@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wkrzywiec.spring.library.dto.BookDTO;
+import com.wkrzywiec.spring.library.dto.LibraryLogDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
+import com.wkrzywiec.spring.library.dto.UserLogDTO;
 import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
@@ -60,6 +62,17 @@ public class LibraryController {
 		
 		model.addAttribute("quote", quote);
 		return "home";
+	}
+	
+	@GetMapping("/profile")
+	public String showProfilePage(Model model) {
+		
+		int userId = 0;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentPrincipalName = authentication.getName();
+		userId = userService.getUserByUsername(currentPrincipalName).getId();
+		
+		return this.showDetailedUserInfoOnAdmin(userId, null, model);
 	}
 	
 	@GetMapping("/admin-panel")
@@ -116,10 +129,12 @@ public class LibraryController {
 												@RequestParam(value="addit", required=false)  Integer additional,
 												Model model) {
 		
-		User user = userService.getUserById(id);
-		List<UserLog> userLogs = null;
-		List<LibraryLog> libraryLogs = null;
+		List<UserLogDTO> userLogs = null;
+		List<LibraryLogDTO> libraryLogs = null;
 		List<ManageDTO> manageDTO = null;
+		
+		User user = userService.getUserById(id);
+		model.addAttribute("user", user);
 		
 		if (additional != null) {
 			if (additional == 1) {
@@ -130,8 +145,6 @@ public class LibraryController {
 				model.addAttribute("logs", libraryLogs);
 			}
 		}
-		
-		model.addAttribute("user", user);
 		
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("userDTO", userDTO);
@@ -201,7 +214,7 @@ public class LibraryController {
 									Model model) {
 		
 		BookDTO book = null;
-		List<LibraryLog> libraryLogs = null;
+		List<LibraryLogDTO> libraryLogs = null;
 		int userId = 0;
 		if (action != null) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

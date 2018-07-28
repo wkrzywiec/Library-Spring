@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wkrzywiec.spring.library.dao.BookDAO;
 import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.BookDTO;
+import com.wkrzywiec.spring.library.dto.LibraryLogDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
@@ -209,19 +210,24 @@ public class LibraryServiceImpl implements LibraryService {
 	
 	@Override
 	@Transactional
-	public List<LibraryLog> getLibraryLogsByUser(int userId) {
+	public List<LibraryLogDTO> getLibraryLogsByUser(int userId) {
 		
 		List<LibraryLog> libraryLogs = null;
+		List<LibraryLogDTO> libraryLogsDTO = null;
 		libraryLogs = bookDAO.getLibraryLogsByUser(userId);
-		return libraryLogs;
-	}
+		libraryLogsDTO = this.convertLibraryLogsEntityListToLibraryLogsDTOList(libraryLogs);
 	
+		return libraryLogsDTO;
+	}
+
 	@Override
-	public List<LibraryLog> getLibraryLogsByBook(int bookId) {
+	public List<LibraryLogDTO> getLibraryLogsByBook(int bookId) {
 		
 		List<LibraryLog> libraryLogs = null;
+		List<LibraryLogDTO> libraryLogsDTO = null;
 		libraryLogs = bookDAO.getLibraryLogsByBook(bookId);
-		return libraryLogs;
+		libraryLogsDTO = this.convertLibraryLogsEntityListToLibraryLogsDTOList(libraryLogs);
+		return libraryLogsDTO;
 	}
 
 	private int reservedBooksTotalCountByUser(int userId) {
@@ -458,28 +464,35 @@ public class LibraryServiceImpl implements LibraryService {
 		return resultsCount;
 	}
 	
-	private List<ManageDTO> convertReservedListToManageDTOList(List<Reserved> reservedList){
+	private List<LibraryLogDTO> convertLibraryLogsEntityListToLibraryLogsDTOList(List<LibraryLog> libraryLogs) {
 		
-		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
-		ManageDTO manageDTO = null;
+		List<LibraryLogDTO> libraryLogsDTOList = new ArrayList<LibraryLogDTO>();
+		LibraryLogDTO libraryLogDTO;
 		
-		for (Reserved reserved : reservedList) {
-			manageDTO = this.convertReservedToManageDTO(reserved);
-			manageList.add(manageDTO);
-		}
-		return manageList;
+		if (libraryLogs != null) {
+			for (LibraryLog log: libraryLogs) {
+				libraryLogDTO = this.convertLibraryLogEntityToLibraryLogDTO(log);
+				libraryLogsDTOList.add(libraryLogDTO);
+			}
+		} 
+		return libraryLogsDTOList;
 	}
-	
-	private List<ManageDTO> convertBorrowedListToManageDTOList(List<Borrowed> borrowedList){
+
+	private LibraryLogDTO convertLibraryLogEntityToLibraryLogDTO(LibraryLog log) {
 		
-		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
-		ManageDTO manageDTO = null;
+		LibraryLogDTO libraryLogDTO = new LibraryLogDTO();
+		libraryLogDTO.setId(log.getId());
+		libraryLogDTO.setBookId(log.getBook().getId());
+		libraryLogDTO.setBookTitle(log.getBook().getTitle());
+		libraryLogDTO.setUserId(log.getUser().getId());
+		libraryLogDTO.setUserFirstName(log.getUser().getFirstName());
+		libraryLogDTO.setUserLastName(log.getUser().getLastName());
+		libraryLogDTO.setUsername(log.getUser().getUsername());
+		libraryLogDTO.setMessage(log.getMessage());
+		libraryLogDTO.setDated(log.getDated());
+		libraryLogDTO.setChangedByUsername(log.getChangedByUsername());
 		
-		for (Borrowed borrowed : borrowedList) {
-			manageDTO = this.convertBorrowedToManageDTO(borrowed);
-			manageList.add(manageDTO);
-		}
-		return manageList;
+		return libraryLogDTO;
 	}
 
 }

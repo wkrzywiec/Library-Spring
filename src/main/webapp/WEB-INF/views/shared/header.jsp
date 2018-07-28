@@ -91,7 +91,7 @@
       </a>
       
       <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" href="#">Profile</a>
+        <a class="dropdown-item" href="${pageContext.request.contextPath}/profile">Profile</a>
         <a class="dropdown-item" href="#">Change password</a>
         
         <form:form id="form1" action="${pageContext.request.contextPath}/logout" method="post">

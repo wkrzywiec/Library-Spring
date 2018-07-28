@@ -3,9 +3,9 @@ package com.wkrzywiec.spring.library.service;
 import java.util.List;
 
 import com.wkrzywiec.spring.library.dto.UserDTO;
+import com.wkrzywiec.spring.library.dto.UserLogDTO;
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.User;
-import com.wkrzywiec.spring.library.entity.UserLog;
 
 public interface UserService {
 
@@ -37,6 +37,6 @@ public interface UserService {
 	
 	int searchUsersResultsCount(String searchText);
 	
-	List<UserLog> getUserLogs(int id);
+	List<UserLogDTO> getUserLogs(int id);
 	
 }

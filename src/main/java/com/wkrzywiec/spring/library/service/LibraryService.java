@@ -3,6 +3,7 @@ package com.wkrzywiec.spring.library.service;
 import java.util.List;
 
 import com.wkrzywiec.spring.library.dto.BookDTO;
+import com.wkrzywiec.spring.library.dto.LibraryLogDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
 import com.wkrzywiec.spring.library.entity.LibraryLog;
 
@@ -30,7 +31,7 @@ public interface LibraryService {
 	
 	List<ManageDTO> sortManageList(List<ManageDTO> manageDTO, String sortBy);
 	
-	List<LibraryLog> getLibraryLogsByUser(int userId);
+	List<LibraryLogDTO> getLibraryLogsByUser(int userId);
 	
-	List<LibraryLog> getLibraryLogsByBook(int bookId);
+	List<LibraryLogDTO> getLibraryLogsByBook(int bookId);
 }

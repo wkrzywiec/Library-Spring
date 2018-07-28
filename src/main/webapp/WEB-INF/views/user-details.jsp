@@ -309,8 +309,8 @@
 	    			<c:forEach items="${logs}" var="log">
 						<tr>
 							<td>${log.id}</td>
-							<td><a href="${pageContext.request.contextPath}/books/${log.book}">${log.book.title}</a></td>
-							<td>${log.user.firstName} ${log.user.lastName}</td>
+							<td><a href="${pageContext.request.contextPath}/books/${log.bookId}">${log.bookTitle}</a></td>
+							<td>${log.userFirstName} ${log.userLastName}</td>
 							<td>${log.message}</td>
 							<td>${log.dated}</td>
 							<td>${log.changedByUsername}</td>

@@ -119,8 +119,8 @@
 	    			<c:forEach items="${logs}" var="log">
 						<tr>
 							<td>${log.id}</td>
-							<td>${log.book.title}</td>
-							<td><a href="${pageContext.request.contextPath}/admin-panel/user/${manage.userId}">${log.user.firstName} ${log.user.lastName}</a></td>
+							<td>${log.bookTitle}</td>
+							<td><a href="${pageContext.request.contextPath}/admin-panel/user/${log.userId}"> ${log.userFirstName} ${log.userLastName}</a></td>
 							<td>${log.message}</td>
 							<td>${log.dated}</td>
 							<td>${log.changedByUsername}</td>

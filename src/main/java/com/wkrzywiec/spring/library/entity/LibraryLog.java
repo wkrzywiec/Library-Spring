@@ -38,11 +38,11 @@ public class LibraryLog {
 	@Column(name="message")
 	private String message;
 	
-	@ManyToOne (fetch=FetchType.EAGER)
+	@ManyToOne (fetch=FetchType.LAZY)
 	@JoinColumn(name="book_id", insertable=false, updatable=false)
 	private Book book;
 	
-	@ManyToOne (fetch=FetchType.EAGER)
+	@ManyToOne (fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id", insertable=false, updatable=false)
 	private User user;
 	

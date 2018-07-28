@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
+import com.wkrzywiec.spring.library.dto.UserLogDTO;
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.User;
@@ -267,9 +268,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	
 	@Override
 	@Transactional
-	public List<UserLog> getUserLogs(int id) {
+	public List<UserLogDTO> getUserLogs(int id) {
 		
-		return userDAO.getUserLogs(id);
+		List<UserLog> userLogList;
+		List<UserLogDTO> userLogDTOList;
+		
+		userLogList = userDAO.getUserLogs(id);
+		userLogDTOList = this.convertUserLogsEntityListToUserLogsDTOList(userLogList);
+		
+		return userLogDTOList;
 	}
 
 	private Collection<? extends GrantedAuthority> getUserAuthorities(Set<Role> modelAuthSet) {
@@ -316,5 +323,33 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		userEntity.addRole(role);
 		
 		return userEntity;
+	}
+	
+	private List<UserLogDTO> convertUserLogsEntityListToUserLogsDTOList(List<UserLog> userLogList) {
+		
+		List<UserLogDTO> userLogDTOList = new ArrayList<UserLogDTO>();
+		UserLogDTO userLogDTO;
+		if (userLogList != null) {
+			for (UserLog userLog : userLogList) {
+				userLogDTO = this.convertUserLogEntityToUserLogDTO(userLog);
+				userLogDTOList.add(userLogDTO);
+			}
+		}
+		return userLogDTOList;
+	}
+
+	private UserLogDTO convertUserLogEntityToUserLogDTO(UserLog userLog) {
+		
+		UserLogDTO userLogDTO = new UserLogDTO();
+		userLogDTO.setId(userLog.getId());
+		userLogDTO.setUsername(userLog.getUser().getUsername());
+		userLogDTO.setDated(userLog.getDated());
+		userLogDTO.setField(userLog.getField());
+		userLogDTO.setFromValue(userLog.getFromValue());
+		userLogDTO.setToValue(userLog.getToValue());
+		userLogDTO.setMessage(userLog.getMessage());
+		userLogDTO.setChangedByUsername(userLog.getChangedByUsername());
+		
+		return userLogDTO;
 	}
 }
