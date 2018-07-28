@@ -16,6 +16,8 @@ public interface LibraryService {
 	
 	int calculateManagePagesCount(int resultsCount, int resultsPerPage);
 	
+	List<ManageDTO> getManageListByUser(int userId);
+	
 	List<ManageDTO> allManageList(int pageNo, int resultsPerPage);
 
 	List<ManageDTO> searchManageList(String searchText, int typeNo, int statusNo, int pageNo, int resultsPerPage);

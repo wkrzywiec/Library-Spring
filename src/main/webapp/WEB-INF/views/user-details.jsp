@@ -129,6 +129,14 @@
 						 	</div>
 						 	<div class="row" style="margin-top:20px">
 						 		<div class="col">
+							 		<h5>Books: </h5>
+							 	</div>
+							 	<div class="col">
+							 		<a data-toggle="modal" href="#reserveModal">Show user current books</a>
+							 	</div>
+						 	</div>
+						 	<div class="row" style="margin-top:20px">
+						 		<div class="col">
 							 		<h5>User book history: </h5>
 							 	</div>
 							 	<div class="col">
@@ -311,6 +319,42 @@
 	    		</tbody>
 	    	</table>
 		</c:if>
+	</div>
+	
+	<div class="modal fade" id="reserveModal" tabindex="-1" role="dialog" aria-labelledby="reserveModalLabel" aria-hidden="true">
+  		<div class="modal-dialog" role="document">
+    		<div class="modal-content">
+      			<div class="modal-header">
+        			<h5 class="modal-title" id="exampleModalLabel">User current books</h5>
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          				<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			<div class="modal-body">
+        			<table class="table table-striped table-hover" align="center">
+	        			<thead>
+	     	 				<tr>
+			        			<th>Book</th>
+			        			<th>Status</th>
+			        			<th>Due date</th>
+	      					</tr>
+	    				</thead>
+	    				<tbody>
+	    					<c:forEach items="${manageList}" var="manage">
+								<tr>
+									<td><a href="${pageContext.request.contextPath}/books/${manage.bookId}">${manage.bookTitle}</a></td>
+									<td>${manage.bookStatus}</td>
+									<td>${manage.dueDate}</td>
+								</tr>
+							</c:forEach>
+	    				</tbody>
+        			</table>
+      			</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      			</div>
+    		</div>
+  		</div>
 	</div>
 </body>
 </html>

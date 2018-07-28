@@ -131,8 +131,6 @@
 		</c:if>
 	</div>
 	
-	
-	
 	<div class="modal fade" id="reserveModal" tabindex="-1" role="dialog" aria-labelledby="reserveModalLabel" aria-hidden="true">
   		<div class="modal-dialog" role="document">
     		<div class="modal-content">

@@ -96,6 +96,22 @@ public class LibraryServiceImpl implements LibraryService {
 		if (resultsCount % resultsPerPage != 0) pagesCount += 1;
 		return pagesCount;
 	}
+	
+	@Override
+	@Transactional
+	public List<ManageDTO> getManageListByUser(int userId) {
+		
+		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
+		List <Reserved> reservedList = null;
+		List <Borrowed> borrowedList = null;
+		
+		reservedList = bookDAO.getReservedBooksByUserId(userId);
+		borrowedList = bookDAO.getBorrowedBooksByUserId(userId);
+		
+		manageList = this.combineReservedAndBorrowedBooksList(reservedList, borrowedList);
+		
+		return manageList;
+	}
 
 	@Override
 	@Transactional

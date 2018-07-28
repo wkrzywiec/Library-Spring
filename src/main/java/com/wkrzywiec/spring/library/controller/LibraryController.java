@@ -119,6 +119,7 @@ public class LibraryController {
 		User user = userService.getUserById(id);
 		List<UserLog> userLogs = null;
 		List<LibraryLog> libraryLogs = null;
+		List<ManageDTO> manageDTO = null;
 		
 		if (additional != null) {
 			if (additional == 1) {
@@ -128,13 +129,15 @@ public class LibraryController {
 				libraryLogs = libraryService.getLibraryLogsByUser(user.getId());
 				model.addAttribute("logs", libraryLogs);
 			}
-			
 		}
 		
 		model.addAttribute("user", user);
 		
 		UserDTO userDTO = new UserDTO();
 		model.addAttribute("userDTO", userDTO);
+		
+		manageDTO = libraryService.getManageListByUser(id);
+		model.addAttribute("manageList", manageDTO);
 		
 		return "user-details";
 	}
