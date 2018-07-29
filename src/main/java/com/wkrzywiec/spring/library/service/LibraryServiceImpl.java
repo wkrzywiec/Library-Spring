@@ -221,6 +221,7 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 
 	@Override
+	@Transactional
 	public List<LibraryLogDTO> getLibraryLogsByBook(int bookId) {
 		
 		List<LibraryLog> libraryLogs = null;

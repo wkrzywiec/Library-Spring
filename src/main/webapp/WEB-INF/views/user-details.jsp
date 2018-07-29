@@ -280,7 +280,7 @@
 	    			<c:forEach items="${logs}" var="log">
 						<tr>
 							<td>${log.id}</td>
-							<td>${log.user.username}</td>
+							<td>${log.username}</td>
 							<td>${log.dated}</td>
 							<td>${log.field}</td>
 							<td>${log.fromValue}</td>

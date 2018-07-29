@@ -38,7 +38,7 @@ public class UserLog {
 	@Column(name="dated")
 	private Timestamp dated;
 
-	@ManyToOne (fetch=FetchType.EAGER)
+	@ManyToOne (fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id", insertable=false, updatable=false)
 	private User user;
 	
