@@ -1,5 +1,15 @@
 @charset "UTF-8";
 
+.navbar {
+		font-size: 20px;
+		font: Arial;
+		background: #556270;  /* fallback for old browsers */
+		background: -webkit-linear-gradient(to left, #FF6B6B, #556270);  /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to left, #FF6B6B, #556270); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	
+}
+
+
+
 .subtitle {
 	font-family: "Arial Black", Gadget, sans-serif;
 	color: #3f4449;

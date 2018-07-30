@@ -8,18 +8,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 <link href="<c:url value="/resources/css/main.css" />" rel="stylesheet">
-<style>
-
-	.navbar{
-		font-size: 20px;
-		font: Arial;
-		background: #556270;  /* fallback for old browsers */
-		background: -webkit-linear-gradient(to left, #FF6B6B, #556270);  /* Chrome 10-25, Safari 5.1-6 */
-		background: linear-gradient(to left, #FF6B6B, #556270); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	
-	}
-	
-
-</style>
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 
@@ -60,27 +48,11 @@
     <security:authorize access="hasAuthority('ADMIN')">
     </security:authorize>
     
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" id="navbardrop" data-toggle="dropdown">
-      		Users
-      </a>
-      
-      <div class="dropdown-menu dropdown-menu-right">
-      
-        <security:authorize access="hasAuthority('ADMIN')">
-        	<a class="nav-link" href="${pageContext.request.contextPath}/admin-panel">Manage user profile</a>
-        </security:authorize>
-        
-         <security:authorize access="hasAuthority('ADMIN')">
-        	<a class="dropdown-item" href="#">Check user book account</a>
-        </security:authorize>
-        
-        <security:authorize access="hasAuthority('LIBRARIAN')">
-        	<a class="dropdown-item" href="#">User book account</a>
-        </security:authorize>
-
-      </div>
+    <security:authorize access="hasAuthority('ADMIN')">
+    <li class="nav-item">
+      <a class="nav-link" href="${pageContext.request.contextPath}/admin-panel">Users</a>
     </li>
+    </security:authorize>
   </ul>
   
   <ul class="navbar-nav ml-auto">
