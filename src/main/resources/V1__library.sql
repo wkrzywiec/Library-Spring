@@ -220,11 +220,46 @@ CREATE TABLE `book_logs` (
     `message` varchar(500) NOT NULL,
     `book_id` int(12) NOT NULL,
     `user_id` int(6) NOT NULL,
-    `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
+    `dated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
    
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    
+    KEY `user` (`user_id`),
+    CONSTRAINT `FK_USER_BOOK_LOGS` FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    
+    KEY `book` (`book_id`),
+    CONSTRAINT `FK_BOOK_BOOK_LOGS` FOREIGN KEY (`book_id`)
+	REFERENCES `book` (`id`)
+	ON DELETE NO ACTION ON UPDATE NO ACTION
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `library_logs` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `level` varchar(10) NOT NULL,
+    `message` varchar(500) NOT NULL,
+    `book_id` int(12) NOT NULL,
+    `user_id` int(6) NOT NULL,
+    `dated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `changed_by_username` varchar(64) NOT NULL,
+   
+    PRIMARY KEY (`id`),
+    
+    KEY `user` (`user_id`),
+    CONSTRAINT `FK_USER_LIBRARY_LOGS` FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    
+    KEY `book` (`book_id`),
+    CONSTRAINT `FK_BOOK_LIBRARY_LOGS` FOREIGN KEY (`book_id`)
+	REFERENCES `book` (`id`)
+	ON DELETE NO ACTION ON UPDATE NO ACTION
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 INSERT INTO `role` (`name`) VALUES
 	("USER"), ("ADMIN"), ("LIBRARIAN");
@@ -247,6 +282,7 @@ CREATE PROCEDURE bookBorrow(
 BEGIN
 	INSERT INTO `borrowed` (`book_id`, `user_id`, `deadline_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
 	DELETE FROM `reserved` WHERE book_id= bookId;
+    SELECT * FROM book WHERE id=bookId;
 END //
 
 
@@ -256,34 +292,43 @@ BEGIN
 	DELETE FROM `borrowed` WHERE book_id = bookId;
 END //
 
+CREATE EVENT `overdueReservedBooks`
+	ON SCHEDULE EVERY 1 DAY
+    ON COMPLETION PRESERVE
+DO
+	DELETE FROM `reserved` WHERE deadline_date <= CURDATE()
+//
+
 DELIMITER ;
 	
+-- has³o dla u¿ytkowników to : test
+
 INSERT INTO `user` (`username`, `password`, `email`, `enable`, `first_name`, `last_name`) VALUES
 
 	("admin", "$2a$10$TDb0af7bDK9Gr4xAPoqZqunjFVLCM6togtL556J.M4BEJeUZd7psu", "edard.stark@winterfell.com", TRUE, "Edard", "Stark"),
     ("book", "$2a$10$ZsA1jIBWe/GcMWgKRSwIt.wcFKUH86O1t63JsJ/.JCKlT3iJK/n0a", "sam.tarly@night-watch.com", TRUE, "Sam", "Tarly"),
-    ("test", "$2a$10$a9WYkCHn5goa5wEgplC87.4Dy.A23khRSAssrU5OFYKMGva7.c9Ba", "cersai.lanister@kings-landing.com", TRUE, "Cersai", "Lanister"),
-    ("rob", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","rob.stark@winterfell.com",TRUE, "Rob", "Stark"),
-    ("lyanna", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","lyanna.stark@winterfell.com",TRUE, "Lyanna", "Stark"),
-    ("ramsay", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","ramsay.boltonk@winterfell.com",TRUE, "Ramsay", "Bolton"),
-    ("roose", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","roose.bolton@winterfell.com",TRUE, "Roose", "Bolton"),
-    ("walder", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","walder.frey@crossing.com",TRUE, "Walder", "Frey"),
-    ("theon", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","theon.greyjoy@pyke.com",TRUE, "Theon", "Greyjoy"),
-    ("balon", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","balon.greyjoy@pyke.com",FALSE, "Balon", "Greyjoy"),
-    ("yara", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","yara.greyjoy@pyke.com",TRUE, "Yara", "Greyjoy"),
-    ("euron", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","euron.greyjoy@pyke.com",FALSE, "Euron", "Greyjoy"),
-    ("jon", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","jon.aryyn@vale.com",TRUE, "Jon", "Arryn"),
-    ("lysa", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","lysa.aryyn@vale.com",TRUE, "Lysa", "Arryn"),
-    ("robin", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","robin.aryyn@vale.com",TRUE, "Robin", "Arryn"),
-    ("petyr", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","petyr.bealish@vale.com",TRUE, "Petyr", "Baelish"),
-    ("daenerys", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","denerys.targaryen@kings-landing.com",TRUE, "Daenerys", "Targaryen"),
-    ("varys", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","varys@westeros.com",TRUE, "Varys", "Spider"),
-    ("oberyn", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","oberyn.martell@dorne.com",TRUE, "Oberyn", "Martell"),
-    ("doran", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","doran.martell@dorne.com",TRUE, "Doran", "Martell"),
-    ("obara", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","obara.sand@dorne.com",TRUE, "Obara", "Sand"),
-    ("nymeria", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","nymeria.sand@dorne.com",TRUE, "Nymeria", "Sand"),
-    ("catelyn", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","catelyn.tully@riverrun.com",TRUE, "Catelyn", "Tully"),
-    ("brynden", "$2a$10$OLwv3yttePkgfE5vZwsuDO7Zni/5s/tgq5UaWXOX39d9oD03eTODW","brynden.tully@riverrun.com",FALSE, "Brynden", "Tully")
+    ("test", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje", "cersai.lanister@kings-landing.com", TRUE, "Cersai", "Lanister"),
+    ("rob", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","rob.stark@winterfell.com",TRUE, "Rob", "Stark"),
+    ("lyanna", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","lyanna.stark@winterfell.com",TRUE, "Lyanna", "Stark"),
+    ("ramsay", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","ramsay.boltonk@winterfell.com",TRUE, "Ramsay", "Bolton"),
+    ("roose", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","roose.bolton@winterfell.com",TRUE, "Roose", "Bolton"),
+    ("walder", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","walder.frey@crossing.com",TRUE, "Walder", "Frey"),
+    ("theon", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","theon.greyjoy@pyke.com",TRUE, "Theon", "Greyjoy"),
+    ("balon", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","balon.greyjoy@pyke.com",FALSE, "Balon", "Greyjoy"),
+    ("yara", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","yara.greyjoy@pyke.com",TRUE, "Yara", "Greyjoy"),
+    ("euron", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","euron.greyjoy@pyke.com",FALSE, "Euron", "Greyjoy"),
+    ("jon", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","jon.aryyn@vale.com",TRUE, "Jon", "Arryn"),
+    ("lysa", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","lysa.aryyn@vale.com",TRUE, "Lysa", "Arryn"),
+    ("robin", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","robin.aryyn@vale.com",TRUE, "Robin", "Arryn"),
+    ("petyr", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","petyr.bealish@vale.com",TRUE, "Petyr", "Baelish"),
+    ("daenerys", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","denerys.targaryen@kings-landing.com",TRUE, "Daenerys", "Targaryen"),
+    ("varys", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","varys@westeros.com",TRUE, "Varys", "Spider"),
+    ("oberyn", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","oberyn.martell@dorne.com",TRUE, "Oberyn", "Martell"),
+    ("doran", "$2a$10$jLmONIhEVld8Jftq4sXrbook_logs1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","doran.martell@dorne.com",TRUE, "Doran", "Martell"),
+    ("obara", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","obara.sand@dorne.com",TRUE, "Obara", "Sand"),
+    ("nymeria", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","nymeria.sand@dorne.com",TRUE, "Nymeria", "Sand"),
+    ("catelyn", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","catelyn.tully@riverrun.com",TRUE, "Catelyn", "Tully"),
+    ("brynden", "$2a$10$jLmONIhEVld8Jftq4sXr1u/s66eU.Bw9I6DVeaJpFrnYS2Z2Aecje","brynden.tully@riverrun.com",FALSE, "Brynden", "Tully")
 ;
 
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES
