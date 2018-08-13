@@ -74,8 +74,18 @@ CREATE TABLE persistent_logins (
     REFERENCES `user` (`username`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-DROP TABLE IF EXISTS `user_logs`;
+CREATE TABLE `user_password_token` (
+	`id` int(6) NOT NULL AUTO_INCREMENT,
+    `token` varchar(64) NOT NULL,
+    `user_id` int(6) NOT NULL,
+    `due_date` TIMESTAMP NOT NULL,
+    
+    PRIMARY KEY (`id`),
+    KEY `user` (`user_id`),
+    CONSTRAINT `FK_USER_PASSWORD` FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION
+);
 
 CREATE TABLE `user_logs` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
