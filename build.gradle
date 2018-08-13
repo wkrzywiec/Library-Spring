@@ -38,6 +38,7 @@ dependencies {
     providedCompile 'javax.servlet:javax.servlet-api:4.0.0'
 	compile 'javax.servlet:jstl:1.2'
 	compile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.1'
+	compile "org.springframework:spring-context-support:${springWebMvcVersion}"
 	compile "org.springframework:spring-webmvc:${springWebMvcVersion}"
 	compile "org.springframework:spring-jdbc:${springWebMvcVersion}"
 	compile "org.springframework:spring-orm:${springWebMvcVersion}"
@@ -66,8 +67,11 @@ dependencies {
 	compile group: 'commons-pool', name: 'commons-pool', version: '1.6'
 	
 	compileOnly'org.projectlombok:lombok:1.16.20'
+	
+	compile 'javax.mail:mail:1.4.7'
 
     testImplementation 'junit:junit:4.12'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
 }
 
 

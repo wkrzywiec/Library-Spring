@@ -1,11 +1,14 @@
 package com.wkrzywiec.spring.library.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,17 +22,21 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wkrzywiec.spring.library.dao.UserDAO;
+import com.wkrzywiec.spring.library.dto.PasswordDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.dto.UserLogDTO;
 import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
+import com.wkrzywiec.spring.library.entity.UserPasswordToken;
 
 
 @Service("userDetailService")
 public class UserServiceImpl implements UserDetailsService, UserService {
 
+	private final long PASSWORD_TOKEN_VALID_TIME = 24*60*60*1000;
+	
 	@Autowired
 	private UserDAO userDAO;
 	
@@ -237,6 +244,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		
 		return userDAO.getActiveUser(username);
 	}
+	
+	@Override
+	@Transactional
+	public User getUserByEmail(String email) {
+		
+		return userDAO.getActiveUserByEmail(email);
+	}
 
 	@Override
 	@Transactional
@@ -277,6 +291,99 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		userLogDTOList = this.convertUserLogsEntityListToUserLogsDTOList(userLogList);
 		
 		return userLogDTOList;
+	}
+	
+	@Override
+	@Transactional
+	public boolean isUserAlreadyHasResetPasswordToken(String email) {
+		
+		boolean isUserHasPasswordToken = false;
+		User user = null;
+		UserPasswordToken userPasswordToken = null;
+		user = this.getUserByEmail(email);
+		
+		if (user != null) {
+			
+			userPasswordToken = userDAO.getUserPasswordResetTokenByUserId(user.getId());
+		}
+		
+		isUserHasPasswordToken =  userPasswordToken != null ? true : false;
+		
+		return isUserHasPasswordToken;
+	}
+	
+	@Override
+	@Transactional
+	public UserPasswordToken createPasswordResetTokenForEmail(String email) {
+		
+		UserPasswordToken userPasswordToken = null;
+		String token = UUID.randomUUID().toString();
+		
+		User user = userDAO.getActiveUserByEmail(email);
+		
+		userPasswordToken = new UserPasswordToken();
+		userPasswordToken.setUser(user);
+		userPasswordToken.setToken(token);
+		userPasswordToken.setDueDate(new Timestamp(System.currentTimeMillis() + PASSWORD_TOKEN_VALID_TIME));
+		userPasswordToken = userDAO.createPasswordResetToken(userPasswordToken);
+		
+		return userPasswordToken;
+	}
+	
+	@Override
+	@Transactional
+	public UserPasswordToken updateResetPasswordTokenForEmail(String email) {
+		
+		User user = null;
+		UserPasswordToken userPasswordToken = null;
+		user = this.getUserByEmail(email);
+		
+		if (user != null) {
+			
+			userPasswordToken = userDAO.getUserPasswordResetTokenByUserId(user.getId());
+			String token = UUID.randomUUID().toString();
+			Timestamp dueDate = new Timestamp(System.currentTimeMillis() + PASSWORD_TOKEN_VALID_TIME);
+			
+			userPasswordToken.setToken(token);
+			userPasswordToken.setDueDate(dueDate);
+			userPasswordToken = userDAO.updateResetPasswordTokenForUser(userPasswordToken);
+		}
+		
+		return userPasswordToken;
+	}
+	
+	@Override
+	@Transactional
+	public void deleteUserPassword(int userId) {
+		userDAO.deleteUserPassword(userId);
+	}
+
+	@Override
+	@Transactional
+	public boolean isUserTokenValid(int userId, String token) {
+		
+		boolean isUserTokenValid = false;
+		UserPasswordToken userPasswordToken = null;
+		userPasswordToken = userDAO.getUserPasswordResetTokenByUserId(userId);
+		if (userPasswordToken != null) {
+			Timestamp current = new Timestamp(System.currentTimeMillis());
+			if (userPasswordToken.getDueDate().compareTo(current) > 0) {
+				isUserTokenValid = userPasswordToken.getToken().equals(token) ? true : false;
+			}
+		}
+		 
+		return isUserTokenValid;
+	}
+	
+	@Override
+	@Transactional
+	public void updateUserPassword(int userId, PasswordDTO passwordDTO) {
+		
+		User user = null;
+		user = userDAO.getUserById(userId);
+		
+		user.setPassword(passwordEncoder.encode(passwordDTO.getPassword()));
+		userDAO.updatePassword(user);
 	}
 
 	private Collection<? extends GrantedAuthority> getUserAuthorities(Set<Role> modelAuthSet) {

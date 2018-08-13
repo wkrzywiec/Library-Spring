@@ -5,37 +5,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link rel="stylesheet"
-		 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">	
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>	
-<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<style>
-	body {
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>	
+	<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<title>Library login page</title>
+	<style>
+		body {
 		background: #556270;  /* fallback for old browsers */
 		background: -webkit-linear-gradient(to left, #FF6B6B, #556270);  /* Chrome 10-25, Safari 5.1-6 */
 		background: linear-gradient(to left, #FF6B6B, #556270); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	
 	
-	}
+		}
+			
+		h1 {
+				font-family: "Arial Black", Gadget, sans-serif;
+				font-size: 400%;
+				letter-spacing: 4px;
+				color: #F0E68C;
+		}
+					
+		p {
+				color: #F4A460;
+		}
+					
+		.error {
+				color: red;
+		}
 	
-	h1 {
-		    font-family: "Arial Black", Gadget, sans-serif;
-		    font-size: 400%;
-		    letter-spacing: 4px;
-		    color: #F0E68C;
-			}
-			
-	p 	{
-			color: #F4A460;
-		}
-			
-	.error {
-			color: red;
-		}
-
-</style>
-<title>Library login page</title>
+	</style>
 </head>
 <body>
 
@@ -68,7 +67,7 @@
 					
 						<div class="panel-heading">
 							<div class="panel-title">Sign In</div>
-							<div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="www.google.com">Forgot password?</a></div>
+							<div style="float:right; font-size: 80%; position: relative; top:-10px"><a href="${pageContext.request.contextPath}/forgot-password">Forgot password?</a></div>
 						</div>
 						
 						<div class="panel-body" style="margin: 25px 50px 25px">
@@ -85,12 +84,19 @@
 								
 									</c:if>
 								
-									<c:if test="${param.logout!= null }">
+									<c:if test="${param.logout!= null}">
 								
 										<div class="alert alert-success col-xs-offset-1 col-xs-10">
 										You have successfully logout.
 										</div>
 									</c:if>
+									
+									<c:if test="${message != null}">
+										<div class="alert alert-info col-xs-offset-1 col-xs-10">
+											${message}
+										</div>			
+									</c:if>
+									
 							   </div>
 							   Please provide your credentials below:
 							   	<div style="margin-bottom: 25px" class="input-group">

@@ -20,32 +20,33 @@
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
 	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
-	
+	<link href="<c:url value="/resources/css/prelogon.css" />" rel="stylesheet">
+
+	<title>Library Portal - Reader registration</title>
 	<style>
-	body {
+		body {
 		background: #556270;  /* fallback for old browsers */
 		background: -webkit-linear-gradient(to left, #FF6B6B, #556270);  /* Chrome 10-25, Safari 5.1-6 */
 		background: linear-gradient(to left, #FF6B6B, #556270); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */	
-			}
+	
+		}
 			
 		h1 {
-		    font-family: "Arial Black", Gadget, sans-serif;
-		    font-size: 400%;
-		    letter-spacing: 4px;
-		    color: #F0E68C;
-			}
-			
-		p 	{
+				font-family: "Arial Black", Gadget, sans-serif;
+				font-size: 400%;
+				letter-spacing: 4px;
+				color: #F0E68C;
+		}
+					
+		p {
 				color: #F4A460;
-			}
-			
+		}
+					
 		.error {
 				color: red;
-			}
+		}
+	
 	</style>
-	
-	
-	<title>Library Portal - Reader registration</title>
 </head>
 <body>
 	<div class="container" style="margin-top: 50px;">

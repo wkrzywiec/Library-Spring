@@ -22,6 +22,7 @@ import com.wkrzywiec.spring.library.entity.Role;
 import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
+import com.wkrzywiec.spring.library.entity.UserPasswordToken;
 
 
 @Repository
@@ -104,6 +105,11 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
+	public void updatePassword(User user) {
+		entityManager.persist(user);
+	}
+
+	@Override
 	public User enableUser(int id, String changedByUsername) {
 		
 		User user = entityManager.find(User.class, id);
@@ -183,6 +189,45 @@ public class UserDAOImpl implements UserDAO {
 					.getResultList();
 		
 		return userLogList;
+	}
+
+	@Override
+	public UserPasswordToken createPasswordResetToken(UserPasswordToken userPasswordToken) {
+		
+		entityManager.persist(userPasswordToken);
+		return userPasswordToken;
+	}
+	
+	@Override
+	public UserPasswordToken updateResetPasswordTokenForUser(UserPasswordToken userPasswordToken) {
+
+		entityManager.persist(userPasswordToken);
+		
+		return userPasswordToken;
+	}
+
+	@Override
+	public void deleteUserPassword(int userId) {
+		
+		UserPasswordToken userPasswordToken = null;
+		
+		userPasswordToken = this.getUserPasswordResetTokenByUserId(userId);
+		entityManager.remove(userPasswordToken);
+	}
+
+	@Override
+	public UserPasswordToken getUserPasswordResetTokenByUserId(int userId) {
+		
+		UserPasswordToken userPasswordToken = null;
+		try {
+			userPasswordToken = (UserPasswordToken) entityManager.createQuery("from UserPasswordToken u where u.user.id =:userId")
+					.setParameter("userId", userId)
+					.getSingleResult();
+		} catch(NoResultException e) {
+			
+		}
+		
+		return userPasswordToken;
 	}
 
 	private FullTextQuery searchUsersQuery (String searchText) {
