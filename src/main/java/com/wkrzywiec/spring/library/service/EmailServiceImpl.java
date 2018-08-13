@@ -14,6 +14,17 @@ public class EmailServiceImpl implements EmailService {
 	private JavaMailSender emailSender;
 	
 	@Override
+	public void sendUserRegistrationConfirmEmail(User user) {
+		
+		SimpleMailMessage message = new SimpleMailMessage(); 
+	    message.setTo(user.getEmail()); 
+	    message.setSubject("Library Portal registration"); 
+	    message.setText(this.prepareUserRegistrationConfirmEmail(user));
+	    emailSender.send(message);
+		
+	}
+
+	@Override
 	public void sendForgotPasswordEmail(User user, String path, String token) {
 		
 		SimpleMailMessage message = new SimpleMailMessage(); 
@@ -22,6 +33,16 @@ public class EmailServiceImpl implements EmailService {
 	    message.setText(this.prepareForgotPasswordEmail(user, path, token));
 	    emailSender.send(message);
 		
+	}
+	
+	private String prepareUserRegistrationConfirmEmail(User user) {
+
+		String text = "Hello " + user.getFirstName() + ","
+				+ "\nThank you for registering to our Library Portal. From now on you have access to enormous amount of books with just few clicks."
+				+ "\n\nHave a nice day,"
+				+ "\nLibrary Portal Team";
+		
+		return text;
 	}
 
 	private String prepareForgotPasswordEmail(User user, String path, String token) {

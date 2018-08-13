@@ -66,6 +66,7 @@ public class LoginController {
 				Model model) {
 		
 		String currentPrincipalName = "";
+		User user = null;
 		
 		if (authentication != null) {
 			currentPrincipalName = authentication.getName();
@@ -74,7 +75,8 @@ public class LoginController {
 		if (bindingResult.hasErrors()){
 			return "register-user";
 		} else {
-			userService.saveReaderUser(userDTO, currentPrincipalName);
+			user = userService.saveReaderUser(userDTO, currentPrincipalName);
+			emailService.sendUserRegistrationConfirmEmail(user);
 			model.addAttribute("message", "You have been successfully registered as a new user. In a couple of minutes you will receive confirmation email.");
 			return "success";
 		}
