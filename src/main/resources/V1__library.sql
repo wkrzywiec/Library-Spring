@@ -8,6 +8,8 @@ CREATE DATABASE  IF NOT EXISTS `library_db`;
 
 USE `library_db`;
 
+SET GLOBAL EVENT_SCHEDULER = ON;
+
 DROP TABLE IF EXISTS `role`;
 
 CREATE TABLE `role` (
@@ -224,6 +226,27 @@ CREATE TABLE `borrowed` (
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `overdue_book` (
+	`id` int(12) NOT NULL AUTO_INCREMENT,
+    `book_id` int(12) NOT NULL UNIQUE,
+    `user_id` int(6) NOT NULL,
+    `due_date` DATE NOT NULL,
+    `return_date` DATE,
+    
+    PRIMARY KEY (`id`),
+    
+    KEY `user` (`user_id`),
+    CONSTRAINT `FK_USER_OVERDUE` FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION ON UPDATE NO ACTION,
+    
+    KEY `book` (`book_id`),
+    CONSTRAINT `FK_BOOK_OVERDUE` FOREIGN KEY (`book_id`)
+	REFERENCES `book` (`id`)
+	ON DELETE NO ACTION ON UPDATE NO ACTION
+    
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;	
+
 CREATE TABLE `book_logs` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
     `level` varchar(10) NOT NULL,
@@ -269,11 +292,10 @@ CREATE TABLE `library_logs` (
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
 INSERT INTO `role` (`name`) VALUES
 	("USER"), ("ADMIN"), ("LIBRARIAN");
 	
+
 DELIMITER //
 CREATE PROCEDURE bookReserve(
 	bookId int(12),
@@ -302,13 +324,32 @@ BEGIN
 	DELETE FROM `borrowed` WHERE book_id = bookId;
 END //
 
+CREATE PROCEDURE penaltiesPaid(
+	userId int(12))
+BEGIN
+	DELETE FROM `overdue_book` WHERE user_id = userId;
+END //
+
 CREATE EVENT `overdueReservedBooks`
 	ON SCHEDULE EVERY 1 DAY
+    STARTS CONCAT(DATE(NOW()+INTERVAL 1 DAY ), ' 00:10:00')
     ON COMPLETION PRESERVE
 DO
 	DELETE FROM `reserved` WHERE deadline_date <= CURDATE()
 //
 
+CREATE EVENT `overdueBorrowedBooks`
+	ON SCHEDULE EVERY 1 DAY
+    STARTS CONCAT(DATE(NOW()+INTERVAL 1 DAY ), ' 00:20:00')
+    ON COMPLETION PRESERVE
+DO
+	BEGIN
+		INSERT INTO `overdue_book` (`book_id`, `user_id`, `due_date`) 
+			SELECT `book_id`, `user_id`, `deadline_date` 
+            FROM borrowed
+            WHERE deadline_date <= CURDATE();
+    END
+//
 DELIMITER ;
 	
 -- has³o dla u¿ytkowników to : test
