@@ -1,11 +1,12 @@
 package com.wkrzywiec.spring.library.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.LibraryLogDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
-import com.wkrzywiec.spring.library.entity.LibraryLog;
+import com.wkrzywiec.spring.library.dto.PenaltyDTO;
 
 public interface LibraryService {
 
@@ -34,4 +35,10 @@ public interface LibraryService {
 	List<LibraryLogDTO> getLibraryLogsByUser(int userId);
 	
 	List<LibraryLogDTO> getLibraryLogsByBook(int bookId);
+	
+	List<PenaltyDTO> getPenaltiesByUser(int userId);
+	
+	BigDecimal sumPenalties(List<PenaltyDTO> penalties);
+	
+	void makePayment(int userId);
 }

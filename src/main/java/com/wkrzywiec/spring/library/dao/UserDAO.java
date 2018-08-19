@@ -45,4 +45,6 @@ public interface UserDAO {
 	
 	UserPasswordToken getUserPasswordResetTokenByUserId(int userId);
 	
+	void penaltiesPaidForUser(int userId);
+	
 }

@@ -132,7 +132,7 @@
 							 		<h5>Books: </h5>
 							 	</div>
 							 	<div class="col">
-							 		<a data-toggle="modal" href="#reserveModal">Show user current books</a>
+							 		<a data-toggle="modal" href="#currentBooksModal">Show user current books</a>
 							 	</div>
 						 	</div>
 						 	<div class="row" style="margin-top:20px">
@@ -148,7 +148,12 @@
 							 		<h5>Penalties: </h5>
 							 	</div>
 							 	<div class="col">
-							 		<p>PENALTIES</p>
+							 		<c:if test="${empty penalties}">
+							 			<button type="button" class="btn btn-info" disabled>No penalties</button>
+									</c:if>
+									<c:if test="${not empty penalties}">
+										<a href="#penaltiesModal" class="btn btn-info" role="button" data-toggle="modal">Show penalties</a>
+									</c:if>
 							 	</div>
 						 	</div>
 						 </div>
@@ -321,11 +326,11 @@
 		</c:if>
 	</div>
 	
-	<div class="modal fade" id="reserveModal" tabindex="-1" role="dialog" aria-labelledby="reserveModalLabel" aria-hidden="true">
+	<div class="modal fade" id="currentBooksModal" tabindex="-1" role="dialog" aria-labelledby="currentBooksModalLabel" aria-hidden="true">
   		<div class="modal-dialog" role="document">
-    		<div class="modal-content">
+    		<div class="modal-content" style="width:700px;">
       			<div class="modal-header">
-        			<h5 class="modal-title" id="exampleModalLabel">User current books</h5>
+        			<h5 class="modal-title" id="currentBooksModalLabel">User current books</h5>
         			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
           				<span aria-hidden="true">&times;</span>
         			</button>
@@ -349,6 +354,54 @@
 							</c:forEach>
 	    				</tbody>
         			</table>
+      			</div>
+      			<div class="modal-footer">
+        			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      			</div>
+    		</div>
+  		</div>
+	</div>
+	
+	<div class="modal fade" id="penaltiesModal" tabindex="-1" role="dialog" aria-labelledby="penaltiesModalLabel" aria-hidden="true">
+  		<div class="modal-dialog" role="document">
+    		<div class="modal-content" style="width:750px;">
+      			<div class="modal-header">
+        			<h5 class="modal-title" id="penaltiesModalLabel">User current books</h5>
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          				<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			<div class="modal-body">
+        			<table class="table table-striped table-hover" align="center">
+	        			<thead>
+	     	 				<tr>
+			        			<th>Book</th>
+			        			<th>Due date</th>
+			        			<th>Return date</th>
+			        			<th>Days</th>
+			        			<th>Penalty</th>
+	      					</tr>
+	    				</thead>
+	    				<tbody>
+	    					<c:forEach items="${penalties}" var="penalty">
+								<tr>
+									<td><a href="${pageContext.request.contextPath}/books/${penalty.bookId}">${penalty.bookTitle}</a></td>
+									<td>${penalty.dueDate}</td>
+									<td>${penalty.returnDate}</td>
+									<td>${penalty.days}</td>
+									<td>${penalty.penalty}</td>
+								</tr>
+							</c:forEach>
+							<tr>
+									<td><b>SUM</b></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td>${penaltiesTotal}</td>
+							</tr>
+	    				</tbody>
+        			</table>
+        			<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}/payment" class="btn btn-success" role="button">Confirm payment</a>
       			</div>
       			<div class="modal-footer">
         			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>

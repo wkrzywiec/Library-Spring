@@ -1,9 +1,13 @@
 package com.wkrzywiec.spring.library.service;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +18,13 @@ import com.wkrzywiec.spring.library.dao.UserDAO;
 import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.LibraryLogDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
+import com.wkrzywiec.spring.library.dto.PenaltyDTO;
 import com.wkrzywiec.spring.library.entity.Author;
 import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.LibraryLog;
+import com.wkrzywiec.spring.library.entity.OverDueBook;
 import com.wkrzywiec.spring.library.entity.Reserved;
 import com.wkrzywiec.spring.library.entity.User;
 
@@ -27,7 +33,7 @@ public class LibraryServiceImpl implements LibraryService {
 
 	public final int MAX_BOOKS_COUNT_PER_USER = 3;
 	public final int DAYS_AFTER_RESERVATION = 3;
-	public final int DAYS_AFTER_BORROWED = 30;
+	public final int DAYS_AFTER_BORROWED = 1;
 	
 	@Autowired
 	private BookDAO bookDAO;
@@ -229,6 +235,36 @@ public class LibraryServiceImpl implements LibraryService {
 		libraryLogs = bookDAO.getLibraryLogsByBook(bookId);
 		libraryLogsDTO = this.convertLibraryLogsEntityListToLibraryLogsDTOList(libraryLogs);
 		return libraryLogsDTO;
+	}
+
+	@Override
+	@Transactional
+	public List<PenaltyDTO> getPenaltiesByUser(int userId) {
+		
+		List<OverDueBook> overdues = null;
+		List<PenaltyDTO> penalties = null;
+		
+		overdues = bookDAO.getOverDueBooksByUser(userId);
+		penalties = this.convertOverDueBookListToPenaltiesList(overdues);
+		
+		return penalties;
+	}
+
+	@Override
+	public BigDecimal sumPenalties(List<PenaltyDTO> penalties) {
+		
+		BigDecimal penaltiesTotal = new BigDecimal(0.00);
+		
+		for(PenaltyDTO penalty : penalties) {
+			penaltiesTotal.add(penalty.getPenalty());
+		}
+		
+		return penaltiesTotal;
+	}
+
+	@Override
+	public void makePayment(int userId) {
+		userDAO.penaltiesPaidForUser(userId);
 	}
 
 	private int reservedBooksTotalCountByUser(int userId) {
@@ -495,5 +531,64 @@ public class LibraryServiceImpl implements LibraryService {
 		
 		return libraryLogDTO;
 	}
+	
+	@Transactional
+	private List<PenaltyDTO> convertOverDueBookListToPenaltiesList(List<OverDueBook> overdues) {
+		
+		List<PenaltyDTO> penalties = null;
+		PenaltyDTO penalty = null;
+		int days = 0;
+		
+		if (overdues != null) {
+			penalties = new ArrayList<PenaltyDTO>();
+			for (OverDueBook overdue : overdues) {
+				penalty = new PenaltyDTO();
+				
+				penalty.setBookId(overdue.getBook().getId());
+				penalty.setBookTitle(overdue.getBook().getTitle());
+				penalty.setDueDate(overdue.getDueDate());
+				if (overdue.getReturnDate() != null) {
+					penalty.setReturnDate(overdue.getReturnDate());	
+					days = this.calculateDaysDifference(overdue.getReturnDate(), overdue.getDueDate());
+				} else {
+					days = this.calculateDaysDifference(new Date(new java.util.Date().getTime()), overdue.getDueDate());
+				}
+				penalty.setDays(days);
+				penalty.setPenalty(this.calculatePenalty(days));
+				
+				penalties.add(penalty);
+			}
+		}
+		
+		return penalties;
+	}
+
+	private int calculateDaysDifference(Date returnDate, Date dueDate) {
+		
+		long diff = returnDate.getTime() - dueDate.getTime();
+		
+		return (int) TimeUnit.MILLISECONDS.toDays(diff);
+	}
+	
+	private BigDecimal calculatePenalty(int days) {
+		
+		BigDecimal penalty = new BigDecimal(0.00);
+		
+		for (int i = 1; i<= days; i++) {
+			penalty.add(this.calculatePenaltyInDay(i));
+		}
+		
+		return penalty;
+	}
+
+	private BigDecimal calculatePenaltyInDay(int day) {
+		
+		int week = (int) Math.floor(day/7);
+		BigDecimal penaltyInDay = new BigDecimal(0.05*week);
+		
+		return penaltyInDay;
+	}
+	
+	
 
 }

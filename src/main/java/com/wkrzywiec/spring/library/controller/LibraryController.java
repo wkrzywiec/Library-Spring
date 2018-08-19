@@ -1,6 +1,7 @@
 package com.wkrzywiec.spring.library.controller;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,15 +18,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.wkrzywiec.spring.library.dto.BookDTO;
 import com.wkrzywiec.spring.library.dto.LibraryLogDTO;
 import com.wkrzywiec.spring.library.dto.ManageDTO;
+import com.wkrzywiec.spring.library.dto.PenaltyDTO;
 import com.wkrzywiec.spring.library.dto.UserDTO;
 import com.wkrzywiec.spring.library.dto.UserLogDTO;
-import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.User;
-import com.wkrzywiec.spring.library.entity.UserLog;
 import com.wkrzywiec.spring.library.retrofit.model.RandomQuoteResponse;
 import com.wkrzywiec.spring.library.service.BookServiceImpl;
 import com.wkrzywiec.spring.library.service.GoogleBookServiceImpl;
@@ -129,32 +130,11 @@ public class LibraryController {
 												@RequestParam(value="addit", required=false)  Integer additional,
 												Model model) {
 		
-		List<UserLogDTO> userLogs = null;
-		List<LibraryLogDTO> libraryLogs = null;
-		List<ManageDTO> manageDTO = null;
-		
-		User user = userService.getUserById(id);
-		model.addAttribute("user", user);
-		
-		if (additional != null) {
-			if (additional == 1) {
-				userLogs = userService.getUserLogs(user.getId());
-				model.addAttribute("logs", userLogs);
-			} else if (additional == 2) {
-				libraryLogs = libraryService.getLibraryLogsByUser(user.getId());
-				model.addAttribute("logs", libraryLogs);
-			}
-		}
-		
-		UserDTO userDTO = new UserDTO();
-		model.addAttribute("userDTO", userDTO);
-		
-		manageDTO = libraryService.getManageListByUser(id);
-		model.addAttribute("manageList", manageDTO);
+		model = this.addModelsToUserDetailedPage(model, id, additional);
 		
 		return "user-details";
 	}
-	
+
 	@PostMapping("/admin-panel/user/{id}/update")
 	public String updateUserByAdmin(@PathVariable("id") Integer id,
 									@ModelAttribute("user") UserDTO userDTO,
@@ -169,9 +149,19 @@ public class LibraryController {
 			userService.disableUser(id, currentPrincipalName);
 		}
 			
-		User updatedUser = userService.updateUser(id, userDTO, currentPrincipalName);
-			
-		model.addAttribute("user", updatedUser);
+		userService.updateUser(id, userDTO, currentPrincipalName);
+		//TODO PAYMENT
+		model = this.addModelsToUserDetailedPage(model, id, null);
+		return "user-details";
+	}
+	
+	@GetMapping("/admin-panel/user/{id}/payment")
+	public String makePaymentForPenalties(	@PathVariable("id") Integer id,
+											Model model) {
+		
+		libraryService.makePayment(id);
+		
+		model = this.addModelsToUserDetailedPage(model, id, null);
 		return "user-details";
 	}
 	
@@ -393,6 +383,42 @@ public class LibraryController {
 		
 		model.addAttribute("bookList", googleBookService.searchBookList(searchText));
 		return "add-book";
+	}
+	
+	private Model addModelsToUserDetailedPage(Model model, Integer id, Integer additional) {
+		
+		List<UserLogDTO> userLogs = null;
+		List<LibraryLogDTO> libraryLogs = null;
+		List<ManageDTO> manageDTO = null;
+		BigDecimal penaltiesTotal = null;
+		
+		User user = userService.getUserById(id);
+		model.addAttribute("user", user);
+		
+		if (additional != null) {
+			if (additional == 1) {
+				userLogs = userService.getUserLogs(user.getId());
+				model.addAttribute("logs", userLogs);
+			} else if (additional == 2) {
+				libraryLogs = libraryService.getLibraryLogsByUser(user.getId());
+				model.addAttribute("logs", libraryLogs);
+			}
+		}
+		
+		UserDTO userDTO = new UserDTO();
+		model.addAttribute("userDTO", userDTO);
+		
+		manageDTO = libraryService.getManageListByUser(id);
+		model.addAttribute("manageList", manageDTO);
+		
+		List<PenaltyDTO> penalties = null;
+		penalties = libraryService.getPenaltiesByUser(id);
+		model.addAttribute("penalties", penalties);
+		
+		penaltiesTotal = libraryService.sumPenalties(penalties);
+		model.addAttribute("penaltiesTotal", penaltiesTotal);
+		
+		return model;
 	}
 
 }

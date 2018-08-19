@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
 
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
@@ -228,6 +230,18 @@ public class UserDAOImpl implements UserDAO {
 		}
 		
 		return userPasswordToken;
+	}
+
+	@Override
+	public void penaltiesPaidForUser(int userId) {
+		
+		StoredProcedureQuery query = entityManager
+				.createStoredProcedureQuery("penaltiesPaid")
+				.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+				.setParameter(1, userId);
+		
+		query.execute();
+		
 	}
 
 	private FullTextQuery searchUsersQuery (String searchText) {

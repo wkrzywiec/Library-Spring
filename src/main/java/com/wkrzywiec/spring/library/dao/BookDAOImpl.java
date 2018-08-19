@@ -23,6 +23,7 @@ import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.LibraryLog;
+import com.wkrzywiec.spring.library.entity.OverDueBook;
 import com.wkrzywiec.spring.library.entity.Reserved;
 
 @Repository
@@ -393,6 +394,19 @@ public class BookDAOImpl implements BookDAO {
 		} catch (NoResultException e) {
 		}
 		return libraryLogs;
+	}
+
+	@Override
+	public List<OverDueBook> getOverDueBooksByUser(int userId) {
+		
+		List<OverDueBook> overdues = null;
+		try {
+			overdues = entityManager.createQuery("from OverDueBook o where o.user.id = :userId")
+					.setParameter("userId", userId)
+					.getResultList();
+		} catch (NoResultException e) {
+		}
+		return overdues;
 	}
 
 	private FullTextQuery searchBooksQuery (String searchText) {
