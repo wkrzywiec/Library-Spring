@@ -2,6 +2,7 @@ package com.wkrzywiec.spring.library.unit.service;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -108,6 +109,32 @@ public class LibraryServiceUnitTest {
 		List<ManageDTO> manageList = this.prepareUnsortedManageDTOList();
 		libraryService.sortManageList(manageList, "statusDes");
 		assertEquals(manageList, this.manageListSortedByStatusDes());
+	}
+	
+	@Test
+	public void givenDays_thenCalculatePenalty_thenGetPenalty() {
+		
+		int days = 0;
+		assertEquals(libraryService.calculatePenalty(days), new BigDecimal(0.00));
+		
+		days = 1;
+		assertEquals(new BigDecimal(0.05).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
+		
+		days = 3;
+		assertEquals(new BigDecimal(0.15).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
+		
+		days = 7;
+		assertEquals(new BigDecimal(0.35).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
+		
+		days = 8;
+		assertEquals(new BigDecimal(0.45).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
+	
+		days = 10;
+		assertEquals(new BigDecimal(0.65).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
+	
+	
+		days = 14;
+		assertEquals(new BigDecimal(1.05).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
 	}
 	
 	private List<ManageDTO> prepareUnsortedManageDTOList(){

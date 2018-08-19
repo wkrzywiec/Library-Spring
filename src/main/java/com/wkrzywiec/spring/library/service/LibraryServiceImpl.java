@@ -249,6 +249,18 @@ public class LibraryServiceImpl implements LibraryService {
 		
 		return penalties;
 	}
+	
+	@Override
+	public BigDecimal calculatePenalty(int days) {
+		
+		BigDecimal penalty = new BigDecimal(0.00);
+		
+		for (int i = 1; i<= days; i++) {
+			penalty = penalty.add(this.calculatePenaltyInDay(i));
+		}
+		
+		return penalty;
+	}
 
 	@Override
 	public BigDecimal sumPenalties(List<PenaltyDTO> penalties) {
@@ -569,26 +581,12 @@ public class LibraryServiceImpl implements LibraryService {
 		
 		return (int) TimeUnit.MILLISECONDS.toDays(diff);
 	}
-	
-	private BigDecimal calculatePenalty(int days) {
-		
-		BigDecimal penalty = new BigDecimal(0.00);
-		
-		for (int i = 1; i<= days; i++) {
-			penalty.add(this.calculatePenaltyInDay(i));
-		}
-		
-		return penalty;
-	}
 
 	private BigDecimal calculatePenaltyInDay(int day) {
 		
-		int week = (int) Math.floor(day/7);
-		BigDecimal penaltyInDay = new BigDecimal(0.05*week);
-		
+		int week = (int) Math.ceil((double) day/7);
+		BigDecimal penaltyInDay = new BigDecimal(0.05*week).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		return penaltyInDay;
 	}
-	
-	
 
 }

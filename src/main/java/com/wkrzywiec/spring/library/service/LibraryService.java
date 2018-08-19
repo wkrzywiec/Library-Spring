@@ -38,6 +38,8 @@ public interface LibraryService {
 	
 	List<PenaltyDTO> getPenaltiesByUser(int userId);
 	
+	BigDecimal calculatePenalty(int days);
+	
 	BigDecimal sumPenalties(List<PenaltyDTO> penalties);
 	
 	void makePayment(int userId);
