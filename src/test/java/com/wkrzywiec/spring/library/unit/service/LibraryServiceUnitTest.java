@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.wkrzywiec.spring.library.dto.ManageDTO;
+import com.wkrzywiec.spring.library.dto.PenaltyDTO;
 import com.wkrzywiec.spring.library.service.LibraryService;
 import com.wkrzywiec.spring.library.service.LibraryServiceImpl;
 
@@ -115,7 +116,7 @@ public class LibraryServiceUnitTest {
 	public void givenDays_thenCalculatePenalty_thenGetPenalty() {
 		
 		int days = 0;
-		assertEquals(libraryService.calculatePenalty(days), new BigDecimal(0.00));
+		assertEquals(new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
 		
 		days = 1;
 		assertEquals(new BigDecimal(0.05).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
@@ -137,6 +138,16 @@ public class LibraryServiceUnitTest {
 		assertEquals(new BigDecimal(1.05).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.calculatePenalty(days));
 	}
 	
+	@Test
+	public void givenFewPenalties_thenCalculateSum_thenPenaltySum() {
+		
+		List<PenaltyDTO> penalties = new ArrayList<PenaltyDTO>();
+		penalties = this.addThreePenalties(penalties);
+		
+		assertEquals(new BigDecimal(21.70).setScale(2, BigDecimal.ROUND_HALF_EVEN), libraryService.sumPenalties(penalties));
+		
+	}
+
 	private List<ManageDTO> prepareUnsortedManageDTOList(){
 		
 		List<ManageDTO> manageList = new ArrayList<ManageDTO>();
@@ -349,6 +360,24 @@ public class LibraryServiceUnitTest {
 		manageList.add(manage2);
 		
 		return manageList;
+	}
+	
+	private List<PenaltyDTO> addThreePenalties(List<PenaltyDTO> penalties) {
+		
+		PenaltyDTO penalty1 = new PenaltyDTO();
+		PenaltyDTO penalty2 = new PenaltyDTO();
+		PenaltyDTO penalty3 = new PenaltyDTO();
+		
+		penalty1.setPenalty(new BigDecimal(0.55).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+		penalties.add(penalty1);
+		
+		penalty2.setPenalty(new BigDecimal(12.00).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+		penalties.add(penalty2);
+		
+		penalty3.setPenalty(new BigDecimal(9.15).setScale(2, BigDecimal.ROUND_HALF_EVEN));
+		penalties.add(penalty3);
+		
+		return penalties;
 	}
 }
 

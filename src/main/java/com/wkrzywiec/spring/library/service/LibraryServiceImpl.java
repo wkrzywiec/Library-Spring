@@ -253,7 +253,7 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public BigDecimal calculatePenalty(int days) {
 		
-		BigDecimal penalty = new BigDecimal(0.00);
+		BigDecimal penalty = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		
 		for (int i = 1; i<= days; i++) {
 			penalty = penalty.add(this.calculatePenaltyInDay(i));
@@ -265,10 +265,10 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public BigDecimal sumPenalties(List<PenaltyDTO> penalties) {
 		
-		BigDecimal penaltiesTotal = new BigDecimal(0.00);
+		BigDecimal penaltiesTotal = new BigDecimal(0.00).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		
 		for(PenaltyDTO penalty : penalties) {
-			penaltiesTotal.add(penalty.getPenalty());
+			penaltiesTotal = penaltiesTotal.add(penalty.getPenalty());
 		}
 		
 		return penaltiesTotal;
