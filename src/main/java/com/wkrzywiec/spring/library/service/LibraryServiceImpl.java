@@ -24,7 +24,7 @@ import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.LibraryLog;
-import com.wkrzywiec.spring.library.entity.OverDueBook;
+import com.wkrzywiec.spring.library.entity.BookPenalty;
 import com.wkrzywiec.spring.library.entity.Reserved;
 import com.wkrzywiec.spring.library.entity.User;
 
@@ -190,7 +190,7 @@ public class LibraryServiceImpl implements LibraryService {
 		Calendar calendar = Calendar.getInstance();
 		java.util.Date currentDate = calendar.getTime();
 		
-		if (currentDate.after(borrowed.getDeadlineDate())) {
+		if (currentDate.after(borrowed.getDueDate())) {
 			
 			bookDAO.setReturnDateForPenalty(bookId);
 		}
@@ -250,13 +250,13 @@ public class LibraryServiceImpl implements LibraryService {
 	@Transactional
 	public List<PenaltyDTO> getPenaltiesByUser(int userId) {
 		
-		List<OverDueBook> overdues = null;
-		List<PenaltyDTO> penalties = null;
+		List<BookPenalty> penalties = null;
+		List<PenaltyDTO> penaltiesDTO = null;
 		
-		overdues = bookDAO.getOverDueBooksByUser(userId);
-		penalties = this.convertOverDueBookListToPenaltiesList(overdues);
+		penalties = bookDAO.getBookPenaltiesByUser(userId);
+		penaltiesDTO = this.converBookPenaltiesEntityListToDTOList(penalties);
 		
-		return penalties;
+		return penaltiesDTO;
 	}
 	
 	@Override
@@ -352,7 +352,7 @@ public class LibraryServiceImpl implements LibraryService {
 		manageDTO.setBookTitle(reserved.getBook().getTitle());
 		manageDTO.setBookId(reserved.getBook().getId());
 		manageDTO.setBookStatus("RESERVED");
-		manageDTO.setDueDate(reserved.getDeadlineDate());
+		manageDTO.setDueDate(reserved.getDueDate());
 		
 		return manageDTO;
 	}
@@ -367,7 +367,7 @@ public class LibraryServiceImpl implements LibraryService {
 		manageDTO.setBookTitle(borrowed.getBook().getTitle());
 		manageDTO.setBookId(borrowed.getBook().getId());
 		manageDTO.setBookStatus("BORROWED");
-		manageDTO.setDueDate(borrowed.getDeadlineDate());
+		manageDTO.setDueDate(borrowed.getDueDate());
 		
 		return manageDTO;
 	}
@@ -570,34 +570,34 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 	
 	@Transactional
-	private List<PenaltyDTO> convertOverDueBookListToPenaltiesList(List<OverDueBook> overdues) {
+	private List<PenaltyDTO> converBookPenaltiesEntityListToDTOList(List<BookPenalty> penalties) {
 		
-		List<PenaltyDTO> penalties = null;
-		PenaltyDTO penalty = null;
+		List<PenaltyDTO> penaltiesDTO = null;
+		PenaltyDTO penaltyDTO = null;
 		int days = 0;
 		
-		if (overdues != null) {
-			penalties = new ArrayList<PenaltyDTO>();
-			for (OverDueBook overdue : overdues) {
-				penalty = new PenaltyDTO();
+		if (penalties != null) {
+			penaltiesDTO = new ArrayList<PenaltyDTO>();
+			for (BookPenalty penalty : penalties) {
+				penaltyDTO = new PenaltyDTO();
 				
-				penalty.setBookId(overdue.getBook().getId());
-				penalty.setBookTitle(overdue.getBook().getTitle());
-				penalty.setDueDate(overdue.getDueDate());
-				if (overdue.getReturnDate() != null) {
-					penalty.setReturnDate(overdue.getReturnDate());	
-					days = this.calculateDaysDifference(overdue.getReturnDate(), overdue.getDueDate());
+				penaltyDTO.setBookId(penalty.getBook().getId());
+				penaltyDTO.setBookTitle(penalty.getBook().getTitle());
+				penaltyDTO.setDueDate(penalty.getDueDate());
+				if (penalty.getReturnDate() != null) {
+					penaltyDTO.setReturnDate(penalty.getReturnDate());	
+					days = this.calculateDaysDifference(penalty.getReturnDate(), penalty.getDueDate());
 				} else {
-					days = this.calculateDaysDifference(new Date(new java.util.Date().getTime()), overdue.getDueDate());
+					days = this.calculateDaysDifference(new Date(new java.util.Date().getTime()), penalty.getDueDate());
 				}
-				penalty.setDays(days);
-				penalty.setPenalty(this.calculatePenalty(days));
+				penaltyDTO.setDays(days);
+				penaltyDTO.setPenalty(this.calculatePenalty(days));
 				
-				penalties.add(penalty);
+				penaltiesDTO.add(penaltyDTO);
 			}
 		}
 		
-		return penalties;
+		return penaltiesDTO;
 	}
 
 	private int calculateDaysDifference(Date returnDate, Date dueDate) {

@@ -2,12 +2,6 @@ package com.wkrzywiec.spring.library.dto;
 
 import java.util.List;
 
-import javax.persistence.Column;
-
-import org.hibernate.annotations.Type;
-
-import com.wkrzywiec.spring.library.entity.Author;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

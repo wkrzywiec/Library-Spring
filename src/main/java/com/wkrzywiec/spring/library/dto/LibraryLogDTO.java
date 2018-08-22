@@ -1,7 +1,6 @@
 package com.wkrzywiec.spring.library.dto;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

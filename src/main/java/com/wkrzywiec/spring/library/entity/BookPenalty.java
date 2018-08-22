@@ -25,8 +25,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @Entity
-@Table(name="overdue_book")
-public class OverDueBook {
+@Table(name="book_penalty")
+public class BookPenalty {
 
 	
 	@Id

@@ -45,6 +45,6 @@ public class Borrowed {
 	@Column(name="dated")
 	private Timestamp dated;
 	
-	@Column(name="deadline_date")
-	private Date deadlineDate;
+	@Column(name="due_date")
+	private Date dueDate;
 }

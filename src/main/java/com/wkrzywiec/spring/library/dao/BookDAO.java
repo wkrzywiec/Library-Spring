@@ -7,7 +7,7 @@ import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.LibraryLog;
-import com.wkrzywiec.spring.library.entity.OverDueBook;
+import com.wkrzywiec.spring.library.entity.BookPenalty;
 import com.wkrzywiec.spring.library.entity.Reserved;
 
 public interface BookDAO {
@@ -66,9 +66,9 @@ public interface BookDAO {
 	
 	List<LibraryLog> getLibraryLogsByBook(int bookId);
 	
-	List<OverDueBook> getOverDueBooksByUser(int userId);
+	List<BookPenalty> getBookPenaltiesByUser(int userId);
 	
-	OverDueBook getPenaltyForBook(int bookId);
+	BookPenalty getPenaltyForBook(int bookId);
 	
 	void setReturnDateForPenalty(int bookId);
 }

@@ -1,6 +1,5 @@
 package com.wkrzywiec.spring.library.dao;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 

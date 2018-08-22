@@ -16,12 +16,9 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wkrzywiec.spring.library.entity.LibraryLog;
 import com.wkrzywiec.spring.library.entity.Role;
-import com.wkrzywiec.spring.library.entity.Roles;
 import com.wkrzywiec.spring.library.entity.User;
 import com.wkrzywiec.spring.library.entity.UserLog;
 import com.wkrzywiec.spring.library.entity.UserPasswordToken;

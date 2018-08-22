@@ -23,7 +23,7 @@ import com.wkrzywiec.spring.library.entity.Book;
 import com.wkrzywiec.spring.library.entity.BookCategory;
 import com.wkrzywiec.spring.library.entity.Borrowed;
 import com.wkrzywiec.spring.library.entity.LibraryLog;
-import com.wkrzywiec.spring.library.entity.OverDueBook;
+import com.wkrzywiec.spring.library.entity.BookPenalty;
 import com.wkrzywiec.spring.library.entity.Reserved;
 
 @Repository
@@ -410,25 +410,25 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<OverDueBook> getOverDueBooksByUser(int userId) {
+	public List<BookPenalty> getBookPenaltiesByUser(int userId) {
 		
-		List<OverDueBook> overdues = null;
+		List<BookPenalty> penalties = null;
 		try {
-			overdues = entityManager.createQuery("from OverDueBook o where o.user.id = :userId")
+			penalties = entityManager.createQuery("from BookPenalty o where o.user.id = :userId")
 					.setParameter("userId", userId)
 					.getResultList();
 		} catch (NoResultException e) {
 		}
-		return overdues;
+		return penalties;
 	}
 
 	@Override
-	public OverDueBook getPenaltyForBook(int bookId) {
+	public BookPenalty getPenaltyForBook(int bookId) {
 		
-		OverDueBook penalty = null;
+		BookPenalty penalty = null;
 		
 		try {
-			penalty = (OverDueBook) entityManager.createQuery("from OverDueBook o where o.book.id = :bookId")
+			penalty = (BookPenalty) entityManager.createQuery("from BookPenalty o where o.book.id = :bookId")
 					.setParameter("bookId", bookId)
 					.getSingleResult();
 		} catch (NoResultException e) {

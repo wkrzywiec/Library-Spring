@@ -33,21 +33,22 @@ public class LibraryLogsAspect {
 	@AfterReturning("reserveBook()")
 	public void reserveBook(JoinPoint joinPoint) {
 		this.getLogsDetails(joinPoint);
-		libraryLogger.info("Book Reserved");
+		libraryLogger.info("Reserved");
 		this.clearAllLogsDetails();
 	}
 	
 	@AfterReturning("borrowBook()")
 	public void borrowBook(JoinPoint joinPoint) {
 		this.getLogsDetails(joinPoint);
-		libraryLogger.info("Book Borrowed");
+		libraryLogger.info("Borrowed");
 		this.clearAllLogsDetails();
 	}
 	
 	@AfterReturning("returnBook()")
 	public void returnBook(JoinPoint joinPoint) {
+		System.out.println("returned");
 		this.getLogsDetails(joinPoint);
-		libraryLogger.info("Book Returned");
+		libraryLogger.info("Returned");
 		this.clearAllLogsDetails();
 	}
 	
