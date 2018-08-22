@@ -150,7 +150,7 @@ public class LibraryController {
 		}
 			
 		userService.updateUser(id, userDTO, currentPrincipalName);
-		//TODO PAYMENT
+		
 		model = this.addModelsToUserDetailedPage(model, id, null);
 		return "user-details";
 	}
@@ -159,8 +159,11 @@ public class LibraryController {
 	public String makePaymentForPenalties(	@PathVariable("id") Integer id,
 											Model model) {
 		
-		libraryService.makePayment(id);
+		boolean paid = false;
+		paid = libraryService.makePayment(id);
 		
+		String message = !paid ? "Not all books are returned to the library. Return all the books so we could proceed with payments." : null;
+		model.addAttribute("message", message);
 		model = this.addModelsToUserDetailedPage(model, id, null);
 		return "user-details";
 	}
@@ -391,6 +394,7 @@ public class LibraryController {
 		List<LibraryLogDTO> libraryLogs = null;
 		List<ManageDTO> manageDTO = null;
 		BigDecimal penaltiesTotal = null;
+		boolean allBooksReturned = false;
 		
 		User user = userService.getUserById(id);
 		model.addAttribute("user", user);
@@ -418,7 +422,23 @@ public class LibraryController {
 		penaltiesTotal = libraryService.sumPenalties(penalties);
 		model.addAttribute("penaltiesTotal", penaltiesTotal);
 		
+		allBooksReturned = this.areAllBooksReturned(penalties);
+		model.addAttribute("allBooksReturned", allBooksReturned);
+		
 		return model;
+	}
+
+	private boolean areAllBooksReturned(List<PenaltyDTO> penalties) {
+		
+		boolean allBooksReturned = true;
+		
+		for(PenaltyDTO penalty : penalties) {
+			if (penalty.getReturnDate() == null) {
+				allBooksReturned = false;
+				break;
+			}
+		}
+		return allBooksReturned;
 	}
 
 }

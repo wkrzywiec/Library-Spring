@@ -3,9 +3,9 @@ package com.wkrzywiec.spring.library.service;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Currency;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +33,7 @@ public class LibraryServiceImpl implements LibraryService {
 
 	public final int MAX_BOOKS_COUNT_PER_USER = 3;
 	public final int DAYS_AFTER_RESERVATION = 3;
-	public final int DAYS_AFTER_BORROWED = 1;
+	public final int DAYS_AFTER_BORROWED = 30;
 	
 	@Autowired
 	private BookDAO bookDAO;
@@ -112,8 +112,8 @@ public class LibraryServiceImpl implements LibraryService {
 		List <Reserved> reservedList = null;
 		List <Borrowed> borrowedList = null;
 		
-		reservedList = bookDAO.getReservedBooksByUserId(userId);
-		borrowedList = bookDAO.getBorrowedBooksByUserId(userId);
+		reservedList = bookDAO.getReservedBooksListByUserId(userId);
+		borrowedList = bookDAO.getBorrowedBooksListByUserId(userId);
 		
 		manageList = this.combineReservedAndBorrowedBooksList(reservedList, borrowedList);
 		
@@ -128,8 +128,8 @@ public class LibraryServiceImpl implements LibraryService {
 		List <Reserved> reservedList = null;
 		List <Borrowed> borrowedList = null;
 		
-		reservedList = bookDAO.getAllReservedBooks();
-		borrowedList = bookDAO.getAllBorrowedBooks();
+		reservedList = bookDAO.getAllReservedBooksList();
+		borrowedList = bookDAO.getAllBorrowedBooksList();
 		
 		manageList = this.combineReservedAndBorrowedBooksList(reservedList, borrowedList);
 		
@@ -177,7 +177,7 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	@Transactional
 	public void borrowBook(int bookId, int librarianId) {
-		Reserved reserved = bookDAO.getReservedBooksByBookId(bookId).get(0);
+		Reserved reserved = bookDAO.getReservedBooksListByBookId(bookId).get(0);
 		int userId = reserved.getUser().getId();
 		bookDAO.borrowBook(bookId, userId, DAYS_AFTER_BORROWED);
 	}
@@ -185,6 +185,15 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	@Transactional
 	public void returnBook(int bookId, int librarianId) {
+		
+		Borrowed borrowed = bookDAO.getBorrowedBookByBookId(bookId);
+		Calendar calendar = Calendar.getInstance();
+		java.util.Date currentDate = calendar.getTime();
+		
+		if (currentDate.after(borrowed.getDeadlineDate())) {
+			
+			bookDAO.setReturnDateForPenalty(bookId);
+		}
 		bookDAO.returnBook(bookId);
 	}
 	
@@ -275,8 +284,24 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 
 	@Override
-	public void makePayment(int userId) {
-		userDAO.penaltiesPaidForUser(userId);
+	@Transactional
+	public boolean makePayment(int userId) {
+		
+		boolean areAllBooksReturned = true;
+		List<PenaltyDTO> penalties = null;
+		penalties = this.getPenaltiesByUser(userId);
+		
+		for (PenaltyDTO penalty : penalties) {
+			if (penalty.getReturnDate() == null) {
+				areAllBooksReturned = false;
+				break;
+			}
+		}
+		if (areAllBooksReturned) {
+			userDAO.penaltiesPaidForUser(userId);
+		}
+		
+		return areAllBooksReturned;
 	}
 
 	private int reservedBooksTotalCountByUser(int userId) {
@@ -407,20 +432,20 @@ public class LibraryServiceImpl implements LibraryService {
 
 		if (statusNo == 1) {
 			for (Integer userId : idList) {
-				reservedListTemp = bookDAO.getReservedBooksByUserId(userId);
+				reservedListTemp = bookDAO.getReservedBooksListByUserId(userId);
 				reservedList.addAll(reservedListTemp);
 			}
 		} else if (statusNo == 2) {
 			for (Integer userId : idList) {
-				borrowedListTemp = bookDAO.getBorrowedBooksByUserId(userId);
+				borrowedListTemp = bookDAO.getBorrowedBooksListByUserId(userId);
 				borrowedList.addAll(borrowedListTemp);
 			}
 			
 		} else {
 			for (Integer userId : idList) {
-				reservedListTemp = bookDAO.getReservedBooksByUserId(userId);
+				reservedListTemp = bookDAO.getReservedBooksListByUserId(userId);
 				reservedList.addAll(reservedListTemp);
-				borrowedListTemp = bookDAO.getBorrowedBooksByUserId(userId);
+				borrowedListTemp = bookDAO.getBorrowedBooksListByUserId(userId);
 				borrowedList.addAll(borrowedListTemp);
 			}
 		}
@@ -439,20 +464,20 @@ public class LibraryServiceImpl implements LibraryService {
 
 		if (statusNo == 1) {
 			for (Integer bookId : idList) {
-				reservedListTemp = bookDAO.getReservedBooksByBookId(bookId);
+				reservedListTemp = bookDAO.getReservedBooksListByBookId(bookId);
 				reservedList.addAll(reservedListTemp);
 			}
 		} else if (statusNo == 2) {
 			for (Integer bookId : idList) {
-				borrowedListTemp = bookDAO.getBorrowedBooksByBookId(bookId);
+				borrowedListTemp = bookDAO.getBorrowedBooksListByBookId(bookId);
 				borrowedList.addAll(borrowedListTemp);
 			}
 			
 		} else {
 			for (Integer bookId : idList) {
-				reservedListTemp = bookDAO.getReservedBooksByBookId(bookId);
+				reservedListTemp = bookDAO.getReservedBooksListByBookId(bookId);
 				reservedList.addAll(reservedListTemp);
-				borrowedListTemp = bookDAO.getBorrowedBooksByBookId(bookId);
+				borrowedListTemp = bookDAO.getBorrowedBooksListByBookId(bookId);
 				borrowedList.addAll(borrowedListTemp);
 			}
 		}

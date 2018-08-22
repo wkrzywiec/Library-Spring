@@ -294,7 +294,7 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<Reserved> getAllReservedBooks() {
+	public List<Reserved> getAllReservedBooksList() {
 		
 		List<Reserved> reservedList = null;
 		try {
@@ -307,7 +307,7 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<Borrowed> getAllBorrowedBooks() {
+	public List<Borrowed> getAllBorrowedBooksList() {
 		
 		List<Borrowed> borrowedList = null;
 		try {
@@ -320,7 +320,7 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<Reserved> getReservedBooksByUserId(int userId) {
+	public List<Reserved> getReservedBooksListByUserId(int userId) {
 		
 		List<Reserved> reservedList = null;
 		try {
@@ -333,7 +333,7 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<Borrowed> getBorrowedBooksByUserId(int userId) {
+	public List<Borrowed> getBorrowedBooksListByUserId(int userId) {
 		
 		List<Borrowed> borrowedList = null;
 		try {
@@ -344,9 +344,22 @@ public class BookDAOImpl implements BookDAO {
 		}
 		return borrowedList;
 	}
+	
+	@Override
+	public Borrowed getBorrowedBookByBookId(int bookId) {
+		
+		Borrowed borrowed = null;
+		try {
+			borrowed =  (Borrowed) entityManager.createQuery("from Borrowed b where b.book.id = :bookId")
+					.setParameter("bookId", bookId)
+					.getSingleResult();
+		} catch (NoResultException e) {
+		}
+		return borrowed;
+	}
 
 	@Override
-	public List<Reserved> getReservedBooksByBookId(int bookId) {
+	public List<Reserved> getReservedBooksListByBookId(int bookId) {
 		
 		List<Reserved> reservedList = null;
 		try {
@@ -359,7 +372,7 @@ public class BookDAOImpl implements BookDAO {
 	}
 
 	@Override
-	public List<Borrowed> getBorrowedBooksByBookId(int bookId) {
+	public List<Borrowed> getBorrowedBooksListByBookId(int bookId) {
 		
 		List<Borrowed> borrowedList = null;
 		try {
@@ -407,6 +420,32 @@ public class BookDAOImpl implements BookDAO {
 		} catch (NoResultException e) {
 		}
 		return overdues;
+	}
+
+	@Override
+	public OverDueBook getPenaltyForBook(int bookId) {
+		
+		OverDueBook penalty = null;
+		
+		try {
+			penalty = (OverDueBook) entityManager.createQuery("from OverDueBook o where o.book.id = :bookId")
+					.setParameter("bookId", bookId)
+					.getSingleResult();
+		} catch (NoResultException e) {
+		}
+		return penalty;
+	}
+
+	@Override
+	public void setReturnDateForPenalty(int bookId) {
+		
+		StoredProcedureQuery query = entityManager
+				.createStoredProcedureQuery("setPenaltyReturnDate")
+				.registerStoredProcedureParameter(1, Integer.class, ParameterMode.IN)
+				.setParameter(1, bookId);
+		
+		query.execute();
+		
 	}
 
 	private FullTextQuery searchBooksQuery (String searchText) {

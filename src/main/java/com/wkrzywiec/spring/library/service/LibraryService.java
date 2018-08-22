@@ -42,5 +42,5 @@ public interface LibraryService {
 	
 	BigDecimal sumPenalties(List<PenaltyDTO> penalties);
 	
-	void makePayment(int userId);
+	boolean makePayment(int userId);
 }

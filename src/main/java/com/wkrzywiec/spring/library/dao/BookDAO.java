@@ -48,21 +48,27 @@ public interface BookDAO {
 	
 	int getBorrowedBooksTotalCount();
 	
-	List<Reserved> getAllReservedBooks();
+	List<Reserved> getAllReservedBooksList();
 	
-	List<Borrowed> getAllBorrowedBooks();
+	List<Borrowed> getAllBorrowedBooksList();
 	
-	List<Reserved> getReservedBooksByUserId(int userId);
+	List<Reserved> getReservedBooksListByUserId(int userId);
 	
-	List<Borrowed> getBorrowedBooksByUserId(int userId);
+	List<Borrowed> getBorrowedBooksListByUserId(int userId);
 	
-	List<Reserved> getReservedBooksByBookId(int bookId);
+	List<Reserved> getReservedBooksListByBookId(int bookId);
 	
-	List<Borrowed> getBorrowedBooksByBookId(int bookId);
+	List<Borrowed> getBorrowedBooksListByBookId(int bookId);
+	
+	Borrowed getBorrowedBookByBookId(int bookId);
 	
 	List<LibraryLog> getLibraryLogsByUser(int userId);
 	
 	List<LibraryLog> getLibraryLogsByBook(int bookId);
 	
 	List<OverDueBook> getOverDueBooksByUser(int userId);
+	
+	OverDueBook getPenaltyForBook(int bookId);
+	
+	void setReturnDateForPenalty(int bookId);
 }

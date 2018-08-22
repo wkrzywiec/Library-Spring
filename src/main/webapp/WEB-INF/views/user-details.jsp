@@ -22,7 +22,13 @@
     	<jsp:include page="shared/header.jsp"/>
 	</div>
 	
-	
+	<div class="container">
+		<c:if test="${message != null}">
+			<div class="alert alert-danger col-xs-offset-1 col-xs-10">
+				${message}
+			</div>
+		</c:if>
+	</div>
 	
 	<div class="container" style="margin-top: 30px;">
 		<a href="javascript:history.back()">&#8592; Go back </a>
@@ -401,7 +407,9 @@
 							</tr>
 	    				</tbody>
         			</table>
-        			<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}/payment" class="btn btn-success" role="button">Confirm payment</a>
+        			<c:if test="${allBooksReturned}">
+        				<a href="${pageContext.request.contextPath}/admin-panel/user/${user.id}/payment" class="btn btn-success" role="button">Confirm payment</a>
+        			</c:if>
       			</div>
       			<div class="modal-footer">
         			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
