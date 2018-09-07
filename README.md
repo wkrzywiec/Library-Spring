@@ -22,6 +22,7 @@ During work on this project I've parallely created some blog posts that describe
 * [Why Spring framework is so cool](https://medium.com/@wkrzywiec/why-spring-framework-is-so-cool-8472ceabaab1)
 
 * [How to start with Spring MVC](https://medium.com/@wkrzywiec/how-to-start-with-spring-mvc-309dec3c59fd)
+
 **Configurations**
 
 * [Setting up Gradle web project in Eclispe (on Tomcar server)](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d)
