@@ -1,17 +1,3 @@
-CREATE USER 'library-spring'@'localhost' IDENTIFIED BY 'library-spring';
-
-GRANT ALL PRIVILEGES ON  *.* TO 'library-spring'@'localhost';
-
-DROP DATABASE `library_db`;
-
-CREATE DATABASE  IF NOT EXISTS `library_db`;
-
-USE `library_db`;
-
-SET GLOBAL EVENT_SCHEDULER = ON;
-
-DROP TABLE IF EXISTS `role`;
-
 CREATE TABLE `role` (
 	`id` int(6) NOT NULL AUTO_INCREMENT,
     `name` varchar(45) NOT NULL UNIQUE,
@@ -19,9 +5,6 @@ CREATE TABLE `role` (
 	PRIMARY KEY (`id`)
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
 	`id` int(6) NOT NULL AUTO_INCREMENT,
@@ -42,9 +25,6 @@ CREATE TABLE `user` (
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-DROP TABLE IF EXISTS `user_role`;
-
 CREATE TABLE `user_role` (
 	`user_id` int(6) NOT NULL,
     `role_id` int(6) NOT NULL,
@@ -62,8 +42,6 @@ CREATE TABLE `user_role` (
 	ON DELETE NO ACTION ON UPDATE NO ACTION
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `persistent_logins`;
 
 CREATE TABLE persistent_logins (
 	`username` varchar(64) NOT NULL,
@@ -189,7 +167,7 @@ CREATE TABLE `reserved` (
     `book_id` int(12) NOT NULL,
     `user_id` int(6) NOT NULL,
     `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
-    `deadline_date` DATE NOT NULL,
+    `due_date` DATE NOT NULL,
     
     PRIMARY KEY (`id`),
     
@@ -210,7 +188,7 @@ CREATE TABLE `borrowed` (
     `book_id` int(12) NOT NULL,
     `user_id` int(6) NOT NULL,
     `dated` TIMESTAMP NOT  NULL DEFAULT CURRENT_TIMESTAMP,
-    `deadline_date` DATE NOT NULL,
+    `due_date` DATE NOT NULL,
     
     PRIMARY KEY (`id`),
     
@@ -226,7 +204,7 @@ CREATE TABLE `borrowed` (
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `overdue_book` (
+CREATE TABLE `book_penalty` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
     `book_id` int(12) NOT NULL UNIQUE,
     `user_id` int(6) NOT NULL,
@@ -236,38 +214,16 @@ CREATE TABLE `overdue_book` (
     PRIMARY KEY (`id`),
     
     KEY `user` (`user_id`),
-    CONSTRAINT `FK_USER_OVERDUE` FOREIGN KEY (`user_id`)
+    CONSTRAINT `FK_USER_PENALTY` FOREIGN KEY (`user_id`)
     REFERENCES `user` (`id`)
     ON DELETE NO ACTION ON UPDATE NO ACTION,
     
     KEY `book` (`book_id`),
-    CONSTRAINT `FK_BOOK_OVERDUE` FOREIGN KEY (`book_id`)
+    CONSTRAINT `FK_BOOK_PENALTY` FOREIGN KEY (`book_id`)
 	REFERENCES `book` (`id`)
 	ON DELETE NO ACTION ON UPDATE NO ACTION
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;	
-
-CREATE TABLE `book_logs` (
-	`id` int(12) NOT NULL AUTO_INCREMENT,
-    `level` varchar(10) NOT NULL,
-    `message` varchar(500) NOT NULL,
-    `book_id` int(12) NOT NULL,
-    `user_id` int(6) NOT NULL,
-    `dated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   
-    PRIMARY KEY (`id`),
-    
-    KEY `user` (`user_id`),
-    CONSTRAINT `FK_USER_BOOK_LOGS` FOREIGN KEY (`user_id`)
-    REFERENCES `user` (`id`)
-    ON DELETE NO ACTION ON UPDATE NO ACTION,
-    
-    KEY `book` (`book_id`),
-    CONSTRAINT `FK_BOOK_BOOK_LOGS` FOREIGN KEY (`book_id`)
-	REFERENCES `book` (`id`)
-	ON DELETE NO ACTION ON UPDATE NO ACTION
-    
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `library_logs` (
 	`id` int(12) NOT NULL AUTO_INCREMENT,
@@ -302,7 +258,7 @@ CREATE PROCEDURE bookReserve(
     userId int(6),
     days int(2))
 BEGIN
-    INSERT INTO `reserved` (`book_id`, `user_id`, `deadline_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
+    INSERT INTO `reserved` (`book_id`, `user_id`, `due_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
     SELECT * FROM book WHERE id=bookId;
 END //
 
@@ -312,7 +268,7 @@ CREATE PROCEDURE bookBorrow(
     userId int(6),
     days int(2))
 BEGIN
-	INSERT INTO `borrowed` (`book_id`, `user_id`, `deadline_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
+	INSERT INTO `borrowed` (`book_id`, `user_id`, `due_date`) VALUES (bookId, userId, DATE_ADD(NOW(), INTERVAL days DAY));
 	DELETE FROM `reserved` WHERE book_id= bookId;
     SELECT * FROM book WHERE id=bookId;
 END //
@@ -324,10 +280,17 @@ BEGIN
 	DELETE FROM `borrowed` WHERE book_id = bookId;
 END //
 
+
+CREATE PROCEDURE setPenaltyReturnDate(
+	bookId int(12))
+BEGIN
+	UPDATE `book_penalty` SET `return_date` = NOW() WHERE book_id = bookId;
+END //
+
 CREATE PROCEDURE penaltiesPaid(
 	userId int(12))
 BEGIN
-	DELETE FROM `overdue_book` WHERE user_id = userId;
+	DELETE FROM `book_penalty` WHERE user_id = userId;
 END //
 
 CREATE EVENT `overdueReservedBooks`
@@ -335,7 +298,7 @@ CREATE EVENT `overdueReservedBooks`
     STARTS CONCAT(DATE(NOW()+INTERVAL 1 DAY ), ' 00:10:00')
     ON COMPLETION PRESERVE
 DO
-	DELETE FROM `reserved` WHERE deadline_date <= CURDATE()
+	DELETE FROM `reserved` WHERE due_date <= CURDATE()
 //
 
 CREATE EVENT `overdueBorrowedBooks`
@@ -344,15 +307,13 @@ CREATE EVENT `overdueBorrowedBooks`
     ON COMPLETION PRESERVE
 DO
 	BEGIN
-		INSERT INTO `overdue_book` (`book_id`, `user_id`, `due_date`) 
-			SELECT `book_id`, `user_id`, `deadline_date` 
+		INSERT INTO `book_penalty` (`book_id`, `user_id`, `due_date`) 
+			SELECT `book_id`, `user_id`, `due_date` 
             FROM borrowed
-            WHERE deadline_date <= CURDATE();
+            WHERE due_date <= CURDATE();
     END
 //
 DELIMITER ;
-	
--- has³o dla u¿ytkowników to : test
 
 INSERT INTO `user` (`username`, `password`, `email`, `enable`, `first_name`, `last_name`) VALUES
 

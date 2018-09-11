@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 apply plugin: 'eclipse-wtp'
-
+apply plugin: 'org.flywaydb.flyway'
 
 repositories {
     jcenter()
@@ -16,6 +16,7 @@ buildscript {
     dependencies {
         classpath 'com.bmuschko:gradle-tomcat-plugin:2.4.1'
         classpath 'mysql:mysql-connector-java:6.0.6'
+        classpath 'org.flywaydb:flyway-gradle-plugin:5.1.4'
     }
 }
 
@@ -74,6 +75,13 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
 }
 
+flyway {
+	driver = 'com.mysql.cj.jdbc.Driver'
+    url = 'jdbc:mysql://localhost:3306?autoReconnect=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
+    user = 'library-spring'
+    password = 'library-spring'
+    schemas = ['library_db']
+}
 
 tomcat {
 
@@ -82,4 +90,5 @@ tomcat {
 	contextPath = '/library-spring'
 }
 
+tomcatRun.dependsOn flywayMigrate
 
