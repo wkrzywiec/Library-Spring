@@ -1,8 +1,8 @@
-## Library Portal (in Spring)
+# Library Portal (in Spring)
 
 Spring MVC web application for borrowing and managing library books inventory.
 
-### Description
+## Description
 
 This is my first Spring MVC project, which is an implementation of the library website. The application allow to borrow books (as a standard user),
 manage books inventory (add new ones, check availablity, etc.) and user account.
@@ -12,7 +12,7 @@ In Library Portal there are three types of users:
  * Librarian - limited number of users that can add new books, borrow and return them. They can also confirm payments for penalties in case when a reader keeps a book to long.
  * Admin - person, who can add, edit and deactivate users.
 
-### Tools & Frameworks
+## Tools & Frameworks
 
 The application is written using Spring MVC framework and Gradle (for external dependency managment).
 
@@ -36,7 +36,7 @@ The application is written using Spring MVC framework and Gradle (for external d
 * JSP, JSTL
 * Bootstrap 4
 
-### How to run it?
+## How to run it?
 
 Prerequisites: Eclipse IDE ([with Gradle and Tomcat plugin installed](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d)), Tomcat, [MySQL Community Edition](https://www.mysql.com/products/community/)
 
@@ -60,7 +60,7 @@ Prerequisites: Eclipse IDE ([with Gradle and Tomcat plugin installed](https://me
  
  5. The application will avaialble under URL `http://localhost:8080/library-spring`
 
-### Blog Posts
+## Blog Posts
 
 During work on this project I've parallely created some blog posts that describe my path to the working application. In those entires I've tried to explain some of key concepts, tools and frameworks that I used. Here is the list of all entries that was written so far:
 
@@ -106,9 +106,9 @@ During work on this project I've parallely created some blog posts that describe
 * [How to deploy web app and database in one click with Flyway (on Tomcat server)](https://medium.com/@wkrzywiec/how-to-deploy-web-app-and-database-in-one-click-with-flyway-on-tomcat-server-26b580e09e38)
 
 
-### Database Schema
+## Database Schema
 
-### Screenshots
+## Screenshots
 
 
 
