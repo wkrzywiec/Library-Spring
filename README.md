@@ -7,10 +7,58 @@ Spring MVC web application for borrowing and managing library books inventory.
 This is my first Spring MVC project, which is an implementation of the library website. The application allow to borrow books (as a standard user),
 manage books inventory (add new ones, check availablity, etc.) and user account.
 
-In my Library Portal I plan to have three types of users: 
- * Readers - they can register themselves and borrow limted number of books,
- * Librarian - limted number of users that have some insight on library inventory and add new books,
- * Admin - person, who can add, edit and deactivate users, also have some insight on the library inventory.
+In Library Portal there are three types of users: 
+ * Readers - they can register themselves and borrow limited number of books.
+ * Librarian - limited number of users that can add new books, borrow and return them. They can also confirm payments for penalties in case when a reader keeps a book to long.
+ * Admin - person, who can add, edit and deactivate users.
+
+### Tools & Frameworks
+
+The application is written using Spring MVC framework and Gradle (for external dependency managment).
+
+**Database & configuration**
+* MySQL
+* Flyway (for data migration)
+* Gradle
+* Tomcat
+* Git
+
+**Backend technologies**
+* Spring MVC, Spring AOP, Spring Security
+* Hibernate ORM, Hibernate Validator, Hibenrate Search (Lucene)
+* Retrofit
+* JUnit
+* Project Lombok
+* Log4j2
+
+**Frontend technologies**
+* HTML, CSS, JavaScript
+* JSP, JSTL
+* Bootstrap 4
+
+### How to run it?
+
+Prerequisites: Eclipse IDE ([with Gradle and Tomcat plugin installed](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d)), Tomcat, [MySQL Community Edition](https://www.mysql.com/products/community/)
+
+1. Clone this git repository
+
+` $ git clone https://github.com/wkrzywiec/Library-Spring `
+
+2. Open MySQL Workbench and type following SQL script:
+
+```
+	CREATE USER 'library-spring'@'localhost' IDENTIFIED BY 'library-spring';
+	GRANT ALL PRIVILEGES ON  *.* TO 'library-spring'@'localhost';
+	SET GLOBAL EVENT_SCHEDULER = ON;
+ ```
+ 
+ 3. Go to a folder `src/main/resources/properties`, create googleAPI.properties file and add your Google API key ([here are instructions how to obtain it](https://cloud.google.com/docs/authentication/api-keys)) as follows:
+ 
+ `  googleAPI.key=[YOUR KEY HERE] `
+ 
+ 4. Run `tomcatRun` Gradle task ([or assign it to the Run button in Eclipse](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d#4986))
+ 
+ 5. The application will avaialble under URL `http://localhost:8080/library-spring`
 
 ### Blog Posts
 
@@ -25,7 +73,6 @@ During work on this project I've parallely created some blog posts that describe
 
 **Configurations**
 
-* [Setting up Gradle web project in Eclispe (on Tomcar server)](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d)
 * [Project development history lesson with git](https://medium.com/@wkrzywiec/project-development-history-lesson-with-git-424b9940ad84)
 
 **Clean code**
@@ -50,13 +97,19 @@ During work on this project I've parallely created some blog posts that describe
 
 * [Making use of open REST API with Retrofit](https://medium.com/@wkrzywiec/making-use-of-open-rest-api-with-retrofit-dac6094f0522)
 
+**Deployment**
 
-### Tools & Frameworks
+* [Setting up Gradle web project in Eclispe (on Tomcar server)](https://medium.com/@wkrzywiec/setting-up-gradle-spring-project-in-eclipse-on-tomcat-server-77d68454fd8d)
+
+* [Deployment of Spring MVC app on a local Tomcat server for beginners](https://medium.com/@wkrzywiec/deployment-of-spring-mvc-app-on-a-local-tomcat-server-for-beginners-3dfff9161908)
+
+* [How to deploy web app and database in one click with Flyway (on Tomcat server)](https://medium.com/@wkrzywiec/how-to-deploy-web-app-and-database-in-one-click-with-flyway-on-tomcat-server-26b580e09e38)
+
 
 ### Database Schema
 
 ### Screenshots
 
-### TO-DO list
+
 
  
