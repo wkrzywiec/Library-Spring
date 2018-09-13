@@ -78,7 +78,10 @@ CREATE TABLE `user_logs` (
     `message` varchar(500) NOT NULL,
     `changed_by_username` varchar(64) NOT NULL,
     
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    
+    CONSTRAINT `FK_USER_LOG_USER` FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
     
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

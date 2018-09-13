@@ -22,11 +22,13 @@ The application is written using Spring MVC framework and Gradle (for external d
 * Gradle
 * Tomcat
 * Git
+* Google Book API
 
 **Backend technologies**
+* Java
 * Spring MVC, Spring AOP, Spring Security
 * Hibernate ORM, Hibernate Validator, Hibenrate Search (Lucene)
-* Retrofit
+* Retrofit, JSON
 * JUnit
 * Project Lombok
 * Log4j2
