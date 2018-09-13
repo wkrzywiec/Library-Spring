@@ -108,10 +108,66 @@ During work on this project I've parallely created some blog posts that describe
 * [How to deploy web app and database in one click with Flyway (on Tomcat server)](https://medium.com/@wkrzywiec/how-to-deploy-web-app-and-database-in-one-click-with-flyway-on-tomcat-server-26b580e09e38)
 
 
-## Database Schema
+## Database Diagram
+
+Big picture on the database relationships.
+![Database](https://github.com/wkrzywiec/Library-Spring/blob/master/img/database.PNG)
+
+Detailed look on user entity relationships.Some of them, like `user_password_toke` are specific for Spring Security *Forgot password* feature.
+
+![User database](https://github.com/wkrzywiec/Library-Spring/blob/master/img/dbuser.PNG)
+
+And book entity relationships.
+
+![User database](https://github.com/wkrzywiec/Library-Spring/blob/master/img/dbbook.PNG)
+
+Finally user-book relationships, those tables stores book status information (like if it is reserved, borrowed, has penalties) or logs.
+
+![User-Book database](https://github.com/wkrzywiec/Library-Spring/blob/master/img/user_book.PNG)
+
 
 ## Screenshots
 
+Login page
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/login-page.PNG)
 
 
- 
+Main page, after login. The quote is taken from [Random Quote API](https://talaikis.com/).
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/main.PNG)
+
+
+Admin can find and modify user profiles. Also there are possibility for him to see the logs of the user to check what changes were made on the user account.
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/user-list.PNG)
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/user-details.PNG)
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/user-log.PNG)
+
+
+Librarian can add new books to the library. New book data are fetched from Google Book API when search query is performed.
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/add-book.PNG)
+
+
+Every, regular user can register themself in the application.
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/registration.PNG)
+
+
+After registration they can look for a book they want, see their details, and reserve it.
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/search-book.PNG)
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/book-details.PNG)
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/reservation.PNG)
+
+
+The librarian can borrow and return books. Also he can check book history to get the insight who and when make any action on a book.
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/manage.PNG)
+
+![](https://github.com/wkrzywiec/Library-Spring/blob/master/img/library-log.PNG)
